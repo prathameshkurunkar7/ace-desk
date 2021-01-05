@@ -24,8 +24,23 @@
 ### -> Check Various Recruits and their Applications
 
 ## Employee operations
-### -> Adding Employee and Details
+### -> 
 
+
+# Routing:
+## Auth routes
+### POST    /register/signup    -> SignUp User
+### POST    /register/login     -> Login User
+### PATCH   /register/update-password-> Updates Password
+
+## Employee side routes
+### /employee ->Base Route
+
+
+## HR Admin side routes
+### /admin ->Base Route
+### POST    /admin/employee/create ->                   Adding Employee Details
+### GET     /admin/employee/send-credentials/:id ->     Send Login Credential details on Email to particular Employee
 
 
 # Notes

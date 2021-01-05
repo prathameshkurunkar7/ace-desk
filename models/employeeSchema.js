@@ -33,79 +33,76 @@ const employeeSchema = new Schema({
         default: Date.now(),
         required: true
     },
-    contactNumbers:[{
-        work:{
-            type: Number,
-            required: true
-        },
+    contactNumbers:{
         personal:{
             type: Number,
             required: true
+        },
+        work:{
+            type: Number,
         }
-    }],
-    addresses:[
-        {
-            Permanent:{
-                address:{
-                    type: String,
-                    trim: true,
-                    required: true
-                },
-                city:{
-                    type: String,
-                    trim: true,
-                    required: true
-                },
-                state:{
-                    type: String,
-                    trim: true,
-                    required: true
-                },
-                country:{
-                    type: String,
-                    trim: true,
-                    required: true    
-                },
-                pincode:{
-                    type: Number,
-                    required: true
-                }
+    },
+    addresses:{
+        Permanent:{
+            address:{
+                type: String,
+                trim: true,
+                required: true
             },
-            Residential:{
-                address:{
-                    type: String,
-                    trim: true,
-                    required: true
-                },
-                city:{
-                    type: String,
-                    trim: true,
-                    required: true
-                },
-                state:{
-                    type: String,
-                    trim: true,
-                    required: true
-                },
-                country:{
-                    type: String,
-                    trim: true,
-                    required: true    
-                },
-                pincode:{
-                    type: Number,
-                    required: true
-                }
+            city:{
+                type: String,
+                trim: true,
+                required: true
+            },
+            state:{
+                type: String,
+                trim: true,
+                required: true
+            },
+            country:{
+                type: String,
+                trim: true,
+                required: true    
+            },
+            pincode:{
+                type: Number,
+                required: true
+            }
+        },
+        Residential:{
+            address:{
+                type: String,
+                trim: true,
+                required: true
+            },
+            city:{
+                type: String,
+                trim: true,
+                required: true
+            },
+            state:{
+                type: String,
+                trim: true,
+                required: true
+            },
+            country:{
+                type: String,
+                trim: true,
+                required: true    
+            },
+            pincode:{
+                type: Number,
+                required: true
             }
         }
-    ],
+    },
     userAuth:{
         type: mongoose.Types.ObjectId,
         ref: 'UserAuth'
     },
     designation:{
         type: String,
-        enum: ['Manager','General Manager','Executive','President','Project Manager','Developer','Designer','Marketing Head','HR Admin','Other'],
+        enum: ['Manager','General Manager','Executive','President','Project Manager','Developer','Designer','Marketing Head','HR Admin','Captain','Other'],
         default: 'Other'
     },
     department:{
@@ -124,6 +121,15 @@ const employeeSchema = new Schema({
         linkedIn: { type: String },
         twitter: { type: String }
     },
+    work:{
+        experience: {type: Number},
+        previousCompany: {type: String },
+    },
+    education:{
+        instituteName:{type: String},
+        graduatingYear:{type: Number},
+        qualificationTitle:{type: String}
+    }
 });
 
 mongoose.model('Employee', employeeSchema);

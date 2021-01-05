@@ -3,10 +3,6 @@ const uniqueValidator = require('mongoose-unique-validator');
 const Schema = mongoose.Schema;
 
 const userAuthSchema = new Schema({
-    empId:{
-        type: mongoose.Types.ObjectId,
-        ref: 'Employee'
-    },
     email:{
         type: String,
         unique: true,
@@ -15,7 +11,7 @@ const userAuthSchema = new Schema({
     password: {
         type: String,
         required: true,
-        minlength: 6
+        minlength: 8
     },
     role: {
         type: String,
