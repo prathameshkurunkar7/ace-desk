@@ -3,7 +3,7 @@ const appConfig = require('./config/appConfig');
 const http = require('http');
 const PORT = appConfig.PORT;
 
-//catchinh uncaught exceptions
+//catching uncaught exceptions
 process.on('uncaughtException',(err)=>{
     console.log("Uncaught Exception! Shutting down server...");
     console.log(err.name,err.message);

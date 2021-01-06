@@ -1,13 +1,22 @@
 const Email = require("../../utils/mailService");
 const mongoose = require('mongoose');
 const crypto = require('crypto');
+const {validationResult} = require('express-validator');
 const HttpError = require('../../utils/http-error');
 const bcrypt = require('bcryptjs');
 const appConfig = require("../../config/appConfig");
 const Employee = mongoose.model('Employee');
 const UserAuth = mongoose.model('UserAuth');
 
+//POST Create a new Employee
 const createEmployee = async(req,res,next) =>{
+
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        const err = new HttpError(`${errors.array()[0].msg} given at ${errors.array()[0].param.toLowerCase()} ,please enter valid input.`
+            , 422,true)
+        return next(err);
+    }
 
     const {firstName,lastName,gender,dateOfBirth,bloodGroup,dateOfJoining,contactNumbers,addresses,email,designation} = req.body;
    
@@ -63,7 +72,8 @@ const createEmployee = async(req,res,next) =>{
 
 }
 
-const employeeCredentials = async(req,res,next) =>{
+// GET Send Employee Cred via Email
+const sendEmployeeCredentials = async(req,res,next) =>{
  
     //for the requested employee, give the relevant information as object in Email argument user.
     let employee;
@@ -95,30 +105,11 @@ const employeeCredentials = async(req,res,next) =>{
 
 }
 
-const empSerialIdGenerator = (dateOfCreation) =>{
-    
-    const date = new Date(dateOfCreation);
-    const length = 4;
-    const randomCode = crypto.randomBytes(Math.ceil(length / 2)).toString('hex').slice(0, length).toUpperCase();
-    
-    //CN refers to Company Name,replace it later
-    const empSerialId = `CN${date.getFullYear()}${date.getMonth()+1}${date.getDate()}${randomCode}`;
-
-    return empSerialId;
-}
-const empTempPasswordGenerator = () =>{
-    const length = 8;
-    const tempPassword = crypto.randomBytes(Math.ceil(length / 2)).toString('hex').slice(0, length).toUpperCase();
-    return tempPassword;
-}
-
-
 // GET Employees
 const getEmployees = async(req,res,next) =>{
 
     let employees;
     try {
-        //Build query
 
         //filtering
         const queryObj = {...req.query};
@@ -153,7 +144,7 @@ const getEmployees = async(req,res,next) =>{
         if(req.query.page){
             const numEmployees = await Employee.countDocuments();
             if(offset >= numEmployees){
-                return next(new HttpError('This Page does not exist'));
+                return next(new HttpError('This Page does not exist',404));
             }
         }
         //Execute query
@@ -168,7 +159,121 @@ const getEmployees = async(req,res,next) =>{
 
 }
 
+// GET Employee by Id
+const getEmployeeById = async(req,res,next) =>{
+    
+    let existingEmployee;
+    try {
+        existingEmployee = await Employee.findById(req.params.employeeId);
+    } catch (err) {
+        const error = new HttpError('Could Not fetch Employee details',500);
+        return next(error);
+    }
+    
+    if(!existingEmployee){
+        return next(new HttpError('No Employee Found',404));
+    }
+
+    let employee;
+    try {
+        employee=await Employee.findById(req.params.employeeId).populate('userAuth','-password -__v');
+    } catch (err) {
+        const error = new HttpError('Could Not fetch Employee details',500);
+        return next(error);
+    }
+
+    res.status(200).json(employee);
+}
+
+const updateEmployee = async(req,res,next) =>{
+
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        const err = new HttpError(`${errors.array()[0].msg} given at ${errors.array()[0].param.toLowerCase()} ,please enter valid input.`
+            , 422,true)
+        return next(err);
+    }
+    
+    let existingEmployee;
+    try {
+        existingEmployee = await Employee.findById(req.params.employeeId);
+    } catch (err) {
+        const error = new HttpError('Could Not find Employee',500);
+        return next(error);
+    }
+    
+    if(!existingEmployee){
+        return next(new HttpError('No Employee Found',404));
+    }
+
+    if(req.body.email){
+        try {
+            await UserAuth.findByIdAndUpdate(existingEmployee.userAuth,{email:req.body.email});
+        } catch (err) {
+            const error = new HttpError('Could Not Update employee',500);
+            return next(error);
+        }
+    }
+
+    let employee;
+    try {
+        employee = await Employee.findByIdAndUpdate(req.params.employeeId,req.body,{new:true});        
+    } catch (err) {
+        const error = new HttpError('Could Not Update employee',500);
+        return next(error);
+    }
+
+    res.status(200).json(employee);
+
+}
+
+const deleteEmployee = async(req,res,next) =>{
+
+    let existingEmployee;
+    try {
+        existingEmployee = await Employee.findById(req.params.employeeId);
+    } catch (err) {
+        const error = new HttpError('Could Not find Employee',500);
+        return next(error);
+    }
+
+    if(!existingEmployee){
+        return next(new HttpError('No Employee Found',404));
+    }
+
+    try {
+        await Employee.findByIdAndDelete(req.params.employeeId);
+        await UserAuth.findByIdAndDelete(existingEmployee.userAuth);
+    } catch (err) {
+        const error = new HttpError('Could Not delete Employee',500);
+        return next(error);
+    }
+
+    res.status(204).json({message:"Employee has been deleted successfully"});
+
+}
+
+const empSerialIdGenerator = (dateOfCreation) =>{
+    
+    const date = new Date(dateOfCreation);
+    const length = 4;
+    const randomCode = crypto.randomBytes(Math.ceil(length / 2)).toString('hex').slice(0, length).toUpperCase();
+    
+    //CN refers to Company Name,replace it later
+    const empSerialId = `CN${date.getFullYear()}${date.getMonth()+1}${date.getDate()}${randomCode}`;
+
+    return empSerialId;
+}
+const empTempPasswordGenerator = () =>{
+    const length = 8;
+    const tempPassword = crypto.randomBytes(Math.ceil(length / 2)).toString('hex').slice(0, length).toUpperCase();
+    return tempPassword;
+}
 
 
-exports.employeeCredentials = employeeCredentials;
+exports.getEmployees = getEmployees;
+exports.getEmployeeById = getEmployeeById;
+exports.sendEmployeeCredentials = sendEmployeeCredentials;
 exports.createEmployee = createEmployee;
+exports.updateEmployee = updateEmployee;
+exports.deleteEmployee = deleteEmployee;
