@@ -7,6 +7,7 @@ const bcrypt = require('bcryptjs');
 const appConfig = require("../../config/appConfig");
 const Employee = mongoose.model('Employee');
 const UserAuth = mongoose.model('UserAuth');
+const Department = mongoose.model('Department');
 
 //POST Create a new Employee
 const createEmployee = async(req,res,next) =>{
@@ -18,11 +19,12 @@ const createEmployee = async(req,res,next) =>{
         return next(err);
     }
 
-    const {firstName,lastName,gender,dateOfBirth,bloodGroup,dateOfJoining,contactNumbers,addresses,email,designation} = req.body;
+    const {firstName,lastName,gender,dateOfBirth,bloodGroup,dateOfJoining,contactNumbers,addresses,email,designation,department} = req.body;
    
-    let existingEmployee;
+    let existingEmployee,dept;
     try {
         existingEmployee = await UserAuth.findOne({ email });
+        dept = await Department.findById(department);
     } catch (err) {
         const error = new HttpError('Employee Auth Creation failed,please try again.', 500);
         return next(error);
@@ -31,6 +33,9 @@ const createEmployee = async(req,res,next) =>{
     if (existingEmployee) {
         const error = new HttpError('Employee already exists.', 422);
         return next(error);
+    }
+    if(!dept){
+        return next(new HttpError('Department Does not exist',404));
     }
 
     let createdEmployeeAuth = new UserAuth({
@@ -57,7 +62,8 @@ const createEmployee = async(req,res,next) =>{
         contactNumbers,
         addresses,
         designation,
-        userAuth:createdEmployeeAuth.id
+        userAuth:createdEmployeeAuth.id,
+        department
     });
 
     try {
@@ -108,7 +114,7 @@ const sendEmployeeCredentials = async(req,res,next) =>{
 // GET Employees
 const getEmployees = async(req,res,next) =>{
 
-    let employees;
+    let employees,numEmployees;
     try {
 
         //filtering
@@ -142,20 +148,20 @@ const getEmployees = async(req,res,next) =>{
         query = query.skip(offset).limit(limit);
         
         if(req.query.page){
-            const numEmployees = await Employee.countDocuments();
+            numEmployees = await Employee.countDocuments();
             if(offset >= numEmployees){
                 return next(new HttpError('This Page does not exist',404));
             }
         }
         //Execute query
-        employees = await query;
+        employees = await query.populate('userAuth');
         
     } catch (err) {
         const error = new HttpError('Failed to get employee details',500);
         return next(error);
     }
     
-    res.status(200).json({employees});
+    res.status(200).json({employees,totalCount:numEmployees});
 
 }
 
@@ -217,7 +223,7 @@ const updateEmployee = async(req,res,next) =>{
 
     let employee;
     try {
-        employee = await Employee.findByIdAndUpdate(req.params.employeeId,req.body,{new:true});        
+        employee = await Employee.findByIdAndUpdate(req.params.employeeId,req.body,{new:true});      
     } catch (err) {
         const error = new HttpError('Could Not Update employee',500);
         return next(error);

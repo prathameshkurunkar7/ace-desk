@@ -17,3 +17,4 @@ require('./attendanceSchema');
 require('./leaveSchema');
 require('./occasionSchema');
 require('./projectSchema');
+require('./departmentSchema');

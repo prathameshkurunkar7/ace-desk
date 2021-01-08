@@ -7,13 +7,14 @@ const projectSchema = new Schema({
         type: String,
         required: true
     },
-    description:{
+    projectName:{
         type: String,
         required: true
     },
     status:{
         type: String,
         enum:['Ongoing','Finished'],
+        default:'Ongoing',
         required: true
     },
     clientName:{type: String},

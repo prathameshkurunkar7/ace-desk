@@ -51,3 +51,47 @@ exports.validateEmployeeUpdation = [
     check('addresses.*.country').optional({checkFalsy:true}).notEmpty().isAlpha(),
     check('designation').optional({checkFalsy:true}).notEmpty().isAlpha().isIn(['Manager','General Manager','Executive','President','Project Manager','Developer','Designer','Marketing Head','HR Admin','Captain','Other']).withMessage('Should be a legit designation'),
 ]
+
+exports.validationTeamCreation = [check('teamName').isAlpha().isLength({min:4})]
+
+exports.validationCreateProject = [
+    check('projectName').isLength({min:4,max:30}).withMessage('Project Name should have atleast 4 characters'),
+    check('description').isLength({min:4,max:60}).withMessage('Description can be of max 60 characters and minimum 4 characters'),
+    check('status').isIn(['Ongoing','Finished']).withMessage('Status has to be either Ongoing or finished'),
+    check('clientName').isLength({min:4}).withMessage('Client Name has to be atleast 4 characters'),
+    check('dateOfAssignment').custom(val=>{
+        if (isNaN(Date.parse(val))) return false;
+        else return true;
+    }).withMessage('Entered date is invalid'),
+    check('dateOfDeadline').custom(val=>{
+        if (isNaN(Date.parse(val))) return false;
+        else return true;
+    }).withMessage('Entered date is invalid'),
+    check('dateOfCompletion').custom(val=>{
+        if (isNaN(Date.parse(val))) return false;
+        else return true
+    }).withMessage('Entered date is invalid')
+]
+exports.validationUpdateProject = [
+    body().custom(body => {
+        const keys = ['projectName','description','status','clientName','dateOfAssignment','dateOfDeadline','dateOfCompletion'];
+        return Object.keys(body).every(key => keys.includes(key));
+    }).withMessage('Some extra parameters are sent'),
+    check('projectName').optional({checkFalsy:true}).isLength({min:4,max:30}).withMessage('Project Name should have atleast 4 characters'),
+    check('description').optional({checkFalsy:true}).isLength({min:4,max:60}).withMessage('Description can be of max 60 characters'),
+    check('status').optional({checkFalsy:true}).isIn(['Ongoing','Finished']).withMessage('Status has to be either Ongoing or finished'),
+    check('clientName').optional({checkFalsy:true}).isLength({min:4}).withMessage('Client Name has to be atleast 4 characters'),
+    check('dateOfAssignment').optional({checkFalsy:true}).custom(val=>{
+        if (isNaN(Date.parse(val))) return false;
+        else return true;
+    }).withMessage('Entered date is invalid'),
+    check('dateOfDeadline').optional({checkFalsy:true}).custom(val=>{
+        if (isNaN(Date.parse(val))) return false;
+        else return true;
+    }).withMessage('Entered date is invalid'),
+    check('dateOfCompletion').optional({checkFalsy:true}).custom(val=>{
+        if (isNaN(Date.parse(val))) return false;
+        else return true;
+    }).withMessage('Entered date is invalid')
+
+]

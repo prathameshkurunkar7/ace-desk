@@ -10,3 +10,5 @@ const departmentSchema = new Schema({
         projects:[{type: mongoose.Types.ObjectId,ref:'Project'}]
     }]
 });
+
+mongoose.model('Department', departmentSchema);
