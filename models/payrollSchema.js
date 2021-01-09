@@ -36,7 +36,8 @@ const payrollSchema = new Schema({
     deductions:{
         tds: { type: Number ,required:true},
         epf: { type: Number },
-        professional: { type: Number}        
+        esi: {type: Number},
+        professional: { type: Number,default: 200}        
     }
 });
 

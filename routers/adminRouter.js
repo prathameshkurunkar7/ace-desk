@@ -1,10 +1,11 @@
 const express = require('express');
 const router = express.Router();
 const {check} = require('express-validator');
-const {validateEmployeeCreation, validateEmployeeUpdation,validationTeamCreation,validationUpdateProject,validationCreateProject} = require('../middlewares/validations');
+const {validateEmployeeCreation, validateEmployeeUpdation,validationCreateTeamAndProject,validationUpdateProject} = require('../middlewares/validations');
 
 const employeeController = require('../controllers/admin/employeeController');
 const departmentController = require('../controllers/admin/departmentController');
+const teamController = require('../controllers/admin/teamController');
 
 //employee routes
 router.get('/employee/',employeeController.getEmployees);
@@ -20,24 +21,21 @@ router.patch('/employee/update/:employeeId',validateEmployeeUpdation,employeeCon
 router.delete('/employee/delete/:employeeId',employeeController.deleteEmployee);
 
 // departmental routes
-router.get('/department/projects/',departmentController.getProjects);
-
 router.post('/department/create',[check('deptName').isLength({min:4}).isAlpha('en-US')],departmentController.createDepartment);
-
-router.post('/department/add-team',validationTeamCreation,departmentController.createTeam);
-
-router.post('/department/assign-project',validationCreateProject,departmentController.assignProject);
-
-router.patch('/department/add-team-member',departmentController.addTeamMember);
-
-router.patch('/department/update-project/:projectId',validationUpdateProject,departmentController.updateProject);
 
 router.delete('/department/dissolve-department',departmentController.dissolveDepartment);
 
-router.delete('/department/dissolve-team',departmentController.dissolveTeam);
+// project and Team routes
+router.get('/projects/',teamController.getProjects);
 
-router.delete('/department/remove-team-member',departmentController.removeTeamMember);
+router.post('/team/add-team-project',validationCreateTeamAndProject,teamController.createTeamAndProject);
 
-router.delete('/department/disassign-project',departmentController.disassignProject);
+router.patch('/team/add-team-member',teamController.addTeamMember);
+
+router.patch('/team/update-project/:projectId',validationUpdateProject,teamController.updateProject);
+
+router.delete('/team/dissolve-team-project',teamController.dissolveTeamAndProject);
+
+router.delete('/team/remove-team-member',teamController.removeTeamMember);
 
 module.exports = router;

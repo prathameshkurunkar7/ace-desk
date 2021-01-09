@@ -18,3 +18,4 @@ require('./leaveSchema');
 require('./occasionSchema');
 require('./projectSchema');
 require('./departmentSchema');
+require('./teamSchema');

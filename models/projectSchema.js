@@ -7,7 +7,7 @@ const projectSchema = new Schema({
         type: String,
         required: true
     },
-    projectName:{
+    description:{
         type: String,
         required: true
     },
@@ -20,7 +20,7 @@ const projectSchema = new Schema({
     clientName:{type: String},
     dateOfAssignment:{type: Date,default: Date.now()},
     dateOfDeadline:{type: Date,default: Date.now()},
-    dateOfCompletion:{type: Date,default: Date.now()}
+    dateOfCompletion:{type: Date}
 });
 
 mongoose.model('Project', projectSchema);

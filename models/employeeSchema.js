@@ -109,7 +109,7 @@ const employeeSchema = new Schema({
         type: mongoose.Types.ObjectId,
         ref: 'Department'
     },
-    myProjects:[{ type: mongoose.Types.ObjectId,ref: 'Projects'}],
+    assignedProject:{type: Boolean,default:false},
     salary:{
         type: mongoose.Types.ObjectId,
         ref: 'Payroll'

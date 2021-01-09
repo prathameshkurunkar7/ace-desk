@@ -52,9 +52,9 @@ exports.validateEmployeeUpdation = [
     check('designation').optional({checkFalsy:true}).notEmpty().isAlpha().isIn(['Manager','General Manager','Executive','President','Project Manager','Developer','Designer','Marketing Head','HR Admin','Captain','Other']).withMessage('Should be a legit designation'),
 ]
 
-exports.validationTeamCreation = [check('teamName').isAlpha().isLength({min:4})]
 
-exports.validationCreateProject = [
+exports.validationCreateTeamAndProject = [
+    check('teamName').isAlpha().isLength({min:4}),
     check('projectName').isLength({min:4,max:30}).withMessage('Project Name should have atleast 4 characters'),
     check('description').isLength({min:4,max:60}).withMessage('Description can be of max 60 characters and minimum 4 characters'),
     check('status').isIn(['Ongoing','Finished']).withMessage('Status has to be either Ongoing or finished'),
@@ -74,7 +74,7 @@ exports.validationCreateProject = [
 ]
 exports.validationUpdateProject = [
     body().custom(body => {
-        const keys = ['projectName','description','status','clientName','dateOfAssignment','dateOfDeadline','dateOfCompletion'];
+        const keys = ['projectName','description','status','clientName','dateOfAssignment','dateOfDeadline'];
         return Object.keys(body).every(key => keys.includes(key));
     }).withMessage('Some extra parameters are sent'),
     check('projectName').optional({checkFalsy:true}).isLength({min:4,max:30}).withMessage('Project Name should have atleast 4 characters'),
@@ -89,9 +89,4 @@ exports.validationUpdateProject = [
         if (isNaN(Date.parse(val))) return false;
         else return true;
     }).withMessage('Entered date is invalid'),
-    check('dateOfCompletion').optional({checkFalsy:true}).custom(val=>{
-        if (isNaN(Date.parse(val))) return false;
-        else return true;
-    }).withMessage('Entered date is invalid')
-
 ]

@@ -68,6 +68,7 @@ const createEmployee = async(req,res,next) =>{
 
     try {
         newEmployee = await newEmployee.save();
+        await Department.findByIdAndUpdate(department,{$push:{employees:newEmployee.id}});
     } catch (err) {
         console.log(err);
         const error = new HttpError('New Employee was not created',500);
