@@ -6,6 +6,13 @@ const Department = mongoose.model('Department');
 
 // create departments
 const createDepartment = async(req,res,next) =>{
+
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        const err = new HttpError(`${errors.array()[0].msg} given at ${errors.array()[0].param.toLowerCase()} ,please enter valid input.`
+            , 422,true)
+        return next(err);
+    }
     
     const {deptName} = req.body;
     let dept;

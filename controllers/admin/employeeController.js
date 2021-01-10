@@ -1,9 +1,9 @@
-const Email = require("../../utils/mailService");
 const mongoose = require('mongoose');
 const crypto = require('crypto');
-const {validationResult} = require('express-validator');
-const HttpError = require('../../utils/http-error');
 const bcrypt = require('bcryptjs');
+const {validationResult} = require('express-validator');
+const Email = require("../../utils/mailService");
+const HttpError = require('../../utils/http-error');
 const appConfig = require("../../config/appConfig");
 const Employee = mongoose.model('Employee');
 const UserAuth = mongoose.model('UserAuth');
@@ -98,6 +98,7 @@ const sendEmployeeCredentials = async(req,res,next) =>{
         await new Email(employee.userAuth,employee.firstName,url).sendEmployeeLoginCred();    
         hashedpassword = await bcrypt.hash(employee.userAuth.password, 10);
     } catch (err) {
+        console.log(err);
         return next(new HttpError('Email Not sent',500));
     }
     

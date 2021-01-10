@@ -2,7 +2,6 @@ const mongoose = require('mongoose');
 const {validationResult} = require('express-validator');
 const HttpError = require('../../utils/http-error');
 const Employee = mongoose.model('Employee');
-const Department = mongoose.model('Department');
 const Team = mongoose.model('Team');
 const Project = mongoose.model('Project');
 

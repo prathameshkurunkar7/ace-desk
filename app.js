@@ -1,22 +1,35 @@
 const express = require('express');
+const helmet = require('helmet');
+const cors = require('cors');
+const rateLimit = require("express-rate-limit");
+
 const HttpError = require('./utils/http-error');
 const adminRouter = require('./routers/adminRouter');
 const authRouter = require('./routers/authRouter');
-const helmet = require('helmet');
-const cors = require('cors');
+const employeeRouter = require('./routers/employeeRouter');
 
 const app = express();
 
-app.use(express.json());
-app.use(express.urlencoded({extended:true}));
-
 app.use(helmet());
 app.use(cors());
+// Enable if you're behind a reverse proxy (Heroku, Bluemix, AWS ELB, Nginx, etc)
+// see https://expressjs.com/en/guide/behind-proxies.html
+// app.set('trust proxy', 1);
+ 
+const apiLimiter = rateLimit({
+    windowMs: 60 * 60 * 1000, // 1hr
+    max: 100,
+    message: 'Too many requests from this IP,please try again later.'
+});
 
+// limit body data at 300kb only
+app.use(express.json({ limit: '300kb' }));
+app.use(express.urlencoded({extended:true}));
 
 // all routes here
-app.use('/register',authRouter);
+app.use('/register',apiLimiter,authRouter);
 app.use('/admin',adminRouter);
+app.use('/employee',employeeRouter);
 
 
 app.all('*',(req,res,next)=>{

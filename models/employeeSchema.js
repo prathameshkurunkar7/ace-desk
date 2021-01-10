@@ -100,6 +100,7 @@ const employeeSchema = new Schema({
         type: mongoose.Types.ObjectId,
         ref: 'UserAuth'
     },
+    profileImage:{type: String},
     designation:{
         type: String,
         enum: ['Manager','General Manager','Executive','President','Project Manager','Developer','Designer','Marketing Head','HR Admin','Captain','Other'],
