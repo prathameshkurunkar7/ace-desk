@@ -6,13 +6,13 @@ const attendanceSchema = new Schema({
         type: mongoose.Types.ObjectId,
         ref: 'Employee'
     },
-    workingdays:[{
+    workingDays:[{
         status:{
             type: String,
             enum: ['Present','Absent'],
             default: 'Absent'
         },
-        workingdate:{ type: Date,default:Date.now()},
+        workingDate:{ type: Date,default:Date.now()},
     }]
 });
 

@@ -10,17 +10,10 @@ const leaveSchema = new Schema({
     availableLeaves:{
         type: Number,
         default: 30,
-        required: true
-    },
-    carriedForwardLeaves:{
-        type: Number,
-        default: 0,
-        required: true
     },
     takenLeaves:{
         type: Number,
         default: 0,
-        required: true
     },
     appliedLeaves:{
         status: {type: String,enum: ['Pending','Rejected','Accepted'],default:'Pending'},
@@ -30,7 +23,6 @@ const leaveSchema = new Schema({
     },
     leaveDescription:{
         type: String,
-        required: true
     }
 });
 

@@ -116,7 +116,6 @@ const employeeSchema = new Schema({
         ref: 'Payroll'
     },
     leaves:[{ type: mongoose.Types.ObjectId,ref: 'Leaves' }],
-    attendanceReport:[{ type: mongoose.Types.ObjectId,ref: 'Attendance' }],
     socialHandles: {
         github: { type: String },
         linkedIn: { type: String },

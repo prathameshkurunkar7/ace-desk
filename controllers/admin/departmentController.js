@@ -42,6 +42,65 @@ const createDepartment = async(req,res,next) =>{
 
 }
 
+const getDepartments = async(req,res,next) =>{
+    
+    let departments,numDepartments,newDepartments;
+    try {
+
+        //filtering
+        const queryObj = {...req.query};
+        const fieldsExclude = ['page','sort','limit','fields'];
+        fieldsExclude.forEach(elem => delete queryObj[elem]);
+
+        let query = Department.find(queryObj);
+
+        //sorting
+        if(req.query.sort){
+            const sortBy = req.query.sort.split(',').join(' ');
+            query = query.sort(sortBy);
+        }else{
+            query = query.sort('_id');
+        }
+
+        // field limiting
+        if(req.query.fields){
+            const fields = req.query.fields.split(',').join(' ');
+            query = query.select(fields);
+        }else{
+            query = query.select('-__v'); 
+        }
+        
+        // pagination
+        const limit = req.query.limit*1 || 10;
+        const page = req.query.page*1 || 1;
+        const offset = (page-1)*limit;
+        
+        query = query.skip(offset).limit(limit);
+        
+        if(req.query.page){
+            numDepartments = await Department.countDocuments();
+            if(offset >= numDepartments){
+                return next(new HttpError('This Page does not exist',404));
+            }
+        }
+        //Execute query
+        departments = await query;
+        
+        newDepartments = departments.map(dept =>{
+            return {
+                employeesCount:dept.employees.length,
+                _id: dept.id,
+                deptName: dept.deptName
+            }
+        });
+    } catch (err) {
+        const error = new HttpError('Failed to get department details',500);
+        return next(error);
+    }
+    
+    res.status(200).json({departments:newDepartments,totalCount:numDepartments})
+}
+
 // remove departments
 const dissolveDepartment = async(req,res,next) =>{
     const {deptId} = req.body;
@@ -71,3 +130,4 @@ const dissolveDepartment = async(req,res,next) =>{
 
 exports.createDepartment = createDepartment;
 exports.dissolveDepartment = dissolveDepartment;
+exports.getDepartments = getDepartments;

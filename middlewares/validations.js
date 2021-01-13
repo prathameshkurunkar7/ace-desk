@@ -1,4 +1,4 @@
-const {check,body} = require('express-validator');
+const {check,body,query} = require('express-validator');
 
 exports.validateEmployeeCreation = [
     check('firstName').notEmpty().isAlpha().withMessage('Name should be Alphabetic'),
@@ -89,4 +89,24 @@ exports.validationUpdateProject = [
         if (isNaN(Date.parse(val))) return false;
         else return true;
     }).withMessage('Entered date is invalid'),
+]
+
+exports.validationGetAttendance = [
+    query('status').optional({checkFalsy:true}).isIn(['Present','Absent']),
+    query('workingDate').optional({checkFalsy:true}).custom(val=>{
+        if (isNaN(Date.parse(val))) return false;
+        else return true;
+    }).withMessage('Entered date is invalid')
+]
+
+exports.validationMarkAttendance = [
+    check('status').optional({checkFalsy:true}).isIn(['Present','Absent']),
+    check('workingDate').custom(val=>{
+        const wdate = new Date(val);
+        let today =new Date();
+        val = wdate.getFullYear()+'-' + (wdate.getMonth()+1) + '-'+wdate.getDate();
+        today = today.getFullYear()+'-' + (today.getMonth()+1) + '-'+today.getDate();
+        if (isNaN(Date.parse(val)) || val!==today) return false;
+        else return true;
+    }).withMessage('Entered date is invalid')
 ]

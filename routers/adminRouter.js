@@ -1,11 +1,12 @@
 const express = require('express');
 const router = express.Router();
 const {check} = require('express-validator');
-const {validateEmployeeCreation, validateEmployeeUpdation,validationCreateTeamAndProject,validationUpdateProject} = require('../middlewares/validations');
+const {validateEmployeeCreation, validateEmployeeUpdation,validationCreateTeamAndProject,validationUpdateProject, validationGetAttendance} = require('../middlewares/validations');
 
 const employeeController = require('../controllers/admin/employeeController');
 const departmentController = require('../controllers/admin/departmentController');
 const teamController = require('../controllers/admin/teamController');
+const attendanceController = require('../controllers/attendanceController');
 
 //employee routes
 router.get('/employee/',employeeController.getEmployees);
@@ -21,6 +22,8 @@ router.patch('/employee/update/:employeeId',validateEmployeeUpdation,employeeCon
 router.delete('/employee/delete/:employeeId',employeeController.deleteEmployee);
 
 // departmental routes
+router.get('/department/',departmentController.getDepartments);
+
 router.post('/department/create',[check('deptName').isLength({min:4}).isAlpha('en-US')],departmentController.createDepartment);
 
 router.delete('/department/dissolve-department',departmentController.dissolveDepartment);
@@ -37,5 +40,8 @@ router.patch('/team/update-project/:projectId',validationUpdateProject,teamContr
 router.delete('/team/dissolve-team-project',teamController.dissolveTeamAndProject);
 
 router.delete('/team/remove-team-member',teamController.removeTeamMember);
+
+// attendance route
+router.get('/attendance/',validationGetAttendance,attendanceController.getAttendees);
 
 module.exports = router;

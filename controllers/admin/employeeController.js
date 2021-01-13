@@ -257,7 +257,7 @@ const deleteEmployee = async(req,res,next) =>{
         return next(error);
     }
 
-    res.status(204).json({message:"Employee has been deleted successfully"});
+    res.status(200).json({message:"Employee has been deleted successfully"});
 
 }
 
