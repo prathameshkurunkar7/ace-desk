@@ -15,7 +15,7 @@ require('./userAuthSchema');
 require('./payrollSchema');
 require('./attendanceSchema');
 require('./leaveSchema');
-require('./occasionSchema');
+require('./daySchema');
 require('./projectSchema');
 require('./departmentSchema');
 require('./teamSchema');

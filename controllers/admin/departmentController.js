@@ -51,7 +51,7 @@ const getDepartments = async(req,res,next) =>{
         const queryObj = {...req.query};
         const fieldsExclude = ['page','sort','limit','fields'];
         fieldsExclude.forEach(elem => delete queryObj[elem]);
-
+        
         let query = Department.find(queryObj);
 
         //sorting
@@ -103,7 +103,7 @@ const getDepartments = async(req,res,next) =>{
 
 // remove departments
 const dissolveDepartment = async(req,res,next) =>{
-    const {deptId} = req.body;
+    const deptId = req.params.deptId;
     
     let dept;
     try {

@@ -31,6 +31,8 @@ const createTeamAndProject = async(req,res,next) =>{
         return next(new HttpError('Project Already exists',422));
     }
 
+    const updatedTeamMembers = teamMembers.filter(member=>member!==teamLeader);
+    
     const project = new Project({
         projectName,
         description,
@@ -43,7 +45,7 @@ const createTeamAndProject = async(req,res,next) =>{
     let team = new Team({
         teamName,
         teamLeader,
-        teamMembers,
+        teamMembers: updatedTeamMembers
     })
 
     let newTeam;
@@ -198,7 +200,7 @@ const removeTeamMember = async(req,res,next) =>{
 // get projects
 const getProjects = async(req,res,next) =>{
     
-    let projects,numProjects;
+    let projects,numProjects,upProjects;
     try {
 
         //filtering
@@ -240,12 +242,52 @@ const getProjects = async(req,res,next) =>{
         //Execute query
         projects = await query;
         
+        let team;
+        upProjects = await Promise.all(projects.map(async(project)=>{
+            try {
+                team =await Team.findOne({project:project.id})
+            } catch (err) {
+                const error = new HttpError('Something went wrong',500);
+                return next(error);
+            }
+            
+            let teamLeader;
+            try {
+                teamLeader = await Employee.findById(team.teamLeader).select('firstName lastName');
+            } catch (err) {
+                const error = new HttpError('Something went wrong',500);
+                return next(error);
+            }
+
+            const teamMembers = await Promise.all(team.teamMembers.map(async(member)=>{
+                
+                let teamMember;
+                try {
+                    teamMember = await Employee.findById(member).select('firstName lastName');
+                } catch (err) {
+                    const error = new HttpError('Something went wrong',500);
+                    return next(error);
+                }
+                
+                return teamMember;
+            }))
+
+            return {
+                project,
+                teamLeader,
+                teamMembers
+            }
+        
+        })
+        );
+
+        
     } catch (err) {
         const error = new HttpError('Failed to get project details',500);
         return next(error);
     }
     
-    res.status(200).json({projects,totalCount:numProjects});
+    res.status(200).json({projects:upProjects,totalCount:numProjects});
 
 }
 

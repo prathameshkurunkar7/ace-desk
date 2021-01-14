@@ -14,50 +14,41 @@ const markAttendance = async(req,res,next) =>{
         return next(err);
     }
 
-    const {status,workingDate} = req.body;
+    const {status,workingDate} = req.body
     
-    let attendeeExists,emp;
+    let attendee;
     try {
-        emp = await Employee.findOne({userAuth:req.user.userId});
-        attendeeExists = await Attendance.findOne({empId:emp.id});
+        const employee = await Employee.findOne({userAuth:req.user.userId});
+        attendee = await Attendance.findOne({empId:employee.id});
     } catch (err) {
         const error = new HttpError('Something went wrong!',500);
         return next(error);
     }
 
-    let empAttendance = null;
-    if(!attendeeExists){
-        
-        const newAttendee = new Attendance({
-            empId:emp.id
-        });
-        try {
-           const attendee = await newAttendee.save();
-           const workingDay = {
-               status,
-               workingDate
-           }
-           empAttendance=await Attendance.findByIdAndUpdate(attendee.id,{$push:{workingDays:workingDay}},{new: true}); 
-        } catch (err) {
-            const error = new HttpError('Could not add attendance for employee',500);
-            return next(error);
-        }
-    } else{
-        
-        try {
-            const workingDay = {
-                status,
-                workingDate
-            }
-            empAttendance = await Attendance.findOneAndUpdate({empId:emp.id},{$push:{workingDays:workingDay}},{new:true});
-        } catch (err) {
-            const error = new HttpError('Could not add attendance for employee',500);
-            return next(error);
-        }
+    if(!attendee){
+        return next(new HttpError('Could not find attendance of employee',500));
     }
 
-    res.status(201).json(empAttendance);
+    const markedWorkingDays = attendee.workingDays.map(day=>{
+        const date = new Date(day.workingDate);
+        const nextDay = new Date();
+        nextDay.setDate(date.getDate() + 1)
+        if(new Date(workingDate)>=date && new Date(workingDate)<nextDay){
+            day.status = status
+        }
+        return day;
+    });
 
+    let newAttendee;
+    try {
+        newAttendee = await Attendance.findByIdAndUpdate(attendee.id,{workingDays:markedWorkingDays},{new:true});
+    } catch (err) {
+        const error = new HttpError('Could not mark attendance',500);
+        return next(error);
+    }
+
+    res.status(201).json(newAttendee);
+    
 }
 
 const getAttendees = async(req,res,next) =>{
@@ -69,23 +60,76 @@ const getAttendees = async(req,res,next) =>{
         return next(err);
     }
 
-    const todayDate = new Date(req.query.workingDate)
-    let nextDate =  new Date()
-    nextDate.setDate(todayDate.getDate() + 1)
-
-    let attendees;
+    let attendees,numAttendees,newAttendees;
     try {
-        attendees = await Attendance.find({'workingDays.status':req.query.status,'workingDays.workingDate':{
-            $gte: todayDate,
-            $lt: nextDate
-        }});
+
+        //filtering
+        const queryObj = {...req.query};
+        const fieldsExclude = ['page','limit','fields'];
+        fieldsExclude.forEach(elem => delete queryObj[elem]);
+        
+        const todayDate = new Date(queryObj.workingDate);
+        const nextDate = new Date();
+        nextDate.setDate(todayDate.getDate() + 1)
+        
+        let query;
+        if(queryObj.status){
+            query = Attendance.find({'workingDays.workingDate':{
+                $gte: todayDate,
+                $lte: nextDate
+            },'workingDays.status':queryObj.status});    
+        } else{
+            query = Attendance.find({'workingDays.workingDate':{
+                $gte: todayDate,
+                $lte: nextDate
+            }});
+        }
+
+        // field limiting
+        if(req.query.fields){
+            const fields = req.query.fields.split(',').join(' ');
+            query = query.select(fields);
+        }else{
+            query = query.select('-__v'); 
+        }
+        
+        // pagination
+        const limit = req.query.limit*1 || 10;
+        const page = req.query.page*1 || 1;
+        const offset = (page-1)*limit;
+        
+        query = query.skip(offset).limit(limit);
+        
+        if(req.query.page){
+            numAttendees = await Attendance.countDocuments();
+            if(offset >= numAttendees){
+                return next(new HttpError('This Page does not exist',404));
+            }
+        }
+        //Execute query
+        attendees = await query;
+        newAttendees = attendees.map((attendee)=>{
+
+            let filteredAtt;
+            if(!queryObj.status){
+                filteredAtt = attendee.workingDays.filter((day)=>day.workingDate >=todayDate && day.workingDate<nextDate);
+            }else{
+                filteredAtt = attendee.workingDays.filter((day)=>(day.workingDate >=todayDate && day.workingDate<nextDate)&&day.status===queryObj.status);
+            }
+            
+            return {
+                "empId":attendee.empId,
+                "status": filteredAtt[0].status,
+                "workingDate": filteredAtt[0].workingDate,
+                "id": filteredAtt[0]._id
+            }
+        })
     } catch (err) {
-        console.log(err);
-        const error = new HttpError('Could not find attendees',500);
+        const error = new HttpError('Failed to get attendance details',500);
         return next(error);
     }
 
-    res.status(200).json(attendees);
+    res.status(200).json(newAttendees);
 
 }
 

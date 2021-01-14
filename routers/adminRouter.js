@@ -7,6 +7,7 @@ const employeeController = require('../controllers/admin/employeeController');
 const departmentController = require('../controllers/admin/departmentController');
 const teamController = require('../controllers/admin/teamController');
 const attendanceController = require('../controllers/attendanceController');
+const dayController = require('../controllers/dayController');
 
 //employee routes
 router.get('/employee/',employeeController.getEmployees);
@@ -26,7 +27,7 @@ router.get('/department/',departmentController.getDepartments);
 
 router.post('/department/create',[check('deptName').isLength({min:4}).isAlpha('en-US')],departmentController.createDepartment);
 
-router.delete('/department/dissolve-department',departmentController.dissolveDepartment);
+router.delete('/department/dissolve-department/:deptId',departmentController.dissolveDepartment);
 
 // project and Team routes
 router.get('/projects/',teamController.getProjects);
@@ -43,5 +44,8 @@ router.delete('/team/remove-team-member',teamController.removeTeamMember);
 
 // attendance route
 router.get('/attendance/',validationGetAttendance,attendanceController.getAttendees);
+
+// scheduling routes
+router.post('/schedule/create',dayController.setDaySchedule);
 
 module.exports = router;

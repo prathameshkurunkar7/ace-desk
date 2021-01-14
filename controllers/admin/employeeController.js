@@ -8,6 +8,7 @@ const appConfig = require("../../config/appConfig");
 const Employee = mongoose.model('Employee');
 const UserAuth = mongoose.model('UserAuth');
 const Department = mongoose.model('Department');
+const Attendance = mongoose.model('Attendance');
 
 //POST Create a new Employee
 const createEmployee = async(req,res,next) =>{
@@ -69,6 +70,10 @@ const createEmployee = async(req,res,next) =>{
     try {
         newEmployee = await newEmployee.save();
         await Department.findByIdAndUpdate(department,{$push:{employees:newEmployee.id}});
+        const attendance = new Attendance({
+            empId:newEmployee.id
+        });
+        await attendance.save();
     } catch (err) {
         console.log(err);
         const error = new HttpError('New Employee was not created',500);
