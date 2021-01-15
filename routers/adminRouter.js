@@ -1,7 +1,15 @@
 const express = require('express');
 const router = express.Router();
 const {check} = require('express-validator');
-const {validateEmployeeCreation, validateEmployeeUpdation,validationCreateTeamAndProject,validationUpdateProject, validationGetAttendance} = require('../middlewares/validations');
+const {
+    validateEmployeeCreation, 
+    validateEmployeeUpdation,
+    validationCreateTeamAndProject,
+    validationUpdateProject, 
+    validationGetAttendance,
+    validationSetSchedule,
+    validationEditDaySchedule
+} = require('../middlewares/validations');
 
 const employeeController = require('../controllers/admin/employeeController');
 const departmentController = require('../controllers/admin/departmentController');
@@ -46,6 +54,12 @@ router.delete('/team/remove-team-member',teamController.removeTeamMember);
 router.get('/attendance/',validationGetAttendance,attendanceController.getAttendees);
 
 // scheduling routes
-router.post('/schedule/create',dayController.setDaySchedule);
+router.get('/schedule/',dayController.getSchedule);
+
+router.post('/schedule/create',validationSetSchedule,dayController.setDaySchedule);
+
+router.patch('/schedule/edit/:dayId',validationEditDaySchedule,dayController.editSetDay);
+
+router.delete('/schedule/delete/:dayId',dayController.deleteSetDay);
 
 module.exports = router;

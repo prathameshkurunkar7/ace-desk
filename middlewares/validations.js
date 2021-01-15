@@ -110,3 +110,21 @@ exports.validationMarkAttendance = [
         else return true;
     }).withMessage('Entered date is invalid')
 ]
+
+exports.validationSetSchedule = [
+    check('daysSchedule.*.dayType').isIn(['Event','Holiday','Business']).withMessage('Different values given from what expected'),
+    check('daysSchedule.*.date').custom(val=>{
+        if (isNaN(Date.parse(val))) return false;
+        else return true;
+    }).withMessage('Entered date is invalid'),
+    check('daysSchedule.*.dayDescription').isLength({min:8,max:30}).isAlpha('en-US').withMessage('Description is invalid')
+]
+
+exports.validationEditDaySchedule = [
+    body().custom(body => {
+        const keys = ['dayType','dayDescription'];
+        return Object.keys(body).every(key => keys.includes(key));
+    }).withMessage('Some extra parameters are sent'),
+    check('dayType').isIn(['Event','Holiday','Business']).withMessage('Different values given from what expected'),
+    check('dayDescription').isLength({min:8,max:30}).isAlpha('en-US').withMessage('Description is invalid')
+]
