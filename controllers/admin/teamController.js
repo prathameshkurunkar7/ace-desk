@@ -327,6 +327,37 @@ const updateProject = async(req,res,next) =>{
 
 }
 
+const updateTeamDetails = async(req,res,next) =>{
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        const err = new HttpError(`${errors.array()[0].msg} given at ${errors.array()[0].param.toLowerCase()} ,please enter valid input.`
+            , 422,true)
+        return next(err);
+    }
+    
+    let existingTeam;
+    try {
+        existingTeam = await Team.findById(req.params.teamId);
+    } catch (err) {
+        const error = new HttpError('Something went wrong!',500);
+        return next(error);
+    }
+    
+    if(!existingTeam){
+        return next(new HttpError('No Team Found',404));
+    }
+
+
+    let team;
+    try {
+        team = await Team.findByIdAndUpdate(req.params.teamId,req.body,{new:true});      
+    } catch (err) {
+        const error = new HttpError('Could Not Update Team',500);
+        return next(error);
+    }
+
+    res.status(200).json(team);
+}
 
 
 exports.createTeamAndProject = createTeamAndProject;
@@ -335,3 +366,4 @@ exports.addTeamMember = addTeamMember;
 exports.removeTeamMember = removeTeamMember;
 exports.getProjects = getProjects;
 exports.updateProject = updateProject;
+exports.updateTeamDetails = updateTeamDetails;

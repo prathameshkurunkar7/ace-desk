@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const HttpError = require('../utils/http-error');
+const {validationResult} = require('express-validator');
 const Day = mongoose.model('Day');
 const Attendance = mongoose.model('Attendance');
 
@@ -46,9 +47,9 @@ const setDaySchedule = async(req,res,next) =>{
             const error = new HttpError('Something went wrong!',500);
             return next(error);
         }
-    })
+    });
     
-    res.status(200).json({"message":"Schedule has been set successfully"});
+    res.status(201).json({"status":"Schedule has been successfully created."});
 
 }
 

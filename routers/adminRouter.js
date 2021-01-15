@@ -8,7 +8,8 @@ const {
     validationUpdateProject, 
     validationGetAttendance,
     validationSetSchedule,
-    validationEditDaySchedule
+    validationEditDaySchedule,
+    validationUpdateTeamDetails
 } = require('../middlewares/validations');
 
 const employeeController = require('../controllers/admin/employeeController');
@@ -42,12 +43,16 @@ router.get('/projects/',teamController.getProjects);
 
 router.post('/team/add-team-project',validationCreateTeamAndProject,teamController.createTeamAndProject);
 
+router.patch('/team/update-team/:teamId',validationUpdateTeamDetails,teamController.updateTeamDetails);
+
+//will be removed later
 router.patch('/team/add-team-member',teamController.addTeamMember);
 
 router.patch('/team/update-project/:projectId',validationUpdateProject,teamController.updateProject);
 
 router.delete('/team/dissolve-team-project',teamController.dissolveTeamAndProject);
 
+//will be removed later
 router.delete('/team/remove-team-member',teamController.removeTeamMember);
 
 // attendance route

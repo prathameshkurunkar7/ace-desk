@@ -91,6 +91,14 @@ exports.validationUpdateProject = [
     }).withMessage('Entered date is invalid'),
 ]
 
+exports.validationUpdateTeamDetails = [
+    body().custom(body => {
+        const keys = ['teamName','teamLeader','teamMembers'];
+        return Object.keys(body).every(key => keys.includes(key));
+    }).withMessage('Some extra parameters are sent'),
+    check('teamName').isAlpha().isLength({min:4}),
+]
+
 exports.validationGetAttendance = [
     query('status').optional({checkFalsy:true}).isIn(['Present','Absent']),
     query('workingDate').optional({checkFalsy:true}).custom(val=>{
@@ -117,7 +125,7 @@ exports.validationSetSchedule = [
         if (isNaN(Date.parse(val))) return false;
         else return true;
     }).withMessage('Entered date is invalid'),
-    check('daysSchedule.*.dayDescription').isLength({min:8,max:30}).isAlpha('en-US').withMessage('Description is invalid')
+    check('daysSchedule.*.dayDescription').isAlpha('en-US').isLength({min:8,max:30}).withMessage('Description is invalid')
 ]
 
 exports.validationEditDaySchedule = [
