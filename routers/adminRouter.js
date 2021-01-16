@@ -9,7 +9,8 @@ const {
     validationGetAttendance,
     validationSetSchedule,
     validationEditDaySchedule,
-    validationUpdateTeamDetails
+    validationUpdateTeamDetails,
+    validationsActionOnLeave
 } = require('../middlewares/validations');
 
 const employeeController = require('../controllers/admin/employeeController');
@@ -17,6 +18,7 @@ const departmentController = require('../controllers/admin/departmentController'
 const teamController = require('../controllers/admin/teamController');
 const attendanceController = require('../controllers/attendanceController');
 const dayController = require('../controllers/dayController');
+const leaveController = require('../controllers/leaveController');
 
 //employee routes
 router.get('/employee/',employeeController.getEmployees);
@@ -66,5 +68,10 @@ router.post('/schedule/create',validationSetSchedule,dayController.setDaySchedul
 router.patch('/schedule/edit/:dayId',validationEditDaySchedule,dayController.editSetDay);
 
 router.delete('/schedule/delete/:dayId',dayController.deleteSetDay);
+
+// leaves routes
+router.get('/leaves/',leaveController.getLeaves);
+
+router.patch('/leaves/action',validationsActionOnLeave,leaveController.actionOnLeave);
 
 module.exports = router;

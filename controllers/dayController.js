@@ -9,7 +9,7 @@ const setDaySchedule = async(req,res,next) =>{
     //check validation errors
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-        const err = new HttpError(`${errors.array()[0].msg},please enter valid input.`
+        const err = new HttpError(`${errors.array()[0].msg} at ${errors.array()[0].param},please enter valid input.`
             , 422)
         return next(err);
     }

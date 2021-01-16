@@ -125,7 +125,7 @@ exports.validationSetSchedule = [
         if (isNaN(Date.parse(val))) return false;
         else return true;
     }).withMessage('Entered date is invalid'),
-    check('daysSchedule.*.dayDescription').isAlpha('en-US').isLength({min:8,max:30}).withMessage('Description is invalid')
+    check('daysSchedule.*.dayDescription').isAlpha('en-US').isLength({min:6,max:30}).withMessage('Description is invalid')
 ]
 
 exports.validationEditDaySchedule = [
@@ -134,5 +134,29 @@ exports.validationEditDaySchedule = [
         return Object.keys(body).every(key => keys.includes(key));
     }).withMessage('Some extra parameters are sent'),
     check('dayType').isIn(['Event','Holiday','Business']).withMessage('Different values given from what expected'),
-    check('dayDescription').isLength({min:8,max:30}).isAlpha('en-US').withMessage('Description is invalid')
+    check('dayDescription').isLength({min:6,max:30}).isAlpha('en-US').withMessage('Description is invalid')
+]
+
+exports.validationApplyLeaves = [
+    body().custom(body => {
+        const keys = ['leaveFrom','leaveTo','leaveDescription'];
+        return Object.keys(body).every(key => keys.includes(key));
+    }).withMessage('Some extra parameters are sent'),
+    check('leaveDescription').isLength({min:6,max:30}).isAlpha('en-US').withMessage('Description is invalid'),
+    check('leaveFrom').custom(val=>{
+        if (isNaN(Date.parse(val))) return false;
+        else return true;
+    }).withMessage('Entered date is invalid'),
+    check('leaveTo').custom(val=>{
+        if (isNaN(Date.parse(val))) return false;
+        else return true;
+    }).withMessage('Entered date is invalid'),
+]
+
+exports.validationsActionOnLeave = [
+    body().custom(body => {
+        const keys = ['appliedLeaveId','leaveId','action'];
+        return Object.keys(body).every(key => keys.includes(key));
+    }).withMessage('Some extra parameters are sent'),
+    check('action').isIn(['Accepted','Rejected'])
 ]

@@ -274,6 +274,7 @@ const getProjects = async(req,res,next) =>{
 
             return {
                 project,
+                teamName:team.teamName,
                 teamLeader,
                 teamMembers
             }

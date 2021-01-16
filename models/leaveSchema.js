@@ -15,15 +15,12 @@ const leaveSchema = new Schema({
         type: Number,
         default: 0,
     },
-    appliedLeaves:{
+    appliedLeaves:[{
         status: {type: String,enum: ['Pending','Rejected','Accepted'],default:'Pending'},
-        duration: {type: Number},
         leaveFrom: {type: Date,default: Date.now()},
-        leaveTo: {type: Date,default: Date.now()}
-    },
-    leaveDescription:{
-        type: String,
-    }
+        leaveTo: {type: Date,default: Date.now()},
+        leaveDescription:{type: String}
+    }],
 });
 
 mongoose.model('Leave', leaveSchema);

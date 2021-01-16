@@ -9,7 +9,7 @@ const attendanceSchema = new Schema({
     workingDays:[{
         status:{
             type: String,
-            enum: ['Present','Absent'],
+            enum: ['Present','Absent','On Leave'],
             default: 'Absent'
         },
         workingDate:{ type: Date,default:Date.now()},
