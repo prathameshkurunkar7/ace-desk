@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const crypto = require('crypto');
+const fs = require('fs');
 const bcrypt = require('bcryptjs');
 const {validationResult} = require('express-validator');
 const Email = require("../../utils/mailService");
@@ -10,6 +11,7 @@ const UserAuth = mongoose.model('UserAuth');
 const Department = mongoose.model('Department');
 const Attendance = mongoose.model('Attendance');
 const Leave = mongoose.model('Leave');
+const Team = mongoose.model('Team');
 
 //POST Create a new Employee
 const createEmployee = async(req,res,next) =>{
@@ -200,6 +202,10 @@ const getEmployeeById = async(req,res,next) =>{
         return next(error);
     }
 
+    if(employee.profileImage){
+        employee.profileImage = `${appConfig.APP_URL}/${employee.profileImage}`;
+    }
+
     res.status(200).json(employee);
 }
 
@@ -262,9 +268,28 @@ const deleteEmployee = async(req,res,next) =>{
     try {
         await Employee.findByIdAndDelete(req.params.employeeId);
         await UserAuth.findByIdAndDelete(existingEmployee.userAuth);
+        await Attendance.findOneAndDelete({empId:existingEmployee.id});
+        await Leave.findOneAndDelete({empId:existingEmployee.id});
+        if(existingEmployee.assignedProject){
+            const team = await Team.findById(existingEmployee.team);
+            if(team.teamLeader === existingEmployee.id){
+                await Team.findByIdAndUpdate(existingEmployee.team,{teamLeader:undefined});
+            }else{
+                await Team.findByIdAndUpdate(existingEmployee.team,{$pull:{teamMembers:existingEmployee.id}});
+            }
+        }
+        await Department.findByIdAndUpdate(existingEmployee.department,{$pull:{employees:existingEmployee.id}});
     } catch (err) {
         const error = new HttpError('Could Not delete Employee',500);
         return next(error);
+    }
+
+    if(existingEmployee.profileImage){
+        fs.unlink(existingEmployee.profileImage,(err)=>{
+            if(err){
+                console.log(err);
+            }
+        });
     }
 
     res.status(200).json({message:"Employee has been deleted successfully"});

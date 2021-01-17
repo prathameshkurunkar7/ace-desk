@@ -61,15 +61,14 @@ const createTeamAndProject = async(req,res,next) =>{
     try {
         newTeam.teamMembers.forEach(async(member) =>{
             try {
-                await Employee.findByIdAndUpdate(member,{assignedProject: true});
+                await Employee.findByIdAndUpdate(member,{assignedProject: true,team:newTeam.id});
             } catch (err) {
                 const error = new HttpError('Could not assign Project to employee',500);
                 return next(error);
             }
-            await Employee.findByIdAndUpdate(newTeam.teamLeader,{assignedProject: true}); 
         })
+        await Employee.findByIdAndUpdate(newTeam.teamLeader,{assignedProject: true,team:newTeam.id});
     } catch (err) {
-        console.log(err);
         const error = new HttpError('Some error occurred',500);
         return next(error);
     }
@@ -105,13 +104,13 @@ const dissolveTeamAndProject = async(req,res,next) =>{
     try {
         team.teamMembers.forEach(async(member) =>{
             try {
-                await Employee.findByIdAndUpdate(member,{assignedProject: false});
+                await Employee.findByIdAndUpdate(member,{assignedProject: false,team:undefined});
             } catch (err) {
                 const error = new HttpError('Could not disassign Project to employee',500);
                 return next(error);
             }
         })
-        await Employee.findByIdAndUpdate(team.teamLeader,{assignedProject: false});   
+        await Employee.findByIdAndUpdate(team.teamLeader,{assignedProject: false,team:undefined});
     } catch (err) {
         const error = new HttpError('Some error occurred',500);
         return next(error);
@@ -155,7 +154,7 @@ const addTeamMember = async(req,res,next) =>{
     let team;
     try {
         team = await Team.findByIdAndUpdate(teamId,{$push:{teamMembers:memberId}},{new:true});
-        await Employee.findByIdAndUpdate(memberId,{assignedProject: true});
+        await Employee.findByIdAndUpdate(memberId,{assignedProject: true,team:teamId});
     } catch (err) {
         const error = new HttpError('Could Not Add employee as Team Member',500);
         return next(error);
@@ -186,7 +185,7 @@ const removeTeamMember = async(req,res,next) =>{
     let team;
     try {
         team = await Team.findByIdAndUpdate(teamId,{$pull:{teamMembers:memberId}},{new:true});
-        await Employee.findByIdAndUpdate(memberId,{assignedProject: false});
+        await Employee.findByIdAndUpdate(memberId,{assignedProject: false,team:undefined});
     } catch (err) {
         const error = new HttpError('Could Not Remove employee as Team Member',500);
         return next(error);

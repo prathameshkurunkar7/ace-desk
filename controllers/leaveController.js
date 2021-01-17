@@ -53,6 +53,36 @@ const applyLeave = async(req,res,next) =>{
     res.status(201).json(leave);
 
 }
+
+const deleteLeave = async(req,res,next) =>{
+    const appliedLeaveId = req.params.appliedLeaveId;
+    
+    let leave;
+    try {
+        leave = await Leave.findOne({'appliedLeaves':{$elemMatch:{_id:appliedLeaveId}}});
+    } catch (err) {
+        const error = new HttpError('Something went wrong!',500);
+        return next(error);
+    }
+
+    if(!leave){
+        return next(new HttpError('No such leave found!',400));
+    }
+
+    const filteredAppliedLeaves = leave.appliedLeaves.filter((appLeave)=>appLeave.id!==appliedLeaveId);
+
+    try {
+        await Leave.findByIdAndUpdate(leave.id,{appliedLeaves:filteredAppliedLeaves},{new:true});
+        await Employee.findByIdAndUpdate(leave.empId,{$pull:{leaves:appliedLeaveId}});
+    } catch (err) {
+        const error = new HttpError('Could not remove applied leave',500);
+        return next(error);
+    }
+
+    res.status(200).json({"message":"Applied Leave has been deleted successfully"});
+}
+
+
 // admin gets all the applied leaves from employees
 const getLeaves = async(req,res,next) =>{
     
@@ -246,3 +276,4 @@ function getDates(startDate, stopDate){
 exports.applyLeave = applyLeave;
 exports.getLeaves = getLeaves;
 exports.actionOnLeave = actionOnLeave;
+exports.deleteLeave = deleteLeave;

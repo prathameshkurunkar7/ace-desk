@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
-const Employee = mongoose.model('Employee');
 const HttpError = require("../../utils/http-error");
+const Employee = mongoose.model('Employee');
 
 const updateProfileImage = async(req,res,next) =>{
     if(!req.file){
@@ -8,9 +8,11 @@ const updateProfileImage = async(req,res,next) =>{
     }
     const userId =  req.user.userId;
     
+    const profileImage = req.file.path;
+
     let employee;
     try {
-        employee = await Employee.findOneAndUpdate({userAuth:userId},{profileImage:req.file.fileName},{new:true});
+        employee = await Employee.findOneAndUpdate({userAuth:userId},{profileImage:profileImage},{new:true});
     } catch (err) {
         const error = new HttpError('Some error occurred while uploading file',500);
         return next(error);

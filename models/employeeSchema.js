@@ -111,6 +111,7 @@ const employeeSchema = new Schema({
         ref: 'Department'
     },
     assignedProject:{type: Boolean,default:false},
+    team:{type: mongoose.Types.ObjectId,ref:'Team'},
     salary:{
         type: mongoose.Types.ObjectId,
         ref: 'Payroll'

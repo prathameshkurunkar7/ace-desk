@@ -1,4 +1,5 @@
 const express = require('express');
+const fs = require('fs');
 const helmet = require('helmet');
 const cors = require('cors');
 const rateLimit = require("express-rate-limit");
@@ -39,6 +40,11 @@ app.all('*',(req,res,next)=>{
 
 
 app.use((error, req, res, next) => {
+    if(req.file){
+        fs.unlink(req.file.path,(err)=>{
+            if(err) console.log(err);
+        });
+    }
     if (res.headerSent) {
         return next(error)
     }
