@@ -215,6 +215,7 @@ const actionOnLeave = async(req,res,next) =>{
         }
 
         try {
+            updatedLeaves = await Leave.findByIdAndUpdate(leave.id,{'appliedLeaves':appLeaves},{new:true});
             await Employee.findByIdAndUpdate(leave.empId,{$push:{leaves:mongoose.Types.ObjectId(appliedLeave[0]._id)}});
         } catch (err) {
             const error = new HttpError('Could not update leaves',500);
@@ -222,7 +223,7 @@ const actionOnLeave = async(req,res,next) =>{
         }
     }
 
-    res.status(200).json(updatedLeaves ? updatedLeaves: leave);
+    res.status(200).json(updatedLeaves);
 }
 
 

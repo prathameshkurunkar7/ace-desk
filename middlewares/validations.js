@@ -100,7 +100,7 @@ exports.validationUpdateTeamDetails = [
 ]
 
 exports.validationGetAttendance = [
-    query('status').optional({checkFalsy:true}).isIn(['Present','Absent']),
+    query('status').optional({checkFalsy:true}).isIn(['Present','Absent','On Leave']),
     query('workingDate').optional({checkFalsy:true}).custom(val=>{
         if (isNaN(Date.parse(val))) return false;
         else return true;
