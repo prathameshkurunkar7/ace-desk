@@ -16,10 +16,10 @@ exports.validateEmployeeCreation = [
     check('contactNumbers.work').optional({checkFalsy:true}).isMobilePhone('en-IN').withMessage('Not a valid Mobile Number'),
     check('contactNumbers.personal').isMobilePhone('en-IN').withMessage('Not a valid Mobile Number'),
     check('addresses.*.pincode').isPostalCode('IN').withMessage('Should be a valid Postal Code'),
-    check('addresses.*.address').isLength({min:4,max:60}).isAlpha(),
-    check('addresses.*.city').notEmpty().isAlpha(),
-    check('addresses.*.state').notEmpty().isAlpha(),
-    check('addresses.*.country').notEmpty().isAlpha(),
+    check('addresses.*.address').notEmpty().trim().isAlpha(),
+    check('addresses.*.city').notEmpty().trim().isAlpha(),
+    check('addresses.*.state').notEmpty().trim().isAlpha(),
+    check('addresses.*.country').notEmpty().trim().isAlpha(),
     check('designation').notEmpty().isAlpha().isIn(['Manager','General Manager','Executive','President','Project Manager','Developer','Designer','Marketing Head','HR Admin','Captain','Other']).withMessage('Should be a legit designation'),
 ]
 
@@ -45,10 +45,10 @@ exports.validateEmployeeUpdation = [
     check('contactNumbers.work').optional({checkFalsy:true}).isMobilePhone('en-IN').withMessage('Not a valid Mobile Number'),
     check('contactNumbers.personal').optional({checkFalsy:true}).isMobilePhone('en-IN').withMessage('Not a valid Mobile Number'),
     check('addresses.*.pincode').optional({checkFalsy:true}).isPostalCode('IN').withMessage('Should be a valid Postal Code'),
-    check('addresses.*.address').optional({checkFalsy:true}).isLength({min:4,max:60}).isAlpha(),
-    check('addresses.*.city').optional({checkFalsy:true}).notEmpty().isAlpha(),
-    check('addresses.*.state').optional({checkFalsy:true}).notEmpty().isAlpha(),
-    check('addresses.*.country').optional({checkFalsy:true}).notEmpty().isAlpha(),
+    check('addresses.*.address').optional({checkFalsy:true}).notEmpty().trim().isAlpha(),
+    check('addresses.*.city').optional({checkFalsy:true}).notEmpty().trim().isAlpha(),
+    check('addresses.*.state').optional({checkFalsy:true}).notEmpty().trim().isAlpha(),
+    check('addresses.*.country').optional({checkFalsy:true}).notEmpty().trim().isAlpha(),
     check('designation').optional({checkFalsy:true}).notEmpty().isAlpha().isIn(['Manager','General Manager','Executive','President','Project Manager','Developer','Designer','Marketing Head','HR Admin','Captain','Other']).withMessage('Should be a legit designation'),
 ]
 
@@ -56,7 +56,7 @@ exports.validateEmployeeUpdation = [
 exports.validationCreateTeamAndProject = [
     check('teamName').isAlpha().isLength({min:4}),
     check('projectName').isLength({min:4,max:30}).withMessage('Project Name should have atleast 4 characters'),
-    check('description').isLength({min:4,max:60}).withMessage('Description can be of max 60 characters and minimum 4 characters'),
+    check('description').notEmpty().trim(),
     check('status').isIn(['Ongoing','Finished']).withMessage('Status has to be either Ongoing or finished'),
     check('clientName').isLength({min:4}).withMessage('Client Name has to be atleast 4 characters'),
     check('dateOfAssignment').custom(val=>{
@@ -78,7 +78,7 @@ exports.validationUpdateProject = [
         return Object.keys(body).every(key => keys.includes(key));
     }).withMessage('Some extra parameters are sent'),
     check('projectName').optional({checkFalsy:true}).isLength({min:4,max:30}).withMessage('Project Name should have atleast 4 characters'),
-    check('description').optional({checkFalsy:true}).isLength({min:4,max:60}).withMessage('Description can be of max 60 characters'),
+    check('description').optional({checkFalsy:true}).notEmpty().trim(),
     check('status').optional({checkFalsy:true}).isIn(['Ongoing','Finished']).withMessage('Status has to be either Ongoing or finished'),
     check('clientName').optional({checkFalsy:true}).isLength({min:4}).withMessage('Client Name has to be atleast 4 characters'),
     check('dateOfAssignment').optional({checkFalsy:true}).custom(val=>{
@@ -125,7 +125,7 @@ exports.validationSetSchedule = [
         if (isNaN(Date.parse(val))) return false;
         else return true;
     }).withMessage('Entered date is invalid'),
-    check('daysSchedule.*.dayDescription').isAlpha('en-US').isLength({min:6,max:30}).withMessage('Description is invalid')
+    check('daysSchedule.*.dayDescription').isAlpha('en-US').notEmpty().trim().withMessage('Description is invalid')
 ]
 
 exports.validationEditDaySchedule = [
@@ -134,7 +134,7 @@ exports.validationEditDaySchedule = [
         return Object.keys(body).every(key => keys.includes(key));
     }).withMessage('Some extra parameters are sent'),
     check('dayType').isIn(['Event','Holiday','Business']).withMessage('Different values given from what expected'),
-    check('dayDescription').isLength({min:6,max:30}).isAlpha('en-US').withMessage('Description is invalid')
+    check('dayDescription').isAlpha('en-US').notEmpty().trim().withMessage('Description is invalid')
 ]
 
 exports.validationApplyLeaves = [
@@ -142,7 +142,7 @@ exports.validationApplyLeaves = [
         const keys = ['leaveFrom','leaveTo','leaveDescription'];
         return Object.keys(body).every(key => keys.includes(key));
     }).withMessage('Some extra parameters are sent'),
-    check('leaveDescription').isLength({min:6,max:30}).isAlpha('en-US').withMessage('Description is invalid'),
+    check('leaveDescription').notEmpty().trim().isAlpha('en-US').withMessage('Description is invalid'),
     check('leaveFrom').custom(val=>{
         if (isNaN(Date.parse(val))) return false;
         else return true;
@@ -159,4 +159,22 @@ exports.validationsActionOnLeave = [
         return Object.keys(body).every(key => keys.includes(key));
     }).withMessage('Some extra parameters are sent'),
     check('action').isIn(['Accepted','Rejected'])
+]
+
+exports.validationCreatePolicy = [
+    body().custom(body => {
+        const keys = ['policyName','description','department'];
+        return Object.keys(body).every(key => keys.includes(key));
+    }).withMessage('Some extra parameters are sent'),
+    check('policyName').not().isEmpty().trim().withMessage('Policy cannot be empty'),
+    check('description').not().isEmpty().trim().withMessage('Description cannot be empty')
+]
+
+exports.validationUpdatePolicy = [
+    body().custom(body => {
+        const keys = ['policyName','description','department'];
+        return Object.keys(body).every(key => keys.includes(key));
+    }).withMessage('Some extra parameters are sent'),
+    check('policyName').not().isEmpty().trim().withMessage('Policy cannot be empty'),
+    check('description').not().isEmpty().trim().withMessage('Description cannot be empty')
 ]

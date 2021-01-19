@@ -24,7 +24,7 @@ const apiLimiter = rateLimit({
 });
 
 // limit body data at 300kb only
-app.use(express.json({ limit: '300kb' }));
+app.use(express.json({ limit: '500kb' }));
 app.use(express.urlencoded({extended:true}));
 
 // all routes here

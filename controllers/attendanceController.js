@@ -107,7 +107,7 @@ const getAttendees = async(req,res,next) =>{
             }
         }
         //Execute query
-        attendees = await query;
+        attendees = await query.populate('empId','firstName lastName');
         newAttendees = attendees.map((attendee)=>{
 
             let filteredAtt;
@@ -118,18 +118,21 @@ const getAttendees = async(req,res,next) =>{
             }
             
             return {
-                "empId":attendee.empId,
+                "empId":attendee.empId._id,
+                "firstName":attendee.empId.firstName,
+                "lastName":attendee.empId.lastName,
                 "status": filteredAtt[0].status,
                 "workingDate": filteredAtt[0].workingDate,
                 "id": filteredAtt[0]._id
             }
         })
     } catch (err) {
+        console.log(err);
         const error = new HttpError('Failed to get attendance details',500);
         return next(error);
     }
 
-    res.status(200).json(newAttendees);
+    res.status(200).json({newAttendees,totalCount:newAttendees.length});
 
 }
 

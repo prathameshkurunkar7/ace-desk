@@ -10,7 +10,9 @@ const {
     validationSetSchedule,
     validationEditDaySchedule,
     validationUpdateTeamDetails,
-    validationsActionOnLeave
+    validationsActionOnLeave,
+    validationCreatePolicy,
+    validationUpdatePolicy
 } = require('../middlewares/validations');
 
 const employeeController = require('../controllers/admin/employeeController');
@@ -19,6 +21,8 @@ const teamController = require('../controllers/admin/teamController');
 const attendanceController = require('../controllers/attendanceController');
 const dayController = require('../controllers/dayController');
 const leaveController = require('../controllers/leaveController');
+const policyController = require('../controllers/policyController');
+const { fileUpload } = require('../middlewares/uploader');
 
 //employee routes
 router.get('/employee/',employeeController.getEmployees);
@@ -63,7 +67,7 @@ router.get('/attendance/',validationGetAttendance,attendanceController.getAttend
 // scheduling routes
 router.get('/schedule/',dayController.getSchedule);
 
-router.post('/schedule/create',validationSetSchedule,dayController.setDaySchedule);
+router.post('/schedule/create',fileUpload,validationSetSchedule,dayController.setDaySchedule);
 
 router.patch('/schedule/edit/:dayId',validationEditDaySchedule,dayController.editSetDay);
 
@@ -73,5 +77,14 @@ router.delete('/schedule/delete/:dayId',dayController.deleteSetDay);
 router.get('/leaves/',leaveController.getLeaves);
 
 router.patch('/leaves/action',validationsActionOnLeave,leaveController.actionOnLeave);
+
+//policy routes
+router.get('/policy/',policyController.getPolicies);
+
+router.post('/policy/create',fileUpload,validationCreatePolicy,policyController.createPolicy);
+
+router.patch('/policy/update/:policyId',fileUpload,validationUpdatePolicy,policyController.updatePolicy);
+
+router.delete('/policy/delete/:policyId',policyController.deletePolicy);
 
 module.exports = router;

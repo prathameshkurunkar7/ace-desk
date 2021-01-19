@@ -12,10 +12,11 @@ mongoose.connect(appConfig.DB_URL_LOCAL,{ useNewUrlParser: true, useFindAndModif
 
 require('./employeeSchema');
 require('./userAuthSchema');
-require('./payrollSchema');
-require('./attendanceSchema');
-require('./leaveSchema');
-require('./daySchema');
-require('./projectSchema');
 require('./departmentSchema');
 require('./teamSchema');
+require('./projectSchema');
+require('./daySchema');
+require('./attendanceSchema');
+require('./leaveSchema');
+require('./policySchema');
+require('./payrollSchema');

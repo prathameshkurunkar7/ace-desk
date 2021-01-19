@@ -86,11 +86,12 @@ const deleteLeave = async(req,res,next) =>{
 // admin gets all the applied leaves from employees
 const getLeaves = async(req,res,next) =>{
     
-    let leaves;
+    const queryObj = {...req.query};
+    
+    let leaves,leaveAggregate;
     try {
 
         //filtering
-        const queryObj = {...req.query};
         const fieldsExclude = ['page','sort','limit','fields'];
         fieldsExclude.forEach(elem => delete queryObj[elem]);
 
@@ -120,20 +121,54 @@ const getLeaves = async(req,res,next) =>{
         query = query.skip(offset).limit(limit);
         
         if(req.query.page){
-            const numLeaves = await Leave.countDocuments();
-            if(offset >= numLeaves){
+            leaveAggregate = await Leave.aggregate([{ $unwind: "$appliedLeaves" },
+            { $match: { 'appliedLeaves.status' : queryObj['appliedLeaves.status']}},
+            { $group: { _id: "result", count: { $sum: 1 }}}]);
+            // { $group: { _id: "$appliedLeaves",count:{$sum:1}}}])
+            // { $match:{"appliedLeaves.status":'Pending'}},
+            // { $group: { _id: "result", count: { $sum: 1 }}}]
+            console.log(leaveAggregate[0].count);
+            // const numLeaves = await Leave.countDocuments();
+            if(offset >= leaveAggregate[0].count){
                 return next(new HttpError('This Page does not exist',404));
             }
         }
         //Execute query
-        leaves = await query;
+        leaves = await query.populate('empId','firstName lastName')
         
     } catch (err) {
         const error = new HttpError('Failed to get employee details',500);
         return next(error);
     }
     
-    res.status(200).json({leaves,totalCount:leaves.length});
+    
+    let newLeaves = leaves.map((leave)=>{
+        
+        let newAppliedLeaves = leave.appliedLeaves.map((appLeave)=>{
+            if(appLeave.status === queryObj['appliedLeaves.status']){
+                return {
+                    "_id":appLeave.id,
+                    "leaveFrom":appLeave.leaveFrom,
+                    "leaveTo":appLeave.leaveTo,
+                    "status":appLeave.status,
+                    "leaveDescription":appLeave.leaveDescription,
+                    "leaveId":leave.id,
+                    "empId":leave.empId.id,
+                    "firstName":leave.empId.firstName,
+                    "lastName":leave.empId.lastName
+                }
+            }else{
+                return 1;
+            }
+        })
+        newAppliedLeaves = newAppliedLeaves.filter((leave)=>leave!==1);
+        return newAppliedLeaves
+    })
+    newLeaves = newLeaves.flat();
+    // console.log(offset);
+    // newLeaves = newLeaves.slice(offset,limit);
+    res.status(200).json({leaves:newLeaves,totalCount:newLeaves.count});
+
 }
 
 // admin accepts or rejects leaves
