@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const { Designations } = require('../utils/helperData');
+const { Designations, BloodGroups } = require('../utils/helperData');
 const Schema = mongoose.Schema;
 
 const employeeSchema = new Schema({
@@ -26,7 +26,7 @@ const employeeSchema = new Schema({
     },
     bloodGroup:{
         type: String,
-        enum: ['A+','A-','O+','O-','B+','B-','AB+','AB-'],
+        enum: BloodGroups,
         required: true
     },
     dateOfJoining:{

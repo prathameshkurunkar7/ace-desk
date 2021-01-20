@@ -57,3 +57,5 @@ exports.MetroCities = [
 exports.Designations =['Manager','General Manager','Executive','President','Project Manager','Developer','Designer','Marketing Head','HR Admin','Captain','Other']
 
 exports.QualificationTitles = ['B.E','M.E','M.Tech','B.Tech','M.B.A','MS']
+
+exports.BloodGroups = ['A+','A-','O+','O-','B+','B-','AB+','AB-']

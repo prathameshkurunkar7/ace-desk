@@ -95,6 +95,7 @@ router.patch('/policy/update/:policyId',fileUpload,validationUpdatePolicy,policy
 router.delete('/policy/delete/:policyId',policyController.deletePolicy);
 
 //payroll routes
+router.get('/payroll/',payrollController.getPayrolls);
 
 router.get('/payroll/payslip/generate-pdf/:payrollId',payrollController.generatePdf);
 

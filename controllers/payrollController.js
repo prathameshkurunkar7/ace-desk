@@ -8,6 +8,58 @@ const {MetroCities} =require('../utils/helperData');
 const Payslip = require('../utils/pdfGenerator');
 const Email = require('../utils/mailService');
 
+const getPayrolls = async(req,res,next) =>{
+    
+    let payrolls;
+    try {
+
+        //filtering
+        const queryObj = {...req.query};
+        const fieldsExclude = ['page','sort','limit','fields'];
+        fieldsExclude.forEach(elem => delete queryObj[elem]);
+
+        let query = Payroll.find(queryObj);
+
+        //sorting
+        if(req.query.sort){
+            const sortBy = req.query.sort.split(',').join(' ');
+            query = query.sort(sortBy);
+        }else{
+            query = query.sort('date');
+        }
+
+        // field limiting
+        if(req.query.fields){
+            const fields = req.query.fields.split(',').join(' ');
+            query = query.select(fields);
+        }else{
+            query = query.select('-__v'); 
+        }
+        
+        // pagination
+        const limit = req.query.limit*1 || 10;
+        const page = req.query.page*1 || 1;
+        const offset = (page-1)*limit;
+        
+        query = query.skip(offset).limit(limit);
+        
+        if(req.query.page){
+            const numDays = await Payroll.countDocuments();
+            if(offset >= numDays){
+                return next(new HttpError('This Page does not exist',404));
+            }
+        }
+        //Execute query
+        payrolls = await query.populate('empId','firstName lastName employeeSerialId');
+        
+    } catch (err) {
+        const error = new HttpError('Failed to get schedule details',500);
+        return next(error);
+    }
+    
+    res.status(200).json({payrolls,totalCount:payrolls.length});
+}
+
 const createPaySlip = async(req,res,next) =>{
     
     const errors = validationResult(req);
@@ -110,7 +162,7 @@ const addAllowances = async(req,res,next) =>{
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
         const err = new HttpError(`${errors.array()[0].msg} given at ${errors.array()[0].param.toLowerCase()} ,please enter valid input.`
-            , 422,true)
+            , 422)
         return next(err);
     }
 
@@ -238,6 +290,7 @@ function tdsRateCalc(slab){
     return rate;
 }
 
+exports.getPayrolls = getPayrolls;
 exports.createPaySlip = createPaySlip;
 exports.generatePdf = generatePdf;
 exports.addAllowances = addAllowances;
