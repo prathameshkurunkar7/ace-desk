@@ -25,7 +25,11 @@ const dayController = require('../controllers/dayController');
 const leaveController = require('../controllers/leaveController');
 const policyController = require('../controllers/policyController');
 const payrollController = require('../controllers/payrollController');
+const dashboardController = require('../controllers/admin/dashboardController');
 const { fileUpload } = require('../middlewares/uploader');
+
+//dashboard routes
+router.get('/dashboard/getData',dashboardController.getHRDashboardData);
 
 //employee routes
 router.get('/employee/',employeeController.getEmployees);
