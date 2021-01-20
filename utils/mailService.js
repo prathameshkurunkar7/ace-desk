@@ -1,14 +1,14 @@
-const { model } = require('mongoose');
 const nodemailer = require('nodemailer');
 const hbs = require('nodemailer-express-handlebars');
+// const path = require('path');
 const appConfig = require('../config/appConfig');
 
 module.exports = class Email{
-    constructor(user,firstName,url){
+    constructor(user,firstName){
         this.to = user.email,
         this.firstName = firstName,
-        this.url = url,
-        this.password = user.password //temporary only
+        // this.url = url,
+        // this.password = user.password //temporary only
         this.from = `Company Name <${appConfig.EMAIL_FROM}>`
     }
 
@@ -46,7 +46,6 @@ module.exports = class Email{
         const transporter = this.modifiedTransport();
         transporter.use('compile', hbs(handlebarOptions));
     
-    
         const mailOptions = {
             from: this.from,
             to: this.to,
@@ -58,15 +57,36 @@ module.exports = class Email{
         await transporter.sendMail(mailOptions);
     }
 
-    async sendEmployeeLoginCred(){
+    async sendAttachmentEmail(attachmentFileName,subject,text){
+        const mailOptions = {
+            from: this.from,
+            to: this.to,
+            subject,
+            text,
+            attachments: [{
+                filename: `${attachmentFileName}.pdf`,
+                path: `./docs/${attachmentFileName}.pdf`,
+                contentType: 'application/pdf'
+            }],
+        };
+
+        const transporter = this.modifiedTransport();
+        await transporter.sendMail(mailOptions);
+    }
+
+    async sendEmployeeLoginCred(tempPassword,url){
         const data = {
             "name":this.firstName,
             "message-line-1":"You have been registered as an Employee on our Portal. Please use this password and registered Email-Id as your login credentials.",
             "message-line-2":"Hope you have no troubles logging in. Have a good day!",
-            "url": this.url,
-            "temporaryPassword": this.password
+            "url": url,
+            "temporaryPassword": tempPassword
         }
         await this.sendEmail('mail','Employee Login Credentials',data)
     }
 
+    async sendEmployeePaySlip(payroll){
+        const attachmentFileName =  `Payslip-${payroll.empId['employeeSerialId']}`
+        await this.sendAttachmentEmail(attachmentFileName,'Payslip','Please check your payslip for the month')
+    }
 }

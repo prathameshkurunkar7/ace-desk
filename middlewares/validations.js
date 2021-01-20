@@ -1,4 +1,5 @@
 const {check,body,query} = require('express-validator');
+const {IndianStates, Designations, QualificationTitles} = require('../utils/helperData');
 
 exports.validateEmployeeCreation = [
     check('firstName').notEmpty().isAlpha().withMessage('Name should be Alphabetic'),
@@ -16,11 +17,22 @@ exports.validateEmployeeCreation = [
     check('contactNumbers.work').optional({checkFalsy:true}).isMobilePhone('en-IN').withMessage('Not a valid Mobile Number'),
     check('contactNumbers.personal').isMobilePhone('en-IN').withMessage('Not a valid Mobile Number'),
     check('addresses.*.pincode').isPostalCode('IN').withMessage('Should be a valid Postal Code'),
-    check('addresses.*.address').notEmpty().trim().isAlpha(),
-    check('addresses.*.city').notEmpty().trim().isAlpha(),
-    check('addresses.*.state').notEmpty().trim().isAlpha(),
-    check('addresses.*.country').notEmpty().trim().isAlpha(),
-    check('designation').notEmpty().isAlpha().isIn(['Manager','General Manager','Executive','President','Project Manager','Developer','Designer','Marketing Head','HR Admin','Captain','Other']).withMessage('Should be a legit designation'),
+    check('addresses.*.address').notEmpty().trim(),
+    check('addresses.*.city').notEmpty().trim(),
+    check('addresses.*.state').notEmpty().trim().isIn(IndianStates),
+    check('addresses.*.country').notEmpty().trim().equals('India'),
+    check('designation').notEmpty().isIn(Designations).withMessage('Should be a legit designation'),
+    check('socialHandles.github').isURL({ host_whitelist: [/^.*github\.com$/,] }).withMessage('Should be a Github URL'),
+    check('socialHandles.linkedIn').isURL({ host_whitelist: [/^.*linkedin\.com$/,] }).withMessage('Should be a LinkedIn URL'),
+    check('socialHandles.twitter').isURL({ host_whitelist: [/^.*twitter\.com$/,] }).withMessage('Should be a Twitter URL'),
+    check('work.experience').isNumeric({no_symbols:true}),
+    check('work.previousCompany').notEmpty().trim(),
+    check('education.instituteName').notEmpty().trim(),
+    check('education.graduatingYear').custom(val=>{
+        if (isNaN(Date.parse(val))) return false;
+        else return true;
+    }).withMessage('Entered Date is not valid'),
+    check('education.qualificationTitle').isIn(QualificationTitles).withMessage('Employee with such qualification not allowed')
 ]
 
 exports.validateEmployeeUpdation = [
@@ -45,11 +57,19 @@ exports.validateEmployeeUpdation = [
     check('contactNumbers.work').optional({checkFalsy:true}).isMobilePhone('en-IN').withMessage('Not a valid Mobile Number'),
     check('contactNumbers.personal').optional({checkFalsy:true}).isMobilePhone('en-IN').withMessage('Not a valid Mobile Number'),
     check('addresses.*.pincode').optional({checkFalsy:true}).isPostalCode('IN').withMessage('Should be a valid Postal Code'),
-    check('addresses.*.address').optional({checkFalsy:true}).notEmpty().trim().isAlpha(),
-    check('addresses.*.city').optional({checkFalsy:true}).notEmpty().trim().isAlpha(),
-    check('addresses.*.state').optional({checkFalsy:true}).notEmpty().trim().isAlpha(),
-    check('addresses.*.country').optional({checkFalsy:true}).notEmpty().trim().isAlpha(),
-    check('designation').optional({checkFalsy:true}).notEmpty().isAlpha().isIn(['Manager','General Manager','Executive','President','Project Manager','Developer','Designer','Marketing Head','HR Admin','Captain','Other']).withMessage('Should be a legit designation'),
+    check('addresses.*.address').optional({checkFalsy:true}).notEmpty().trim(),
+    check('addresses.*.city').optional({checkFalsy:true}).notEmpty().trim(),
+    check('addresses.*.state').optional({checkFalsy:true}).notEmpty().trim().isIn(IndianStates),
+    check('addresses.*.country').optional({checkFalsy:true}).notEmpty().trim().equals('India'),
+    check('designation').optional({checkFalsy:true}).notEmpty().isIn(Designations).withMessage('Should be a legit designation'),
+    check('socialHandles.github').optional({checkFalsy:true}).isURL({ host_whitelist: [/^.*github\.com$/,] }).withMessage('Should be a Github URL'),
+    check('socialHandles.linkedIn').optional({checkFalsy:true}).isURL({ host_whitelist: [/^.*linkedin\.com$/,] }).withMessage('Should be a LinkedIn URL'),
+    check('socialHandles.twitter').optional({checkFalsy:true}).isURL({ host_whitelist: [/^.*twitter\.com$/,] }).withMessage('Should be a Twitter URL'),
+    check('work.experience').optional({checkFalsy:true}).isNumeric({no_symbols:true}),
+    check('work.previousCompany').optional({checkFalsy:true}).notEmpty().trim(),
+    check('education.instituteName').optional({checkFalsy:true}).notEmpty().trim(),
+    check('education.graduatingYear').optional({checkFalsy:true}).isDate({format:'yyyy/MM/dd'}).withMessage('Entered Date is not valid'),
+    check('education.qualificationTitle').optional({checkFalsy:true}).isIn(QualificationTitles).withMessage('Employee with such qualification not allowed')
 ]
 
 
@@ -93,7 +113,7 @@ exports.validationUpdateProject = [
 
 exports.validationUpdateTeamDetails = [
     body().custom(body => {
-        const keys = ['teamName','teamLeader','teamMembers'];
+        const keys = ['teamName','teamLeader'];
         return Object.keys(body).every(key => keys.includes(key));
     }).withMessage('Some extra parameters are sent'),
     check('teamName').isAlpha().isLength({min:4}),
@@ -177,4 +197,22 @@ exports.validationUpdatePolicy = [
     }).withMessage('Some extra parameters are sent'),
     check('policyName').not().isEmpty().trim().withMessage('Policy cannot be empty'),
     check('description').not().isEmpty().trim().withMessage('Description cannot be empty')
+]
+
+exports.validationCreatePaySlip = [
+    body().custom(body => {
+        const keys = ['empId'];
+        return Object.keys(body).every(key => keys.includes(key));
+    }).withMessage('Some extra parameters are sent'),
+]
+
+exports.validationAddAllowance = [
+    body().custom(body => {
+        const keys = ['phone','conveyance','medical','performance'];
+        return Object.keys(body).every(key => keys.includes(key));
+    }).withMessage('Some extra parameters are sent'),
+    check('phone').isNumeric({no_symbols:true}).withMessage('Should be a number'),
+    check('conveyance').isNumeric({no_symbols:true}).withMessage('Should be a number'),
+    check('medical').isNumeric({no_symbols:true}).withMessage('Should be a number'),
+    check('performance').isNumeric({no_symbols:true}).withMessage('Should be a number'),
 ]

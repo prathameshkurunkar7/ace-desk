@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin-top: 0;
+            font-weight: 500;
+        }
+        .card-body {
+            flex: 1 1 auto;
+            min-height: 1px;
+            padding: 1.25rem;
+        }
+
+        .card {
+            border: 1px solid #ededed;
+            box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.2);
+            margin-bottom: 30px;
+        }
+
+        .payslip-title {
+            margin-bottom: 20px;
+            text-align: center;
+            text-decoration: underline;
+            text-transform: uppercase;
+            font-size: larger;
+            font-weight: 700;
+        }
+
+        .row {
+            display: -ms-flexbox;
+            display: flex;
+            -ms-flex-wrap: wrap;
+            flex-wrap: wrap;
+            margin-right: -15px;
+            margin-left: -15px;
+        }
+        .mb-0, .my-0 {
+            margin-bottom: 0!important;
+        }
+        .m-b-20 {
+            margin-bottom: 20px !important;
+        }
+        .list-unstyled {
+            padding-left: 0;
+            list-style: none;
+        
+        }
+
+        .invoice-details, .invoice-payment-details > li span {
+            float: right;
+            text-align: right;
+        }
+        .text-uppercase {
+            text-transform: uppercase!important;
+        }
+        
+        .col,
+        .col-1,
+        .col-10,
+        .col-11,
+        .col-12,
+        .col-2,
+        .col-3,
+        .col-4,
+        .col-5,
+        .col-6,
+        .col-7,
+        .col-8,
+        .col-9,
+        .col-auto,
+        .col-lg,
+        .col-lg-1,
+        .col-lg-10,
+        .col-lg-11,
+        .col-lg-12,
+        .col-lg-2,
+        .col-lg-3,
+        .col-lg-4,
+        .col-lg-5,
+        .col-lg-6,
+        .col-lg-7,
+        .col-lg-8,
+        .col-lg-9,
+        .col-lg-auto,
+        .col-md,
+        .col-md-1,
+        .col-md-10,
+        .col-md-11,
+        .col-md-12,
+        .col-md-2,
+        .col-md-3,
+        .col-md-4,
+        .col-md-5,
+        .col-md-6,
+        .col-md-7,
+        .col-md-8,
+        .col-md-9,
+        .col-md-auto,
+        .col-sm,
+        .col-sm-1,
+        .col-sm-10,
+        .col-sm-11,
+        .col-sm-12,
+        .col-sm-2,
+        .col-sm-3,
+        .col-sm-4,
+        .col-sm-5,
+        .col-sm-6,
+        .col-sm-7,
+        .col-sm-8,
+        .col-sm-9,
+        .col-sm-auto,
+        .col-xl,
+        .col-xl-1,
+        .col-xl-10,
+        .col-xl-11,
+        .col-xl-12,
+        .col-xl-2,
+        .col-xl-3,
+        .col-xl-4,
+        .col-xl-5,
+        .col-xl-6,
+        .col-xl-7,
+        .col-xl-8,
+        .col-xl-9,
+        .col-xl-auto {
+            position: relative;
+            width: 100%;
+            padding-right: 15px;
+            padding-left: 15px;
+        }
+
+        .table {
+            color: #333;
+        }
+        .table {
+            width: 100%;
+            margin-bottom: 1rem;
+            color: #212529;
+        }
+        .table-bordered {
+            border: 1px solid #dee2e6;
+        }
+        table {
+            border-collapse: collapse;
+        }
+        .float-right {
+            float: right!important;
+        }
+        @media (min-width: 576px) {
+            .col-sm-6 {
+                -ms-flex: 0 0 50%;
+                flex: 0 0 50%;
+                max-width: 50%;
+            }
+        }
+        @media (min-width: 992px){
+            .col-lg-12 {
+                -ms-flex: 0 0 100%;
+                flex: 0 0 100%;
+                max-width: 100%;
+            }
+        }
+
+    </style>
+</head>
+
+<body>
+    <div class="card">
+        <div class="card-body">
+            <h4 class="payslip-title">Payslip for the month of {{Date}}</h4>
+            <div class="row">
+                <div class="col-sm-6 m-b-20">
+                    <img src="" class="inv-logo" alt="">
+                    <ul class="list-unstyled mb-0">
+                        <li>{{empId.addresses.Residential.address}}</li>
+                        <li>{{empId.addresses.Residential.city}}</li>
+                        <li>{{empId.addresses.Residential.state}} {{empId.addresses.Residential.pincode}}</li>
+                    </ul>
+                </div>
+                <div class="col-sm-6 m-b-20">
+                    <div class="invoice-details">
+                        <h3 class="text-uppercase">Payslip</h3>
+                        <ul class="list-unstyled">
+                            <li>Salary Month:
+                                <span>{{Date}}</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12 m-b-20">
+                    <ul class="list-unstyled">
+                        <li>
+                            <h5 class="mb-0">
+                                <strong>{{empId.firstName}} {{empId.lastName}}</strong>
+                            </h5>
+                        </li>
+                        <li>
+                            <span>{{empId.designation}}</span>
+                        </li>
+                        <li>Employee ID: {{empId.employeeSerialId}}</li>
+                        <li>Joining Date: {{empId.dateOfJoining}}</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-6">
+                    <div>
+                        <h4 class="m-b-10">
+                            <strong>Earnings</strong>
+                        </h4>
+                        <table class="table table-bordered">
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <strong>Basic Salary</strong>
+                                        <span class="float-right">&#8377;{{basicSalary}}</span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <strong>House Rent Allowance (H.R.A.)</strong>
+                                        <span class="float-right">&#8377;{{allowances.houseRent}}</span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <strong>Dearness Allowance</strong>
+                                        <span class="float-right">&#8377;{{allowances.dearness}}</span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <strong>Conveyance</strong>
+                                        <span class="float-right">&#8377;{{allowances.conveyance}}</span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <strong>Medical</strong>
+                                        <span class="float-right">&#8377;{{allowances.medical}}</span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <strong>Phone</strong>
+                                        <span class="float-right">&#8377;{{allowances.phone}}</span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <strong>Performance</strong>
+                                        <span class="float-right">&#8377;{{allowances.performance}}</span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <strong>Gross Salary</strong>
+                                        <span class="float-right">
+                                            <strong>&#8377;{{grossSalary}}</strong>
+                                        </span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div>
+                        <h4 class="m-b-10">
+                            <strong>Deductions</strong>
+                        </h4>
+                        <table class="table table-bordered">
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <strong>Tax Deducted at Source (T.D.S.)</strong>
+                                        <span class="float-right">&#8377;{{deductions.tds}}</span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <strong>Employee Provident Fund</strong>
+                                        <span class="float-right">&#8377;{{deductions.epf}}</span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <strong>ESI</strong>
+                                        <span class="float-right">&#8377;{{deductions.esi}}</span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <strong>Professional</strong>
+                                        <span class="float-right">&#8377;{{deductions.professional}}</span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <strong>Total Deductions</strong>
+                                        <span class="float-right">
+                                            <strong>&#8377;{{deductions.totalDeductions}}</strong>
+                                        </span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="col-sm-12">
+                    <p>
+                        <strong>Net Salary: &#8377;{{netSalary}}</strong>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

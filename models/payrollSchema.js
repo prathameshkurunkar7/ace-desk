@@ -9,13 +9,8 @@ const payrollSchema = new Schema({
     salaryPerAnnum:{
         type: Number,
     },
-    salaryPerMonth:{
-        type: Number,
-        required: true
-    },
     basicSalary:{
         type: Number,
-        required: true
     },
     // In hand Salary
     netSalary:{
@@ -31,14 +26,16 @@ const payrollSchema = new Schema({
         conveyance: { type: Number },
         medical: { type: Number },
         performance: { type: Number },
-        //internetAllowance
+        otherAllowanceTotal:{type:Number}
     },
     deductions:{
-        tds: { type: Number ,required:true},
+        tds: { type: Number},
         epf: { type: Number },
         esi: {type: Number},
-        professional: { type: Number,default: 200}        
-    }
+        professional: { type: Number,default: 200},
+        totalDedcutions:{type:Number}       
+    },
+    updatedAt:{type: Date,default: Date.now()}
 });
 
 mongoose.model('Payroll', payrollSchema);

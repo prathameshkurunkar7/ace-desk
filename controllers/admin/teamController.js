@@ -159,7 +159,29 @@ const addTeamMember = async(req,res,next) =>{
         const error = new HttpError('Could Not Add employee as Team Member',500);
         return next(error);
     }
+    
+    let teamLeader;
+    try {
+        teamLeader = await Employee.findById(team.teamLeader).select('firstName lastName');
+    } catch (err) {
+        const error = new HttpError('Something went wrong',500);
+        return next(error);
+    }
 
+    const teamMembers = await Promise.all(team.teamMembers.map(async(member)=>{
+        
+        let teamMember;
+        try {
+            teamMember = await Employee.findById(member).select('firstName lastName');
+        } catch (err) {
+            const error = new HttpError('Something went wrong',500);
+            return next(error);
+        }
+        
+        return teamMember;
+    }))
+    team.teamLeader = teamLeader;
+    team.teamMembers = teamMembers;
     res.status(200).json(team);
 
 }
@@ -178,7 +200,7 @@ const removeTeamMember = async(req,res,next) =>{
         return next(new HttpError('This team does not exist',404));
     }
 
-    if(!existingTeam.teamMembers.includes(memberId)){
+    if(!(existingTeam.teamMembers.includes(memberId))||!(existingTeam.teamLeader===memberId)){
         return next(new HttpError('Member does not exist in Team',400));
     }
 
@@ -275,7 +297,8 @@ const getProjects = async(req,res,next) =>{
                 project,
                 teamName:team.teamName,
                 teamLeader,
-                teamMembers
+                teamMembers,
+                teamId:team.id
             }
         
         })

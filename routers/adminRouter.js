@@ -12,7 +12,9 @@ const {
     validationUpdateTeamDetails,
     validationsActionOnLeave,
     validationCreatePolicy,
-    validationUpdatePolicy
+    validationUpdatePolicy,
+    validationCreatePaySlip,
+    validationAddAllowance
 } = require('../middlewares/validations');
 
 const employeeController = require('../controllers/admin/employeeController');
@@ -22,6 +24,7 @@ const attendanceController = require('../controllers/attendanceController');
 const dayController = require('../controllers/dayController');
 const leaveController = require('../controllers/leaveController');
 const policyController = require('../controllers/policyController');
+const payrollController = require('../controllers/payrollController');
 const { fileUpload } = require('../middlewares/uploader');
 
 //employee routes
@@ -67,7 +70,7 @@ router.get('/attendance/',validationGetAttendance,attendanceController.getAttend
 // scheduling routes
 router.get('/schedule/',dayController.getSchedule);
 
-router.post('/schedule/create',fileUpload,validationSetSchedule,dayController.setDaySchedule);
+router.post('/schedule/create',validationSetSchedule,dayController.setDaySchedule);
 
 router.patch('/schedule/edit/:dayId',validationEditDaySchedule,dayController.editSetDay);
 
@@ -86,5 +89,15 @@ router.post('/policy/create',fileUpload,validationCreatePolicy,policyController.
 router.patch('/policy/update/:policyId',fileUpload,validationUpdatePolicy,policyController.updatePolicy);
 
 router.delete('/policy/delete/:policyId',policyController.deletePolicy);
+
+//payroll routes
+
+router.get('/payroll/payslip/generate-pdf/:payrollId',payrollController.generatePdf);
+
+router.get('/payroll/payslip/send-mail/:payrollId',payrollController.sendPaySlip);
+
+router.post('/payroll/payslip/create',validationCreatePaySlip,payrollController.createPaySlip);
+
+router.patch('/payroll/payslip/save-changes/:payrollId',validationAddAllowance,payrollController.addAllowances);
 
 module.exports = router;

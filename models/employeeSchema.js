@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const { Designations } = require('../utils/helperData');
 const Schema = mongoose.Schema;
 
 const employeeSchema = new Schema({
@@ -103,7 +104,7 @@ const employeeSchema = new Schema({
     profileImage:{type: String},
     designation:{
         type: String,
-        enum: ['Manager','General Manager','Executive','President','Project Manager','Developer','Designer','Marketing Head','HR Admin','Captain','Other'],
+        enum: Designations,
         default: 'Other'
     },
     department:{
@@ -112,7 +113,7 @@ const employeeSchema = new Schema({
     },
     assignedProject:{type: Boolean,default:false},
     team:{type: mongoose.Types.ObjectId,ref:'Team'},
-    salary:{
+    payroll:{
         type: mongoose.Types.ObjectId,
         ref: 'Payroll'
     },
@@ -128,7 +129,7 @@ const employeeSchema = new Schema({
     },
     education:{
         instituteName:{type: String},
-        graduatingYear:{type: Number},
+        graduatingDate:{type: Date},
         qualificationTitle:{type: String}
     }
 });

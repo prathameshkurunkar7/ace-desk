@@ -27,6 +27,9 @@ const apiLimiter = rateLimit({
 app.use(express.json({ limit: '500kb' }));
 app.use(express.urlencoded({extended:true}));
 
+app.use('/uploads/files',express.static('uploads/files'));
+app.use('/uploads/images',express.static('uploads/images'));
+
 // all routes here
 app.use('/register',apiLimiter,authRouter);
 app.use('/admin',adminRouter);

@@ -12,6 +12,7 @@ const Department = mongoose.model('Department');
 const Attendance = mongoose.model('Attendance');
 const Leave = mongoose.model('Leave');
 const Team = mongoose.model('Team');
+const Payroll = mongoose.model('Payroll');
 
 //POST Create a new Employee
 const createEmployee = async(req,res,next) =>{
@@ -23,7 +24,13 @@ const createEmployee = async(req,res,next) =>{
         return next(err);
     }
 
-    const {firstName,lastName,gender,dateOfBirth,bloodGroup,dateOfJoining,contactNumbers,addresses,email,designation,department} = req.body;
+    const {
+        firstName,lastName,gender,dateOfBirth,
+        bloodGroup,dateOfJoining,contactNumbers,
+        addresses,email,designation,department,
+        salaryPerAnnum,education,socialHandles,
+        work
+    } = req.body;
    
     let existingEmployee,dept;
     try {
@@ -67,7 +74,10 @@ const createEmployee = async(req,res,next) =>{
         addresses,
         designation,
         userAuth:createdEmployeeAuth.id,
-        department
+        department,
+        socialHandles,
+        work,
+        education
     });
 
     try {
@@ -79,8 +89,13 @@ const createEmployee = async(req,res,next) =>{
         const leaves = new Leave({
             empId:newEmployee.id
         })
+        const payroll = new Payroll({
+            empId:newEmployee.id,
+            salaryPerAnnum:salaryPerAnnum
+        })
         await attendance.save();
         await leaves.save();
+        await payroll.save();
     } catch (err) {
         console.log(err);
         const error = new HttpError('New Employee was not created',500);
@@ -107,7 +122,7 @@ const sendEmployeeCredentials = async(req,res,next) =>{
     const url = `${req.protocol}://${req.hostname}:${appConfig.PORT}/register/login`
     let hashedpassword;
     try {
-        await new Email(employee.userAuth,employee.firstName,url).sendEmployeeLoginCred();    
+        await new Email(employee.userAuth,employee.firstName).sendEmployeeLoginCred(employee.userAuth['password'],url);
         hashedpassword = await bcrypt.hash(employee.userAuth.password, 10);
     } catch (err) {
         console.log(err);
@@ -214,7 +229,7 @@ const updateEmployee = async(req,res,next) =>{
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
         const err = new HttpError(`${errors.array()[0].msg} given at ${errors.array()[0].param.toLowerCase()} ,please enter valid input.`
-            , 422,true)
+            , 422)
         return next(err);
     }
     
@@ -279,6 +294,7 @@ const deleteEmployee = async(req,res,next) =>{
             }
         }
         await Department.findByIdAndUpdate(existingEmployee.department,{$pull:{employees:existingEmployee.id}});
+        await Payroll.findOneAndDelete({empId:existingEmployee.id});
     } catch (err) {
         const error = new HttpError('Could Not delete Employee',500);
         return next(error);

@@ -8,7 +8,6 @@ const Policy = mongoose.model('Policy');
 
 // create policy
 const createPolicy = async(req,res,next) =>{
-    console.log(req.body);
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
         const err = new HttpError(`${errors.array()[0].msg} given at ${errors.array()[0].param.toLowerCase()} ,please enter valid input.`
@@ -96,7 +95,7 @@ const getPolicies = async(req,res,next) =>{
             }
         }
         //Execute query
-        policies = await query;
+        policies = await query.populate('department','deptName');
         
     } catch (err) {
         const error = new HttpError('Failed to get policy details',500);

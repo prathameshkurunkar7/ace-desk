@@ -121,15 +121,11 @@ const getLeaves = async(req,res,next) =>{
         query = query.skip(offset).limit(limit);
         
         if(req.query.page){
-            leaveAggregate = await Leave.aggregate([{ $unwind: "$appliedLeaves" },
-            { $match: { 'appliedLeaves.status' : queryObj['appliedLeaves.status']}},
-            { $group: { _id: "result", count: { $sum: 1 }}}]);
-            // { $group: { _id: "$appliedLeaves",count:{$sum:1}}}])
-            // { $match:{"appliedLeaves.status":'Pending'}},
-            // { $group: { _id: "result", count: { $sum: 1 }}}]
-            console.log(leaveAggregate[0].count);
-            // const numLeaves = await Leave.countDocuments();
-            if(offset >= leaveAggregate[0].count){
+            // leaveAggregate = await Leave.aggregate([{ $unwind: "$appliedLeaves" },
+            // { $match: { 'appliedLeaves.status' : queryObj['appliedLeaves.status']}},
+            // { $group: { _id: "result", count: { $sum: 1 }}}]);
+            const numLeaves = await Leave.countDocuments();
+            if(offset >= numLeaves){
                 return next(new HttpError('This Page does not exist',404));
             }
         }
