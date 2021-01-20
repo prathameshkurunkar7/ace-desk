@@ -5,7 +5,7 @@ const Payroll = mongoose.model('Payroll');
 const Employee = mongoose.model('Employee');
 const UserAuth = mongoose.model('UserAuth');
 const {MetroCities} =require('../utils/helperData');
-const Payslip = require('../utils/pdfToHtml');
+const Payslip = require('../utils/pdfGenerator');
 const Email = require('../utils/mailService');
 
 const createPaySlip = async(req,res,next) =>{
