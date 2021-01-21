@@ -58,14 +58,12 @@ router.post('/team/add-team-project',validationCreateTeamAndProject,teamControll
 
 router.patch('/team/update-team/:teamId',validationUpdateTeamDetails,teamController.updateTeamDetails);
 
-//will be removed later
 router.patch('/team/add-team-member',teamController.addTeamMember);
 
 router.patch('/team/update-project/:projectId',validationUpdateProject,teamController.updateProject);
 
-router.delete('/team/dissolve-team-project',teamController.dissolveTeamAndProject);
+router.delete('/team/dissolve-team-project/:teamId',teamController.dissolveTeamAndProject);
 
-//will be removed later
 router.delete('/team/remove-team-member',teamController.removeTeamMember);
 
 // attendance route

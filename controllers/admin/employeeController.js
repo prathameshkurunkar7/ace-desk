@@ -28,7 +28,7 @@ const createEmployee = async(req,res,next) =>{
         firstName,lastName,gender,dateOfBirth,
         bloodGroup,dateOfJoining,contactNumbers,
         addresses,email,designation,department,
-        salaryPerAnnum,education,socialHandles,
+        salaryPerAnnum,education,
         work
     } = req.body;
    
@@ -75,7 +75,7 @@ const createEmployee = async(req,res,next) =>{
         designation,
         userAuth:createdEmployeeAuth.id,
         department,
-        socialHandles,
+        // socialHandles,
         work,
         education
     });
@@ -183,7 +183,7 @@ const getEmployees = async(req,res,next) =>{
             }
         }
         //Execute query
-        employees = await query.populate('userAuth');
+        employees = await query.populate('userAuth','-password -__v').populate('department','deptName');
         
     } catch (err) {
         const error = new HttpError('Failed to get employee details',500);
@@ -211,7 +211,7 @@ const getEmployeeById = async(req,res,next) =>{
 
     let employee;
     try {
-        employee=await Employee.findById(req.params.employeeId).populate('userAuth','-password -__v');
+        employee=await Employee.findById(req.params.employeeId).populate('userAuth','-password -__v').populate('department','deptName');
     } catch (err) {
         const error = new HttpError('Could Not fetch Employee details',500);
         return next(error);
