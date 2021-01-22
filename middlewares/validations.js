@@ -22,9 +22,6 @@ exports.validateEmployeeCreation = [
     check('addresses.*.state').notEmpty().trim().isIn(IndianStates),
     check('addresses.*.country').notEmpty().trim().equals('India'),
     check('designation').notEmpty().isIn(Designations).withMessage('Should be a legit designation'),
-    // check('socialHandles.github').isURL({ host_whitelist: [/^.*github\.com$/,] }).withMessage('Should be a Github URL'),
-    // check('socialHandles.linkedIn').isURL({ host_whitelist: [/^.*linkedin\.com$/,] }).withMessage('Should be a LinkedIn URL'),
-    // check('socialHandles.twitter').isURL({ host_whitelist: [/^.*twitter\.com$/,] }).withMessage('Should be a Twitter URL'),
     check('work.experience').isNumeric({no_symbols:true}),
     check('work.previousCompany').notEmpty().trim(),
     check('education.instituteName').notEmpty().trim(),
@@ -62,9 +59,6 @@ exports.validateEmployeeUpdation = [
     check('addresses.*.state').optional({checkFalsy:true}).notEmpty().trim().isIn(IndianStates),
     check('addresses.*.country').optional({checkFalsy:true}).notEmpty().trim().equals('India'),
     check('designation').optional({checkFalsy:true}).notEmpty().isIn(Designations).withMessage('Should be a legit designation'),
-    // check('socialHandles.github').optional({checkFalsy:true}).isURL({ host_whitelist: [/^.*github\.com$/,] }).withMessage('Should be a Github URL'),
-    // check('socialHandles.linkedIn').optional({checkFalsy:true}).isURL({ host_whitelist: [/^.*linkedin\.com$/,] }).withMessage('Should be a LinkedIn URL'),
-    // check('socialHandles.twitter').optional({checkFalsy:true}).isURL({ host_whitelist: [/^.*twitter\.com$/,] }).withMessage('Should be a Twitter URL'),
     check('work.experience').optional({checkFalsy:true}).isNumeric({no_symbols:true}),
     check('work.previousCompany').optional({checkFalsy:true}).notEmpty().trim(),
     check('education.instituteName').optional({checkFalsy:true}).notEmpty().trim(),
@@ -218,4 +212,35 @@ exports.validationAddAllowance = [
     check('conveyance').isNumeric({no_symbols:true}).withMessage('Should be a number'),
     check('medical').isNumeric({no_symbols:true}).withMessage('Should be a number'),
     check('performance').isNumeric({no_symbols:true}).withMessage('Should be a number'),
+]
+
+exports.validateSanctionLoanBonus = [
+    body().custom(body => {
+        const keys = ['paymentRequest','amount','description','status'];
+        return Object.keys(body).every(key => keys.includes(key));
+    }).withMessage('Some extra parameters are sent'),
+    check('paymentRequest').isIn(['Loan','Bonus']).withMessage('Can be Loan or Bonus only'),
+    check('amount').isInt({max:50000,min:1000}).withMessage('Amount must be between 1000 and 50000'),
+    check('description').notEmpty().trim().withMessage('Please enter valid description.'),
+    check('status').isIn(['Rejected','Accepted']),
+]
+
+exports.validateApplyLoanBonus = [
+    body().custom(body => {
+        const keys = ['paymentRequest','amount','description'];
+        return Object.keys(body).every(key => keys.includes(key));
+    }).withMessage('Some extra parameters are sent'),
+    check('paymentRequest').isIn(['Loan','Bonus']).withMessage('Can be Loan or Bonus only'),
+    check('amount').isInt({max:50000,min:1000}).withMessage('Amount must be between 1000 and 50000'),
+    check('description').notEmpty().trim().withMessage('Please enter valid description.'),
+]
+
+exports.updateProfile = [
+    body().custom(body => {
+        const keys = ['github','linkedIn','twitter'];
+        return Object.keys(body).every(key => keys.includes(key));
+    }).withMessage('Some extra parameters are sent'),
+    check('socialHandles.github').isURL({ host_whitelist: [/^.*github\.com$/,] }).withMessage('Should be a Github URL'),
+    check('socialHandles.linkedIn').isURL({ host_whitelist: [/^.*linkedin\.com$/,] }).withMessage('Should be a LinkedIn URL'),
+    check('socialHandles.twitter').isURL({ host_whitelist: [/^.*twitter\.com$/,] }).withMessage('Should be a Twitter URL'),
 ]

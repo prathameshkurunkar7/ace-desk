@@ -102,7 +102,7 @@ const getPolicies = async(req,res,next) =>{
         return next(error);
     }
     policies.forEach((policy)=>{
-        policy.policyFile = policy.policyFile.replace(/\\/g,'/');
+        policy.policyFile = `${appConfig.APP_URL}/${policy.policyFile.replace(/\\/g,'/')}`;
     })
 
     res.status(200).json({policies,totalCount:policies.length});
@@ -186,7 +186,8 @@ const updatePolicy = async(req,res,next) =>{
         return next(error);
     }
     
-    policy.policyFile = policy.policyFile.replace(/\\/g,'/');
+    policy.policyFile = `${appConfig.APP_URL}/${policy.policyFile.replace(/\\/g,'/')}`;
+    // policy.policyFile = policy.policyFile.replace(/\\/g,'/');
     
     res.status(200).json(policy);
 }

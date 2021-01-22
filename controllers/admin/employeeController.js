@@ -95,7 +95,9 @@ const createEmployee = async(req,res,next) =>{
         })
         await attendance.save();
         await leaves.save();
-        await payroll.save();
+        const pay = await payroll.save();
+        newEmployee.payroll = pay.id;
+        await newEmployee.save();
     } catch (err) {
         console.log(err);
         const error = new HttpError('New Employee was not created',500);
@@ -211,7 +213,11 @@ const getEmployeeById = async(req,res,next) =>{
 
     let employee;
     try {
-        employee=await Employee.findById(req.params.employeeId).populate('userAuth','-password -__v').populate('department','deptName');
+        employee=await Employee.findById(req.params.employeeId).populate([
+            {path:'userAuth',select:'-password -__v'},
+            {path:'department',select:'deptName'},
+            {path:'payroll',select:'salaryPerAnnum'}
+        ]);
     } catch (err) {
         const error = new HttpError('Could Not fetch Employee details',500);
         return next(error);

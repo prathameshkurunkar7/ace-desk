@@ -5,6 +5,7 @@ const { validationResult } = require('express-validator');
 const HttpError = require('../utils/http-error');
 const appConfig = require('../config/appConfig');
 const UserAuth = mongoose.model('UserAuth');
+const Employee = mongoose.model('Employee');
 
 
 const signUp = async(req, res, next) => {
@@ -120,8 +121,22 @@ const login = async (req, res, next) => {
         return next(error);
     }
     
+    let employee;
+    try {
+        employee = await Employee.findOne({userAuth:existingUser.id}).select('firstName profileImage')
+    } catch (err) {
+        const error = new HttpError('Something went wrong!',500);
+        return next(error);
+    }
+    
+    if(employee.profileImage){
+        employee.profileImage = `${appConfig.APP_URL}/${employee.profileImage}`;
+    }
+
     res.status(200).json({
-        userId: existingUser.id, email: existingUser.email, token: token,role: existingUser.role
+        userId: existingUser.id, email: existingUser.email, token: token,role: existingUser.role,
+        firstName:employee.firstName,
+        profileImage:employee.profileImage
     });
 
 }

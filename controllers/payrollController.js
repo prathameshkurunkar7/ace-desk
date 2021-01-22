@@ -10,7 +10,7 @@ const Email = require('../utils/mailService');
 
 const getPayrolls = async(req,res,next) =>{
     
-    let payrolls;
+    let payrolls,numPayrolls;
     try {
 
         //filtering
@@ -25,7 +25,7 @@ const getPayrolls = async(req,res,next) =>{
             const sortBy = req.query.sort.split(',').join(' ');
             query = query.sort(sortBy);
         }else{
-            query = query.sort('date');
+            query = query.sort('-id');
         }
 
         // field limiting
@@ -44,20 +44,19 @@ const getPayrolls = async(req,res,next) =>{
         query = query.skip(offset).limit(limit);
         
         if(req.query.page){
-            const numDays = await Payroll.countDocuments();
-            if(offset >= numDays){
+            numPayrolls = await Payroll.countDocuments();
+            if(offset >= numPayrolls){
                 return next(new HttpError('This Page does not exist',404));
             }
         }
         //Execute query
-        payrolls = await query.populate('empId','firstName lastName employeeSerialId');
-        
+        payrolls = await query.populate([{path:'empId',select:'firstName lastName employeeSerialId designation profileImage'}]);
     } catch (err) {
         const error = new HttpError('Failed to get schedule details',500);
         return next(error);
     }
     
-    res.status(200).json({payrolls,totalCount:payrolls.length});
+    res.status(200).json({payrolls,totalCount:numPayrolls});
 }
 
 const createPaySlip = async(req,res,next) =>{
@@ -74,7 +73,7 @@ const createPaySlip = async(req,res,next) =>{
     let payroll,employee;
     try {
         payroll=await Payroll.findOne({empId:empId});
-        employee = await Employee.findByIdAndUpdate(empId,{payroll:payroll.id},{new:true});
+        employee = await Employee.findById(empId);
     } catch (err) {
         const error = new HttpError('Something went wrong!',500);
         return next(error);
@@ -83,12 +82,21 @@ const createPaySlip = async(req,res,next) =>{
         return next(new HttpError('Payroll does not exist for this employee',500));
     }
 
+    let emploan=0;
+    let empbonus=0;
+    if(payroll.loan['status'] ==='Accepted'){
+        emploan = payroll.loan['amount']
+    }
+    if(payroll.bonus['status'] ==='Accepted'){
+        empbonus = payroll.bonus['amount']
+    }
+
     const employeeCity = employee.addresses['Residential.city'];
     
     const basicSalary = payroll.salaryPerAnnum/2;
     const HRA = MetroCities.includes(employeeCity)?basicSalary*(50/100):basicSalary*(40/100);
     const otherAllowances = basicSalary-HRA;
-    const grossSalary = basicSalary+HRA+otherAllowances;
+    const grossSalary = basicSalary+HRA+otherAllowances+empbonus;
     
     // const grossSalaryPerMonth =grossSalary/12;
     const avgTdsRate=tdsCalc(payroll.salaryPerAnnum)
@@ -99,7 +107,7 @@ const createPaySlip = async(req,res,next) =>{
     const ESI = ((0.75/100)*grossSalary)<21000?(0.75/100)*grossSalary:21000;
     const professionalTax = payroll.deductions['professional'];
     
-    const totalDeductions = EPF+ESI+professionalTax;
+    const totalDeductions = EPF+ESI+professionalTax+(emploan/12);
     const netSalary = (grossSalary -(totalDeductions+totalTds));
 
     const allowances = {
@@ -122,7 +130,7 @@ const createPaySlip = async(req,res,next) =>{
             netSalary,
             grossSalary,
             allowances,
-            deductions
+            deductions,
         },{new:true}).populate('empId','firstName lastName')
     } catch (err) {
         console.log(err);
@@ -149,10 +157,12 @@ const createPaySlip = async(req,res,next) =>{
         "grossSalary": empPayroll.grossSalary/12,
         "netSalary": empPayroll.netSalary/12,
         "allowanceLimit":allowanceLimit,
-        "totalDeductions":totalDeductions+totalTds
+        "totalDeductions":totalDeductions+totalTds,
+        "loan":emploan/12,
+        "bonus":bonus
     }
 
-    res.status(201).json(newPayroll);
+    res.status(201).json({payroll:newPayroll});
 
 }
 
@@ -189,6 +199,9 @@ const addAllowances = async(req,res,next) =>{
     payroll.allowances['medical'] = medical;
     payroll.allowances['performance'] = performance;
     
+    payroll.loan['amount'] = payroll.loan['amount']-(payroll.loan['amount']/12);
+    payroll.bonus['amount'] = payroll.bonus['amount']-payroll.bonus['amount'];
+
     let newPayroll;
     try {
         newPayroll = await Payroll.findByIdAndUpdate(payroll.id,payroll,{new:true});
@@ -214,7 +227,7 @@ const generatePdf = async(req,res,next) =>{
         await new Payslip().pdf(payroll.toJSON());
     } catch (err) {
         console.log(err);
-        return next(new HttpError('Email Not sent',500));
+        return next(new HttpError('Pdf not generated',500));
     }
     
     res.status(200).json("Pdf has been generated");
@@ -239,6 +252,138 @@ const sendPaySlip = async(req,res,next) =>{
     res.status(200).json("Email sent with payslip to employee successfully");
 }
 
+const sanctionLoanBonus = async(req,res,next) =>{
+    
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        const err = new HttpError(`${errors.array()[0].msg}`, 422)
+        return next(err);
+    }
+
+    const empId = req.params.employeeId;
+    const {paymentRequest,amount,description,status} = req.body;
+
+    let employee;
+    try {
+        employee = await Employee.findById(empId);
+    } catch (err) {
+        const error = new HttpError('Something went wrong!',500);
+        return next(error);
+    }
+    if(!employee){
+        return next(new HttpError('No employee found',400));
+    }
+
+    if(paymentRequest==='Loan'){
+        try {
+            await Payroll.findOneAndUpdate({empId},{'loan':{amount,description,status}},{new:true});
+        } catch (err) {
+            const error = new HttpError('Could not update loan',500);
+            return next(error);
+        }
+    } else if(paymentRequest==='Bonus'){
+        try {
+            await Payroll.findOneAndUpdate({empId},{'bonus':{amount,description,status}},{new:true});
+        } catch (err) {
+            const error = new HttpError('Could not update bonus',500);
+            return next(error);
+        }
+    }
+
+    res.status(200).json({'status':`Your request for ${paymentRequest} has been ${status}`});
+}
+
+const applyLoanBonus = async(req,res,next) =>{
+
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        const err = new HttpError(`${errors.array()[0].msg}`, 422)
+        return next(err);
+    }
+    
+    const userId = req.user.userId;
+    const {paymentRequest,amount,description} = req.body;
+    
+    let employee;
+    try {
+        employee = await Employee.findOne({userAuth:userId});
+    } catch (err) {
+        const error = new HttpError('Something went wrong!',500);
+        return next(error);
+    }
+
+    if(!employee){
+        return next(new HttpError('No employee found',400));
+    }
+
+    let payroll;
+    try {
+        payroll = await Payroll.findOne({empId:employee.id});
+    } catch (err) {
+        const error = new HttpError('Something went wrong!',500);
+        return next(error);
+    }
+
+    let newPayroll
+    if(paymentRequest === 'Loan'){
+        if(payroll.loan['status'] === 'Accepted' && payroll.loan['amount']!==0){
+            return next(new HttpError('Ongoing Loan must be completed before applying for another',400));
+        }else if(payroll.loan['status']==='Rejected' || payroll.loan['amount']===0){
+            try {
+                newPayroll = await Payroll.findByIdAndUpdate(payroll.id,{loan:{amount,description,status:'Pending'}},{new:true});
+            } catch (err) {
+                const error = new HttpError('Could not update loan',500);
+                return next(error);
+            }
+        }else if(payroll.loan['status']==='Pending'){
+            return next(new HttpError('Previous Request for loan is still waiting for Approval',400));
+        }
+    }else if(paymentRequest === 'Bonus'){
+
+        const lastDate = new Date(payroll.bonus['lastDate']);
+        const nextMonthDate = new Date();
+        const thisDate = new Date();
+        nextMonthDate.setMonth(lastDate.getMonth() + 1, 1);
+
+        if(payroll.bonus['status'] === 'Accepted' && thisDate<=nextMonthDate){
+            return next(new HttpError('Bonus already given for the month',400));
+        }else if(payroll.bonus['status']==='Rejected' || thisDate>nextMonthDate){
+            try {
+                newPayroll = await Payroll.findByIdAndUpdate(payroll.id,{bonus:{amount,description,status:'Pending',lastDate:thisDate}},{new:true});
+            } catch (err) {
+                const error = new HttpError('Could not update bonus',500);
+                return next(error);
+            }
+        }else if(payroll.bonus['status']==='Pending'){
+            return next(new HttpError('Previous Request for bonus is still waiting for Approval',400));
+        }else{
+            try {
+                newPayroll = await Payroll.findByIdAndUpdate(payroll.id,{bonus:{amount,description,status:'Pending',lastDate:thisDate}},{new:true});
+            } catch (err) {
+                const error = new HttpError('Could not update bonus',500);
+                return next(error);
+            }
+        }
+    }
+
+    res.status(200).json(newPayroll);
+
+}
+
+//get employee loans and bonus --employee side route
+const empLoanAndBonus = async(req,res,next) =>{
+    const userId = req.user.userId;
+    let employee,payroll;
+    try {
+        employee = await Employee.findOne({userAuth:userId});
+        payroll = await Payroll.findById(employee.payroll).select('loan bonus');
+    } catch (err) {
+        const error = new HttpError('Something went wrong',500);
+        return next(error);
+    }
+
+    res.status(200).json(payroll);
+}
 
 function tdsCalc(salaryPA) {
     let taxableAmount = salaryPA;
@@ -295,3 +440,6 @@ exports.createPaySlip = createPaySlip;
 exports.generatePdf = generatePdf;
 exports.addAllowances = addAllowances;
 exports.sendPaySlip = sendPaySlip;
+exports.sanctionLoanBonus = sanctionLoanBonus;
+exports.applyLoanBonus = applyLoanBonus;
+exports.empLoanAndBonus = empLoanAndBonus;

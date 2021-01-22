@@ -14,7 +14,8 @@ const {
     validationCreatePolicy,
     validationUpdatePolicy,
     validationCreatePaySlip,
-    validationAddAllowance
+    validationAddAllowance,
+    validateSanctionLoanBonus
 } = require('../middlewares/validations');
 
 const employeeController = require('../controllers/admin/employeeController');
@@ -25,11 +26,11 @@ const dayController = require('../controllers/dayController');
 const leaveController = require('../controllers/leaveController');
 const policyController = require('../controllers/policyController');
 const payrollController = require('../controllers/payrollController');
-const dashboardController = require('../controllers/admin/dashboardController');
+const dashboardController = require('../controllers/dashboardController');
 const { fileUpload } = require('../middlewares/uploader');
 
 //dashboard routes
-router.get('/dashboard/getData',dashboardController.getHRDashboardData);
+router.get('/dashboard/get-data',dashboardController.getHRDashboardData);
 
 //employee routes
 router.get('/employee/',employeeController.getEmployees);
@@ -98,6 +99,8 @@ router.get('/payroll/',payrollController.getPayrolls);
 router.get('/payroll/payslip/generate-pdf/:payrollId',payrollController.generatePdf);
 
 router.get('/payroll/payslip/send-mail/:payrollId',payrollController.sendPaySlip);
+
+router.patch('/payroll/sanction-loan-bonus/:employeeId',validateSanctionLoanBonus,payrollController.sanctionLoanBonus);
 
 router.post('/payroll/payslip/create',validationCreatePaySlip,payrollController.createPaySlip);
 

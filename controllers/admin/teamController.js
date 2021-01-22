@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const {validationResult} = require('express-validator');
 const HttpError = require('../../utils/http-error');
+const e = require('express');
 const Employee = mongoose.model('Employee');
 const Team = mongoose.model('Team');
 const Project = mongoose.model('Project');
@@ -262,7 +263,7 @@ const getProjects = async(req,res,next) =>{
         const fieldsExclude = ['page','sort','limit','fields'];
         fieldsExclude.forEach(elem => delete queryObj[elem]);
 
-        let query = Project.find(queryObj);
+        let query = Team.find(queryObj);
 
         //sorting
         if(req.query.sort){
@@ -288,62 +289,24 @@ const getProjects = async(req,res,next) =>{
         query = query.skip(offset).limit(limit);
         
         if(req.query.page){
-            numProjects = await Project.countDocuments();
+            numProjects = await Team.countDocuments();
             if(offset >= numProjects){
                 return next(new HttpError('This Page does not exist',404));
             }
         }
         //Execute query
-        projects = await query;
-        
-        let team;
-        upProjects = await Promise.all(projects.map(async(project)=>{
-            try {
-                team =await Team.findOne({project:project.id})
-            } catch (err) {
-                const error = new HttpError('Something went wrong',500);
-                return next(error);
-            }
-            
-            let teamLeader;
-            try {
-                teamLeader = await Employee.findById(team.teamLeader).select('firstName lastName employeeSerialId');
-            } catch (err) {
-                const error = new HttpError('Something went wrong',500);
-                return next(error);
-            }
-
-            const teamMembers = await Promise.all(team.teamMembers.map(async(member)=>{
-                
-                let teamMember;
-                try {
-                    teamMember = await Employee.findById(member).select('firstName lastName employeeSerialId');
-                } catch (err) {
-                    const error = new HttpError('Something went wrong',500);
-                    return next(error);
-                }
-                
-                return teamMember;
-            }))
-
-            return {
-                project,
-                teamName:team.teamName,
-                teamLeader,
-                teamMembers,
-                teamId:team.id
-            }
-        
-        })
-        );
-
+        projects = await query.populate([
+            {path:'project',select:'-__v'},
+            {path:'teamLeader',select:'firstName lastName employeeSerialId'},
+            {path:'teamMembers',select:'firstName lastName employeeSerialId'}
+        ]);
         
     } catch (err) {
         const error = new HttpError('Failed to get project details',500);
         return next(error);
     }
     
-    res.status(200).json({projects:upProjects,totalCount:numProjects});
+    res.status(200).json({projects:projects,totalCount:numProjects});
 
 }
 

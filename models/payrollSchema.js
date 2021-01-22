@@ -35,6 +35,17 @@ const payrollSchema = new Schema({
         professional: { type: Number,default: 200},
         totalDedcutions:{type:Number}       
     },
+    loan:{
+        amount:{type: Number,max:50000,default:0},
+        status:{type: String,enum:['Pending','Accepted','Rejected']},
+        description:{type:String}
+    },
+    bonus:{
+        amount:{type: Number,max:50000,default:0},
+        status:{type: String,enum:['Pending','Accepted','Rejected']},
+        description:{type:String},
+        lastDate:{type:Date,default:Date.now()}
+    },
     updatedAt:{type: Date,default: Date.now()}
 });
 
