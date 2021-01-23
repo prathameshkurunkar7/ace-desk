@@ -1,7 +1,6 @@
 const mongoose = require('mongoose');
 const {validationResult} = require('express-validator');
 const HttpError = require('../../utils/http-error');
-const e = require('express');
 const Employee = mongoose.model('Employee');
 const Team = mongoose.model('Team');
 const Project = mongoose.model('Project');
@@ -247,6 +246,16 @@ const removeTeamMember = async(req,res,next) =>{
         return next(error);
     }
 
+    if(!team.teamLeader && team.teamMembers.length===0){
+        try {
+            await Team.findByIdAndDelete(teamId);
+            await Project.findByIdAndDelete(team.project);
+        } catch (err) {
+            const error = new HttpError('Could not dissovle empty team',500);
+            return next(error)
+        }
+    }
+
     res.status(200).json(team);
 
 }
@@ -306,7 +315,7 @@ const getProjects = async(req,res,next) =>{
         return next(error);
     }
     
-    res.status(200).json({projects:projects,totalCount:numProjects});
+    res.status(200).json({projects:projects,totalCount:numProjects?numProjects:0});
 
 }
 

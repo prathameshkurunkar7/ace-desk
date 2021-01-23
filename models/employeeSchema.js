@@ -131,6 +131,9 @@ const employeeSchema = new Schema({
         instituteName:{type: String},
         graduatingDate:{type: Date},
         qualificationTitle:{type: String}
+    },
+    about:{
+        type:String
     }
 });
 

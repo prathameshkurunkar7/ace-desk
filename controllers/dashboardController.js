@@ -16,8 +16,10 @@ const getHRDashboardData = async(req,res,next) =>{
     const nextMonthDate = new Date();
     nextMonthDate.setMonth(todayDate.getMonth() + 1, 1);
 
+    let departments;
     try {
         data.departmentCount = await Department.countDocuments();
+        departments = await Department.find({});
         data.employeeCount= await Employee.countDocuments();
         data.projectCount= await Project.countDocuments();
         data.bdayEmployees = await Employee.find({'dateOfBirth':{
@@ -28,6 +30,16 @@ const getHRDashboardData = async(req,res,next) =>{
         const error = new HttpError('Something went wrong!',500);
         return next(error);
     }
+
+    let employeeCounts=[];
+    let departmentNames = [];
+    departments.forEach((department)=>{
+        employeeCounts.push(department.employees.length);
+        departmentNames.push(department.deptName);
+    })
+    data.graph={}
+    data.graph['employeeCounts'] = employeeCounts;
+    data.graph['departmentNames'] = departmentNames;
 
     res.status(200).json(data);
 

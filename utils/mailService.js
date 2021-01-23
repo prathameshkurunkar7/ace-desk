@@ -1,14 +1,11 @@
 const nodemailer = require('nodemailer');
 const hbs = require('nodemailer-express-handlebars');
-// const path = require('path');
 const appConfig = require('../config/appConfig');
 
 module.exports = class Email{
     constructor(user,firstName){
         this.to = user.email,
         this.firstName = firstName,
-        // this.url = url,
-        // this.password = user.password //temporary only
         this.from = `Company Name <${appConfig.EMAIL_FROM}>`
     }
 

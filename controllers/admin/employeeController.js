@@ -97,48 +97,35 @@ const createEmployee = async(req,res,next) =>{
         await leaves.save();
         const pay = await payroll.save();
         newEmployee.payroll = pay.id;
-        await newEmployee.save();
+        newEmployee = await newEmployee.save();
     } catch (err) {
         console.log(err);
         const error = new HttpError('New Employee was not created',500);
         return next(error);
     }
 
-    res.status(201).json(newEmployee);
-
-}
-
-// GET Send Employee Cred via Email
-const sendEmployeeCredentials = async(req,res,next) =>{
- 
-    //for the requested employee, give the relevant information as object in Email argument user.
-    let employee;
-    try {
-        employee = await Employee.findById(req.params.employeeId).populate('userAuth');
-    } catch (err) {
-        const error = new HttpError('Could Not find Employee',500);
-        return next(error);
-    }
 
     // add the client side url here for displaying login window.
     const url = `${req.protocol}://${req.hostname}:${appConfig.PORT}/register/login`
+    
+    //send employee email of their credentials
     let hashedpassword;
     try {
-        await new Email(employee.userAuth,employee.firstName).sendEmployeeLoginCred(employee.userAuth['password'],url);
-        hashedpassword = await bcrypt.hash(employee.userAuth.password, 10);
+        await new Email(createdEmployeeAuth,newEmployee.firstName).sendEmployeeLoginCred(createdEmployeeAuth['password'],url);
+        hashedpassword = await bcrypt.hash(createdEmployeeAuth['password'], 10);
     } catch (err) {
         console.log(err);
         return next(new HttpError('Email Not sent',500));
     }
     
     try {
-        await UserAuth.updateOne({_id:employee.userAuth.id},{password:hashedpassword});
+        await UserAuth.updateOne({_id:newEmployee.userAuth},{password:hashedpassword});
     } catch (err) {
         const error = new HttpError('Could Not Update User password',500);
         return next(error);    
     }
 
-    res.status(200).json('Email has been sent successfully');
+    res.status(201).json(newEmployee);
 
 }
 
@@ -192,7 +179,7 @@ const getEmployees = async(req,res,next) =>{
         return next(error);
     }
     
-    res.status(200).json({employees,totalCount:numEmployees});
+    res.status(200).json({employees,totalCount:numEmployees?numEmployees:0});
 
 }
 
@@ -298,6 +285,11 @@ const deleteEmployee = async(req,res,next) =>{
             }else{
                 await Team.findByIdAndUpdate(existingEmployee.team,{$pull:{teamMembers:existingEmployee.id}});
             }
+
+            if(team.teamMembers.length===0 && !team.teamLeader){
+                await Team.findByIdAndDelete(teamId);
+                await Project.findByIdAndDelete(team.project);
+            }
         }
         await Department.findByIdAndUpdate(existingEmployee.department,{$pull:{employees:existingEmployee.id}});
         await Payroll.findOneAndDelete({empId:existingEmployee.id});
@@ -338,7 +330,6 @@ const empTempPasswordGenerator = () =>{
 
 exports.getEmployees = getEmployees;
 exports.getEmployeeById = getEmployeeById;
-exports.sendEmployeeCredentials = sendEmployeeCredentials;
 exports.createEmployee = createEmployee;
 exports.updateEmployee = updateEmployee;
 exports.deleteEmployee = deleteEmployee;

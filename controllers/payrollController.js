@@ -18,7 +18,7 @@ const getPayrolls = async(req,res,next) =>{
         const fieldsExclude = ['page','sort','limit','fields'];
         fieldsExclude.forEach(elem => delete queryObj[elem]);
 
-        let query = Payroll.find(queryObj);
+        let query = Employee.find(queryObj);
 
         //sorting
         if(req.query.sort){
@@ -44,19 +44,19 @@ const getPayrolls = async(req,res,next) =>{
         query = query.skip(offset).limit(limit);
         
         if(req.query.page){
-            numPayrolls = await Payroll.countDocuments();
+            numPayrolls = await Employee.countDocuments();
             if(offset >= numPayrolls){
                 return next(new HttpError('This Page does not exist',404));
             }
         }
         //Execute query
-        payrolls = await query.populate([{path:'empId',select:'firstName lastName employeeSerialId designation profileImage'}]);
+        payrolls = await query.populate([{path:'payroll',select:'salaryPerAnnum'},{path:'department',select:'deptName'}]);
     } catch (err) {
         const error = new HttpError('Failed to get schedule details',500);
         return next(error);
     }
     
-    res.status(200).json({payrolls,totalCount:numPayrolls});
+    res.status(200).json({payrolls,totalCount:numPayrolls?numPayrolls:0});
 }
 
 const createPaySlip = async(req,res,next) =>{

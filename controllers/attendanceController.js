@@ -2,7 +2,6 @@ const mongoose = require('mongoose');
 const {validationResult} = require('express-validator');
 const HttpError = require('../utils/http-error');
 const Attendance = mongoose.model('Attendance');
-const Leave = mongoose.model('Leave');
 const Employee = mongoose.model('Employee');
 
 const markAttendance = async(req,res,next) =>{
@@ -76,12 +75,12 @@ const getAttendees = async(req,res,next) =>{
         if(queryObj.status){
             query = Attendance.find({'workingDays.workingDate':{
                 $gte: todayDate,
-                $lte: nextDate
+                $lt: nextDate
             },'workingDays.status':queryObj.status});    
         } else{
             query = Attendance.find({'workingDays.workingDate':{
                 $gte: todayDate,
-                $lte: nextDate
+                $lt: nextDate
             }});
         }
 
@@ -116,14 +115,15 @@ const getAttendees = async(req,res,next) =>{
             }else{
                 filteredAtt = attendee.workingDays.filter((day)=>(day.workingDate >=todayDate && day.workingDate<nextDate)&&day.status===queryObj.status);
             }
-            
+            console.log(filteredAtt)
+
             return {
                 "empId":attendee.empId._id,
                 "firstName":attendee.empId.firstName,
                 "lastName":attendee.empId.lastName,
-                "status": filteredAtt[0].status,
-                "workingDate": filteredAtt[0].workingDate,
-                "id": filteredAtt[0]._id
+                "status": filteredAtt.length!==0?filteredAtt[0].status:0,
+                "workingDate": filteredAtt.length!==0?filteredAtt[0].workingDate:0,
+                "id": filteredAtt.length!==0?filteredAtt[0]._id:0
             }
         })
     } catch (err) {
@@ -132,7 +132,7 @@ const getAttendees = async(req,res,next) =>{
         return next(error);
     }
 
-    res.status(200).json({newAttendees,totalCount:newAttendees.length});
+    res.status(200).json({newAttendees,totalCount:numAttendees?numAttendees:0});
 
 }
 

@@ -163,7 +163,7 @@ const getLeaves = async(req,res,next) =>{
     newLeaves = newLeaves.flat();
     // console.log(offset);
     // newLeaves = newLeaves.slice(offset,limit);
-    res.status(200).json({leaves:newLeaves,totalCount:newLeaves.count});
+    res.status(200).json({leaves:newLeaves,totalCount:newLeaves.count?newLeaves.count:0});
 
 }
 

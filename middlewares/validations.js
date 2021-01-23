@@ -127,11 +127,7 @@ exports.validationGetAttendance = [
 exports.validationMarkAttendance = [
     check('status').optional({checkFalsy:true}).isIn(['Present','Absent']),
     check('workingDate').custom(val=>{
-        const wdate = new Date(val);
-        let today =new Date();
-        val = wdate.getFullYear()+'-' + (wdate.getMonth()+1) + '-'+wdate.getDate();
-        today = today.getFullYear()+'-' + (today.getMonth()+1) + '-'+today.getDate();
-        if (isNaN(Date.parse(val)) || val!==today) return false;
+        if (isNaN(Date.parse(val))) return false;
         else return true;
     }).withMessage('Entered date is invalid')
 ]
@@ -159,7 +155,7 @@ exports.validationApplyLeaves = [
         const keys = ['leaveFrom','leaveTo','leaveDescription'];
         return Object.keys(body).every(key => keys.includes(key));
     }).withMessage('Some extra parameters are sent'),
-    check('leaveDescription').notEmpty().trim().isAlpha('en-US').withMessage('Description is invalid'),
+    check('leaveDescription').notEmpty().trim().withMessage('Description is invalid'),
     check('leaveFrom').custom(val=>{
         if (isNaN(Date.parse(val))) return false;
         else return true;

@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const fs = require('fs');
 const {validationResult} = require('express-validator');
 const HttpError = require('../utils/http-error');
+const appConfig = require('../config/appConfig');
 const Employee = mongoose.model('Employee');
 const Department = mongoose.model('Department');
 const Policy = mongoose.model('Policy');
@@ -105,7 +106,7 @@ const getPolicies = async(req,res,next) =>{
         policy.policyFile = `${appConfig.APP_URL}/${policy.policyFile.replace(/\\/g,'/')}`;
     })
 
-    res.status(200).json({policies,totalCount:policies.length});
+    res.status(200).json({policies,totalCount:policies.length?policies.length:0});
 }
 
 const deletePolicy = async(req,res,next) =>{
@@ -187,7 +188,6 @@ const updatePolicy = async(req,res,next) =>{
     }
     
     policy.policyFile = `${appConfig.APP_URL}/${policy.policyFile.replace(/\\/g,'/')}`;
-    // policy.policyFile = policy.policyFile.replace(/\\/g,'/');
     
     res.status(200).json(policy);
 }

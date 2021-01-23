@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const fs = require('fs');
-const HttpError = require("../../utils/http-error");
+const HttpError = require("../utils/http-error");
 const {validationResult} = require('express-validator');
 const Employee = mongoose.model('Employee');
 
@@ -39,7 +39,7 @@ const updateProfile = async(req,res,next) =>{
         });
     }
 
-    const {github,linkedIn,twitter} = req.body;
+    const {github,linkedIn,twitter,about} = req.body;
     const socialHandles = {
         github,
         linkedIn,
@@ -48,7 +48,7 @@ const updateProfile = async(req,res,next) =>{
 
     let employee;
     try {
-        employee = await Employee.findOneAndUpdate({userAuth:userId},{profileImage:profileImage,socialHandles},{new:true});
+        employee = await Employee.findOneAndUpdate({userAuth:userId},{profileImage:profileImage,socialHandles,about},{new:true});
     } catch (err) {
         const error = new HttpError('Some error occurred while uploading file',500);
         return next(error);
@@ -57,4 +57,24 @@ const updateProfile = async(req,res,next) =>{
     res.status(200).json(employee);
 }
 
+const getMyProfile = async(req,res,next) =>{
+    
+    const userId = req.user.userId;
+    
+    let employee;
+    try {
+        employee = await Employee.findOne({userAuth:userId}).populate([
+            {path:'userAuth',select:'-password -__v'},
+            {path:'department',select:'deptName'}
+        ]);
+    } catch (err) {
+        const error = new HttpError('Something went wrong!',500);
+        return next(error);
+    }
+
+    res.status(200).json(employee);
+
+}
+
 exports.updateProfile = updateProfile;
+exports.getMyProfile = getMyProfile;

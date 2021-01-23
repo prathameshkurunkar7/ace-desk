@@ -170,7 +170,7 @@ const getSchedule = async(req,res,next) =>{
         return next(error);
     }
     
-    res.status(200).json({days,totalCount:days.length});
+    res.status(200).json({days,totalCount:days.length?days.length:0});
 }
 
 

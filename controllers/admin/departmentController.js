@@ -98,7 +98,7 @@ const getDepartments = async(req,res,next) =>{
         return next(error);
     }
     
-    res.status(200).json({departments:newDepartments,totalCount:numDepartments})
+    res.status(200).json({departments:newDepartments,totalCount:numDepartments?numDepartments:0})
 }
 
 // remove departments
@@ -127,6 +127,7 @@ const dissolveDepartment = async(req,res,next) =>{
     res.status(200).json({"message":"Department has been dissolved"});
 
 }
+
 
 exports.createDepartment = createDepartment;
 exports.dissolveDepartment = dissolveDepartment;

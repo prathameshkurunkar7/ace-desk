@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 
 const authenticate = require('../middlewares/authenticate');
-const employeeController = require('../controllers/employee/employeeController');
+const profileController = require('../controllers/profileController');
 const attendanceController = require('../controllers/attendanceController');
 const leaveController = require('../controllers/leaveController');
 const dashboardController = require('../controllers/dashboardController');
@@ -14,7 +14,9 @@ const payrollController = require('../controllers/payrollController');
 router.get('/dashboard/get-data',authenticate,dashboardController.getEmployeeDashboardData);
 
 //my profile
-router.patch('/profile-image',imageUpload,resizeImage,authenticate,employeeController.updateProfile);
+router.get('/profile/',authenticate,profileController.getMyProfile);
+
+router.patch('/profile/update',imageUpload,resizeImage,authenticate,profileController.updateProfile);
 
 //mark attendance route
 router.post('/attendance/mark',validationMarkAttendance,authenticate,attendanceController.markAttendance);
