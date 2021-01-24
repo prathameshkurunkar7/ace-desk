@@ -133,7 +133,7 @@ const createPaySlip = async(req,res,next) =>{
             grossSalary,
             allowances,
             deductions,
-        },{new:true}).populate('empId','firstName lastName')
+        },{new:true}).populate('empId','firstName lastName designation employeeSerialId')
     } catch (err) {
         const error = new HttpError('Could Not Create Payment',500);
         return next(error);
@@ -160,7 +160,7 @@ const createPaySlip = async(req,res,next) =>{
         "allowanceLimit":allowanceLimit,
         "totalDeductions":totalDeductions+totalTds,
         "loan":emploan/12,
-        "bonus":bonus
+        "bonus":empbonus
     }
 
     res.status(201).json({payroll:newPayroll});

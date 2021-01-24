@@ -13,7 +13,7 @@ const payrollController = require('../controllers/payrollController');
 //dashboard
 router.get('/dashboard/get-data',authenticate,dashboardController.getEmployeeDashboardData);
 
-router.get('/dashboard/graph-data',dashboardController.getHRDashboardGraph);
+router.get('/dashboard/graph-data',dashboardController.getDashboardGraph);
 
 //my profile
 router.get('/profile/',authenticate,profileController.getMyProfile);
