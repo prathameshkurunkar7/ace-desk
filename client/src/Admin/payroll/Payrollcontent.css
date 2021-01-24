@@ -1,0 +1,143 @@
+.payroll {
+  margin-top: 43px;
+  flex: 0.8;
+}
+
+.payroll__firstDiv {
+  padding: 0px;
+  margin: 5px;
+  max-width: 100%;
+  position: relative;
+  margin: 30px;
+  padding: 30px;
+  border-radius: 20px;
+  background: #f8f8f8;
+  box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.payroll__Btn {
+  width: 200px;
+  height: 40px;
+  color: #000;
+  font-size: 18px;
+  font-weight: 600;
+  outline: none;
+  cursor: pointer;
+  background-size: 200% auto;
+  border-radius: 10px;
+  border: none;
+  transition: 0.5s;
+  box-shadow: 0 0 20px #eee;
+  background-image: linear-gradient(
+    to right,
+    #71d9fc 0%,
+    rgb(68, 148, 253) 51%,
+    #65d5fa 100%
+  );
+}
+
+.payroll__Btn:hover {
+  background-position: right center;
+  text-decoration: none;
+}
+
+.payroll__icon {
+  position: absolute;
+  top: 6px;
+  display: flex;
+  left: 10px;
+  font-size: 25px;
+  color: #5078ef;
+}
+
+.payroll__selectRow {
+  display: flex;
+  justify-content: space-between;
+  position: relative;
+  width: 100%;
+  height: 40px;
+  margin-top: 10px;
+}
+
+.payroll__select {
+  -webkit-appearance: none;
+  appearance: none;
+  /* border: 1px solid #d5dbd9; */
+  width: 40%;
+  height: 100%;
+  font-size: 17px;
+  color: rgb(116, 116, 116);
+  font-weight: 500;
+  border-radius: 7px;
+  padding: 8px 20px;
+  background: #f8f8f8;
+  box-shadow: 1px 1px 10px rgba(2, 0, 22, 0.2);
+  outline: none;
+  position: relative;
+  cursor: pointer;
+  border: 0px;
+  z-index: 0;
+  /* text-transform: uppercase; */
+}
+
+.payroll__selectRow:before {
+  content: "";
+  position: absolute;
+  top: 17px;
+  left: 36%;
+  border: 8px solid;
+  border-color: #5078ef transparent transparent transparent;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.payroll__searchBox {
+  width: 45%;
+  border-radius: 7px;
+  display: flex;
+}
+
+.payroll__searchField {
+  width: 600px;
+  position: relative;
+}
+
+.payroll__searchip {
+  width: 100%;
+  height: 95%;
+  border: 0px;
+  font-size: 17px;
+  padding-left: 40px;
+  outline: none;
+  border-radius: 7px;
+  background: #f8f8f8;
+  box-shadow: 1px 1px 10px rgba(2, 0, 22, 0.2);
+}
+
+.payroll__thead:hover,
+.payroll__trow:hover {
+  transition: all 0.2s ease-in;
+  transform: scale(1);
+  box-shadow: 2px 2px 12px rgba(0, 0, 0, 0.2), -1px -1px 8px rgba(0, 0, 0, 0.2);
+}
+
+.generate__payslip {
+  margin: 15px 0;
+  width: 200px;
+  height: 50px;
+  color: #000;
+  font-size: 18px;
+  font-weight: 600;
+  background: #dde1e7;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  border-radius: 10px;
+  box-shadow: 2px 2px 5px #a2a4aa, -3px -2px 10px #ffffff73;
+}
+
+@media (min-width: 1820px) {
+  .payroll__searchField {
+    width: 900px;
+  }
+}

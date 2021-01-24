@@ -1,0 +1,152 @@
+.lbform {
+  margin-top: 43px;
+  flex: 0.8;
+}
+
+.lbform__card {
+  max-width: 100%;
+  margin: 30px;
+  padding: 30px;
+  border-radius: 20px;
+  background: #f8f8f8;
+  box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.lbform__heading {
+  font-weight: 500;
+}
+
+.lbform__header {
+  font-size: 17px;
+  margin: 20px 0;
+  text-align: center;
+}
+
+.lbform__body {
+  width: 100%;
+}
+
+.lbform__row {
+  margin: 30px 0px;
+  display: flex;
+  align-items: center;
+}
+
+.lbform__label {
+  width: 200px;
+  margin-right: 10px;
+  font-size: 18px;
+}
+
+.lbform__star {
+  color: red;
+}
+
+.lbform__input {
+  width: 100%;
+  margin: 15px 0px;
+  outline: none;
+  font-size: 16px;
+  padding: 7px 10px;
+  border-radius: 7px;
+  border: 1px solid #d5dbd9;
+  background: #f8f8f8;
+  box-shadow: 1px 1px 10px rgba(2, 0, 22, 0.2);
+}
+
+.lbform__input:hover {
+  border: 1px solid black;
+}
+
+.lbform__selectRow {
+  display: flex;
+  justify-content: space-between;
+  position: relative;
+  width: 100%;
+  height: 37px;
+  margin-top: 10px;
+}
+
+.lbform__select {
+  -webkit-appearance: none;
+  appearance: none;
+  border: 1px solid #d5dbd9;
+  width: 100%;
+  height: 100%;
+  font-size: 16px;
+  border-radius: 7px;
+  padding: 8px 10px;
+  background: #f8f8f8;
+  box-shadow: 1px 1px 10px rgba(2, 0, 22, 0.2);
+  outline: none;
+  position: relative;
+  cursor: pointer;
+  border: 0px;
+  outline: 0px;
+  z-index: 0;
+  /* text-transform: uppercase; */
+}
+
+.lbform__selectRow:before {
+  content: "";
+  position: absolute;
+  top: 15px;
+  left: 97%;
+  border: 8px solid;
+  border-color: #5078ef transparent transparent transparent;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.lbform__btrow {
+  display: flex;
+  justify-content: center;
+}
+
+.lbform__btn {
+  width: 50%;
+  padding: 10px;
+  font-size: 17px;
+  font-weight: 550;
+  border: 0;
+  transition: 0.5s;
+  cursor: pointer;
+  background-size: 200% auto;
+  border-radius: 10px;
+  box-shadow: 0 0 20px #eee;
+  background-image: linear-gradient(
+    to right,
+    #71d9fc 0%,
+    rgb(68, 148, 253) 51%,
+    #65d5fa 100%
+  );
+  outline: none;
+  border-radius: 10px;
+}
+
+.lbform__btn:hover {
+  background-position: right center;
+  text-decoration: none;
+}
+
+@media (max-width: 940px) {
+  .lbform__row {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .lbform__label {
+    margin-bottom: 5px;
+  }
+}
+
+@media (max-width: 598px) {
+  .lbform__selectRow:before {
+    left: 85%;
+  }
+}
+
+@media (max-width: 400px) {
+  .lbform__selectRow:before {
+    left: 80%;
+  }
+}

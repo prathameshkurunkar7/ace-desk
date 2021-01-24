@@ -1,0 +1,246 @@
+.policies {
+  margin-top: 43px;
+  flex: 0.8;
+  overflow-x: hidden;
+}
+
+.policies__row {
+  margin: 30px 0px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.policies__selecteRow {
+  display: flex;
+  justify-content: space-between;
+  position: relative;
+  width: 100%;
+  height: 40px;
+  margin-top: 10px;
+}
+
+.policies__select {
+  -webkit-appearance: none;
+  appearance: none;
+  /* border: 1px solid #d5dbd9; */
+  width: 40%;
+  height: 100%;
+  font-size: 17px;
+  color: rgb(116, 116, 116);
+  font-weight: 500;
+  border-radius: 7px;
+  padding: 8px 20px;
+  background: #f8f8f8;
+  box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.3);
+  outline: none;
+  position: relative;
+  cursor: pointer;
+  border: 0px;
+  z-index: 0;
+  /* text-transform: uppercase; */
+}
+
+.policies__selecteRow:before {
+  content: "";
+  position: absolute;
+  top: 17px;
+  left: 35%;
+  border: 8px solid;
+  border-color: #5078ef transparent transparent transparent;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.policies__searchBox {
+  width: 40%;
+  border-radius: 7px;
+  display: flex;
+}
+
+.policies__searchField {
+  width: 600px;
+  position: relative;
+}
+
+.policies__searchip {
+  width: 100%;
+  height: 95%;
+  border: 0px;
+  font-size: 17px;
+  padding-left: 40px;
+  outline: none;
+  border-radius: 7px;
+  background: #f8f8f8;
+  box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.policies__addPolicy {
+  margin: 15px 0;
+  width: 150px;
+  height: 50px;
+  color: #000;
+  font-size: 18px;
+  font-weight: 600;
+  outline: none;
+  cursor: pointer;
+  background-size: 200% auto;
+  border-radius: 10px;
+  border: none;
+  transition: 0.5s;
+  box-shadow: 0 0 20px #eee;
+  background-image: linear-gradient(
+    to right,
+    #71d9fc 0%,
+    rgb(68, 148, 253) 51%,
+    #65d5fa 100%
+  );
+}
+
+.policies__addPolicy:hover {
+  background-position: right center;
+  text-decoration: none;
+}
+
+.policy__addIcon {
+  margin-top: 5px;
+}
+
+.policies__icon {
+  position: absolute;
+  top: 6px;
+  display: flex;
+  left: 10px;
+  font-size: 25px;
+  color: #5078ef;
+}
+
+.policies__card {
+  max-width: 100%;
+  margin: 30px;
+  padding: 30px;
+  border-radius: 20px;
+  background: #f8f8f8;
+  box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.policies__theader:hover,
+.policies__trow:hover {
+  transition: all 0.2s ease-in;
+  transform: scale(1);
+  box-shadow: 2px 2px 12px rgba(0, 0, 0, 0.2), -1px -1px 8px rgba(0, 0, 0, 0.2);
+}
+
+.policies__action {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: space-evenly;
+}
+
+.policies__view {
+  background: #06c506;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.policies__view:hover {
+  transition: all 0.2s ease-in;
+  transform: scale(1);
+  box-shadow: 2px 2px 12px rgba(0, 0, 0, 0.2), -1px -1px 8px rgba(0, 0, 0, 0.2);
+}
+
+.policies__edit {
+  background: #4997f0;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.policies__edit:hover {
+  transition: all 0.2s ease-in;
+  transform: scale(1);
+  box-shadow: 2px 2px 12px rgba(0, 0, 0, 0.2), -1px -1px 8px rgba(0, 0, 0, 0.2);
+}
+
+.policies__del {
+  background: #da1a1a;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.policies__del:hover {
+  transition: all 0.2s ease-in;
+  transform: scale(1);
+  box-shadow: 2px 2px 12px rgba(0, 0, 0, 0.2), -1px -1px 8px rgba(0, 0, 0, 0.2);
+}
+
+@media (max-width: 940px) {
+  .policies__row {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .policies__selectRow {
+    width: 100%;
+  }
+  .policies__btn {
+    margin: auto;
+  }
+  .policies__selectRow:before {
+    left: 35%;
+  }
+}
+
+@media (max-width: 598px) {
+  .policies__selectRow:before {
+    left: 29%;
+  }
+
+  .policies__selectRow {
+    width: 100%;
+  }
+
+  .policies__select {
+    padding: 8px 25px;
+  }
+
+  .policies__btn {
+    margin: auto;
+  }
+}
+
+@media (max-width: 1430px) and (min-width: 1024px) {
+  .policies__searchBox {
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
+@media (max-width: 400px) {
+  .policies__selectRow:before {
+    left: 27%;
+  }
+  .policies__selectRow {
+    width: 100%;
+  }
+  .policies__btn {
+    margin: auto;
+    width: 110%;
+  }
+}
+
+@media (max-width: 1024px) {
+  .policies__select {
+    padding: 8px 25px 8px 15px;
+  }
+}
+
+@media (min-width: 1520px) {
+  .policies__searchField {
+    width: 1130px;
+  }
+}

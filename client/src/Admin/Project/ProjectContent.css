@@ -1,0 +1,254 @@
+.project {
+  margin-top: 55px;
+  flex: 0.8;
+  overflow-x: hidden;
+}
+
+.project__row {
+  margin: 30px 0px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.project__selectRow {
+  display: flex;
+  justify-content: flex-start;
+  position: relative;
+  width: 80%;
+  height: 40px;
+  margin-top: 10px;
+}
+
+.project__searchBox {
+  width: 50%;
+  border-radius: 7px;
+  display: flex;
+}
+
+.project__searchField {
+  width: 600px;
+  position: relative;
+}
+
+.project__searchip {
+  width: 90%;
+  height: 95%;
+  border: 0px;
+  font-size: 17px;
+  padding-left: 40px;
+  outline: none;
+  border-radius: 7px;
+  background: #f8f8f8;
+  box-shadow: 1px 1px 10px rgba(2, 0, 22, 0.2);
+}
+
+.project__sicon {
+  position: absolute;
+  top: 6px;
+  display: flex;
+  left: 10px;
+  font-size: 25px;
+  color: #5078ef;
+}
+
+.project__cardRow {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  flex-flow: wrap;
+}
+
+.project__crd {
+  max-width: 100%;
+  margin: 30px;
+  padding: 30px;
+  border-radius: 20px;
+  background: #f8f8f8;
+  box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.project__card {
+  width: 40%;
+  border-radius: 20px;
+  border: none;
+  margin-bottom: 50px;
+  position: relative;
+  background: #f8f8f8;
+  transition: 0.3s;
+  box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.project__addP {
+  width: 200px;
+  height: 45px;
+  color: #000;
+  font-size: 18px;
+  font-weight: 600;
+  outline: none;
+  cursor: pointer;
+  background-size: 200% auto;
+  border-radius: 10px;
+  border: none;
+  transition: 0.5s;
+  box-shadow: 0 0 20px #eee;
+  background-image: linear-gradient(
+    to right,
+    #71d9fc 0%,
+    rgb(68, 148, 253) 51%,
+    #65d5fa 100%
+  );
+}
+
+.project__addP:hover {
+  background-position: right center;
+  text-decoration: none;
+}
+
+.project__name {
+  display: flex;
+  padding: 17px 4px;
+  align-items: center;
+  justify-content: space-around;
+}
+
+.project__pname {
+  font-size: 1.65em;
+  font-weight: 500;
+}
+
+.project__dots {
+  /* margin-top: -25px; */
+  font-size: 1.8em;
+}
+
+.project__dropDown {
+  display: grid;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 3px;
+  background-color: #fff;
+  position: absolute;
+  transform: translate3d(220px, 55px, 0px);
+  top: 0px;
+  left: 0px;
+}
+
+.project__ede {
+  background-color: #fff;
+  outline: none;
+  border: none;
+  /* border: 1px solid #706f6f; */
+}
+
+.project__edit {
+  display: table-cell;
+  width: 20%;
+  padding: 0.6rem 2.5rem;
+  font-weight: 600;
+  font-size: 17px;
+  color: #212529;
+  margin-left: -2px;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.project__del {
+  display: table-cell;
+  width: 40%;
+  padding: 0.6rem 2.5rem;
+  font-weight: 600;
+  font-size: 17px;
+  color: #212529;
+  white-space: nowrap;
+  border: 0;
+  cursor: pointer;
+}
+
+.project__icon {
+  margin-right: 25px;
+  margin-left: -30px;
+  margin-bottom: -5px;
+}
+
+.project__body {
+  padding: 5px 10px;
+  /* font-size: 17px; */
+}
+
+.project__content {
+  margin: 15px 0px;
+}
+
+.project__subHead {
+  display: block;
+  font-size: 1.4em;
+  font-weight: 500;
+}
+
+.project__span {
+  font-size: 0.95em;
+  color: #706f6f;
+}
+
+.project__status {
+  background-color: #f8f8f8;
+  color: #fd9309;
+}
+
+.project__done {
+  height: 40px;
+  box-shadow: 0 0 20px #eee;
+  background-image: linear-gradient(
+    to right,
+    #71d9fc 0%,
+    rgb(68, 148, 253) 51%,
+    #65d5fa 100%
+  );
+  outline: none;
+  cursor: pointer;
+  background-size: 200% auto;
+  border-radius: 10px;
+  border: none;
+  transition: 0.5s;
+  width: 100%;
+  display: block;
+  text-align: center;
+  padding: 10px 5px;
+}
+
+.project__done:hover {
+  background-position: right center;
+  text-decoration: none;
+}
+
+/* @media screen and (max-width: 1000px) {
+  .project__card {
+    width: 40%;
+  }
+} */
+
+@media screen and (max-width: 620px) {
+  .project__card {
+    width: 80%;
+  }
+  .project__dropDown {
+    transform: translate3d(100px, 65px, 0px);
+  }
+  .project__crd {
+    margin: 0;
+    padding: 0;
+  }
+  .project {
+    overflow-x: visible;
+  }
+}
+
+@media screen and (max-width: 1195) {
+  .project__row {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .project__addP {
+    margin: auto;
+  }
+}

@@ -1,0 +1,244 @@
+.dashboard {
+  margin-top: 65px;
+  flex: 0.8;
+}
+
+.dashboard__row1 {
+  width: 100%;
+  display: flex;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+}
+
+.dashboard__row2 {
+  width: 100%;
+  display: flex;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+}
+
+.dashboard__col1 {
+  display: flex;
+  flex: 0.3334;
+  flex-flow: column wrap;
+}
+
+.dashboard__col2 {
+  display: flex;
+  flex: 0.3334;
+  flex-flow: column wrap;
+}
+
+/* .chartjs-render-monitor {
+  display: block;
+  height: 400px;
+  width: 720px;
+} */
+
+/* .dashboard__card2:hover {
+  transform: scale(1.05);
+} */
+
+/* .dashboard__info:hover, .dashboard__val:hover {
+  transform: scale(1.11);
+} */
+
+.dashboard__card1 {
+  background: #fff;
+  border-radius: 20px;
+  position: relative;
+  flex: 0.6667;
+  width: fit-content;
+  /* height: 500px; */
+  margin: 5px 5px 5px 10px;
+  transition: all 0.2s;
+  box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.dashboard__card1:hover {
+  box-shadow: 5px 5px 20px rgba(0, 0, 0, 0.2);
+  transform: translate(-1.5px, -1.5px);
+}
+
+.dashboard__card1:hover .icon svg {
+  animation: iconjln 1s;
+}
+
+.dashboard__card2 {
+  background: #fff;
+  border-radius: 20px;
+  position: relative;
+  flex: 1;
+  width: 96%;
+  height: 150px;
+  margin: 5px;
+  transition: all 0.1s;
+  box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.dashboard__card2:hover {
+  box-shadow: 5px 5px 20px rgba(0, 0, 0, 0.2);
+  transform: translate(-1.5px, -1.5px);
+}
+
+.dashboard__card2:hover .icon svg {
+  animation: iconjln 1s;
+}
+
+.dashboard__info {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.dashboard__navlink {
+  text-decoration: none;
+  color: black;
+}
+
+.dashboard__val {
+  /* display: flex;
+  justify-content: center; */
+  flex: 0.5;
+  margin-top: -5px;
+}
+
+.dashboard__valh {
+  text-align: center;
+  font-family: 500;
+  margin-block-start: 1.35em;
+  margin-block-end: 0em;
+}
+
+.dashboard__valspan {
+  font-size: 20px;
+  font-weight: 500;
+  text-align: center;
+}
+
+.dashboard__circle {
+  flex: 0.5;
+  margin-top: 40px;
+}
+
+.dashboard__icon {
+  margin-left: 57px;
+}
+
+.dashboard__bdayTable {
+  overflow-x: hidden;
+  overflow-y: auto;
+  height: 230px;
+}
+
+.dashboard__bdayRow {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  /* margin: 10px 0px; */
+}
+
+.dashboard__bdayIcon {
+  width: 55%;
+  border-radius: 50%;
+}
+
+.dashboard__cardHead {
+  text-align: center;
+  font-size: 30px;
+  font-weight: 500;
+  margin-block-start: 0.3em;
+  margin-block-end: 0em;
+}
+
+.dashboard__card3 {
+  background: #fff;
+  border-radius: 20px;
+  position: relative;
+  flex: 0.3333;
+  margin: 5px 5px 5px 10px;
+  transition: all 0.2s;
+  box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.dashboard__card3:hover {
+  box-shadow: 5px 5px 20px rgba(0, 0, 0, 0.2);
+  transform: translate(-1.5px, -1.5px);
+}
+
+.dashboard__card3:hover .icon svg {
+  animation: iconjln 1s;
+}
+
+.dashboard__cardBody {
+  text-align: center;
+  height: 250px;
+  padding: 10px;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+.dashboard__col1 {
+  display: flex;
+  justify-content: center;
+}
+
+@media (max-width: 1040px) {
+  .dashboard__card2 {
+    width: 98%;
+  }
+  .dashboard__card1 {
+    margin: 5px;
+  }
+  .dashboard__card3 {
+    margin: 5px;
+  }
+  .dashboard {
+    margin-right: auto;
+    margin-left: auto;
+  }
+}
+
+@media (max-width: 1278px) {
+  .dashboard {
+    width: fit-content;
+    margin-right: auto;
+    margin-left: auto;
+  }
+
+  .dashboard__col1 {
+    flex: 1;
+    height: 500px;
+  }
+
+  .dashboard__col2 {
+    flex: 1;
+    height: 300px;
+  }
+
+  .dashboard__card1 {
+    flex: 100%;
+    max-width: 800px;
+  }
+
+  .dashboard__card2 {
+    /* flex: 100%; */
+    max-width: 800px;
+  }
+
+  .dashboard__card3 {
+    flex: 100%;
+    max-width: 800px;
+  }
+}
+
+@media (min-width: 1280px) and (max-width: 1380px) {
+  .dashboard__col1 {
+    flex: 1;
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+  .dashboard__card1 {
+    flex: 1;
+  }
+}

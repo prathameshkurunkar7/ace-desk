@@ -1,0 +1,42 @@
+.Navbar {
+  background-color: #fff;
+  padding: 10px;
+  width: 100%;
+  height: 55px;
+  position: fixed;
+  z-index: 1;
+  box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.15);
+}
+
+.Navbar__button {
+  background-color: #fff;
+  cursor: pointer;
+  border: none;
+  outline: none;
+}
+.Navbar__link {
+  text-decoration: none;
+  float: right;
+  margin-top: -27px;
+  margin-right: 10px;
+}
+
+.Navbar__title {
+  color: #000;
+  font-size: 22px;
+}
+
+.Navbar__icon {
+  color: #000;
+  margin-bottom: -3px;
+  margin-left: 3px;
+}
+
+@media (min-width: 600px) {
+  .Navbar__button {
+    display: none;
+  }
+  .Navbar__link {
+    margin-top: 0px;
+  }
+}

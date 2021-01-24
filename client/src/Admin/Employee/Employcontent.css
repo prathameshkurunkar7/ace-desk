@@ -1,0 +1,238 @@
+.Employee {
+  margin-top: 55px;
+  flex: 0.8;
+  overflow-x: hidden;
+}
+
+.Employee__card {
+  padding: 0px;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  /* justify-content: space-evenly; */
+  /* align-items: flex-end; */
+  padding: 0px;
+  margin: 5px;
+  max-width: 100%;
+  position: relative;
+  margin: 30px;
+  padding: 30px;
+  border-radius: 20px;
+  background: #f8f8f8;
+  box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+/* .Employee__btn {
+  display: flex;
+  justify-content: flex-end;
+  display: flex;
+  flex-direction: row;
+  justify-content: left;
+  align-items: left;
+  font-size: 20px;
+  flex-wrap: wrap;
+} */
+
+.Employee__addE {
+  margin: 15px 0;
+  width: 150px;
+  height: 50px;
+  color: #000;
+  font-size: 18px;
+  font-weight: 600;
+  outline: none;
+  cursor: pointer;
+  background-size: 200% auto;
+  border-radius: 10px;
+  border: none;
+  transition: 0.5s;
+  box-shadow: 0 0 20px #eee;
+  background-image: linear-gradient(
+    to right,
+    #71d9fc 0%,
+    rgb(68, 148, 253) 51%,
+    #65d5fa 100%
+  );
+}
+
+.Employee__addE:hover {
+  background-position: right center;
+  text-decoration: none;
+}
+
+.Employee__table {
+  padding: 40px 10px 0px 10px;
+}
+.Employee__formTableRow:hover,
+.Employee__tableHeader:hover {
+  transition: all 0.2s ease-in;
+  transform: scale(1);
+  box-shadow: 2px 2px 12px rgba(0, 0, 0, 0.2), -1px -1px 8px rgba(0, 0, 0, 0.2);
+}
+.Employee__formaction {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: space-between;
+}
+.Employee__formactionAdd {
+  background: #09af33;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  border-radius: 5px;
+  box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.3);
+}
+.Employee__formactionRem {
+  background: #e24c4c;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  border-radius: 5px;
+  box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.Employee__row {
+  margin: 30px 0px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.Employee__selectRow {
+  display: flex;
+  justify-content: space-between;
+  position: relative;
+  width: 80%;
+  height: 40px;
+  margin-top: 10px;
+}
+
+.Employee__select {
+  -webkit-appearance: none;
+  appearance: none;
+  /* border: 1px solid #d5dbd9; */
+  width: 40%;
+  height: 100%;
+  font-size: 17px;
+  color: rgb(116, 116, 116);
+  font-weight: 500;
+  border-radius: 7px;
+  padding: 8px 20px;
+  background: #f8f8f8;
+  box-shadow: 1px 1px 10px rgba(2, 0, 22, 0.2);
+  outline: none;
+  position: relative;
+  cursor: pointer;
+  border: 0px;
+  z-index: 0;
+  /* text-transform: uppercase; */
+}
+
+.Employee__selectRow:before {
+  content: "";
+  position: absolute;
+  top: 17px;
+  left: 35%;
+  border: 8px solid;
+  border-color: #5078ef transparent transparent transparent;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.Employee__searchBox {
+  width: 50%;
+  border-radius: 7px;
+  display: flex;
+}
+
+.Employee__searchField {
+  width: 600px;
+  position: relative;
+}
+
+.Employee__searchip {
+  width: 90%;
+  height: 95%;
+  border: 0px;
+  font-size: 17px;
+  padding-left: 40px;
+  outline: none;
+  border-radius: 7px;
+  background: #f8f8f8;
+  box-shadow: 1px 1px 10px rgba(2, 0, 22, 0.2);
+}
+
+.Employee__icon {
+  position: absolute;
+  top: 6px;
+  display: flex;
+  left: 10px;
+  font-size: 25px;
+  color: #5078ef;
+}
+
+@media (max-width: 990px) {
+  .Employee__row {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .Employee__selectRow {
+    width: 100%;
+  }
+  .Employee__btn {
+    margin: auto;
+  }
+  .Employee__selectRow:before {
+    left: 35%;
+  }
+}
+
+@media (max-width: 598px) {
+  .Employee__selectRow:before {
+    left: 29%;
+  }
+
+  .Employee__selectRow {
+    width: 100%;
+  }
+
+  .Employee__select {
+    padding: 8px 25px;
+  }
+
+  .Employee__btn {
+    margin: auto;
+  }
+}
+
+@media (max-width: 1430px) and (min-width: 1024px) {
+  .Employee__searchBox {
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
+@media (max-width: 400px) {
+  .Employee__selectRow:before {
+    left: 27%;
+  }
+  .Employee__selectRow {
+    width: 100%;
+  }
+  .Employee__btn {
+    margin: auto;
+    width: 110%;
+  }
+}
+
+@media (max-width: 1024px) {
+  .Employee__select {
+    padding: 8px 25px 8px 15px;
+  }
+}
+
+@media (min-width: 1520px) {
+  .Employee__searchField {
+    width: 1130px;
+  }
+}

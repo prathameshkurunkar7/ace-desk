@@ -1,0 +1,209 @@
+.Empdashboard {
+  margin-top: 65px;
+  flex: 0.8;
+}
+
+.Empdashboard__row1 {
+  width: 100%;
+  display: flex;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+}
+
+.Empdashboard__row2 {
+  width: 100%;
+  display: flex;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+}
+
+.Empdashboard__col1 {
+  display: flex;
+  flex: 0.3334;
+  flex-flow: column wrap;
+}
+
+.Empdashboard__col2 {
+  display: flex;
+  flex: 0.3334;
+  flex-flow: column wrap;
+}
+
+.Empdash__leaves {
+  display: inline-flex;
+}
+
+.Empdashboard__card1 {
+  background: #fff;
+  border-radius: 20px;
+  position: relative;
+  flex: 0.6667;
+  width: fit-content;
+  margin: 5px 5px 5px 10px;
+  transition: all 0.2s;
+  box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.Empdashboard__card1:hover {
+  box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.2);
+  transform: translate(-1.5px, -1.5px);
+}
+
+.Empdashboard__card1:hover .icon svg {
+  animation: iconjln 1s;
+}
+
+.Empdashboard__card2 {
+  background: #fff;
+  border-radius: 20px;
+  position: relative;
+  /* width: 90%; */
+  flex: 1;
+  margin: 5px;
+  transition: all 0.1s;
+  box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.Empdashboard__card2:hover {
+  box-shadow: 5px 5px 20px rgba(0, 0, 0, 0.2);
+  transform: translate(-1.5px, -1.5px);
+}
+
+.Empdashboard__card2:hover .icon svg {
+  animation: iconjln 1s;
+}
+
+.Empdashboard__card3:hover {
+  box-shadow: 5px 5px 20px rgba(0, 0, 0, 0.2);
+  transform: translate(-1.5px, -1.5px);
+}
+
+.Empdashboard__card3:hover .icon svg {
+  animation: iconjln 1s;
+}
+
+.Empdashboard__info {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.Empdashboard__navlink {
+  text-decoration: none;
+  color: black;
+}
+
+.Empdashboard__circle {
+  flex: 0.5;
+  margin-top: 25px;
+}
+
+.Empdashboard__valh {
+  text-align: center;
+  font-size: 25px;
+  font-weight: 600;
+  margin-block-start: 1.12em;
+}
+
+.Empdashboard__valspanh {
+  text-align: center;
+  font-size: 20px;
+  font-weight: 500;
+  margin-top: 20px;
+}
+
+.Empdashboard__valspan {
+  text-align: center;
+  font-size: 20px;
+  font-weight: 500;
+}
+
+.Empdashboard__icon {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.Empdashboard__bdayTable {
+  overflow-x: hidden;
+  overflow-y: auto;
+  height: 260px;
+}
+
+.Empdashboard__bdayRow {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  /* margin: 10px 0px; */
+}
+
+.Empdashboard__bdayIcon {
+  width: 55%;
+  border-radius: 50%;
+}
+
+.Empdashboard__cardHead {
+  text-align: center;
+  font-size: 30px;
+  font-weight: 500;
+  margin-block-start: 0.3em;
+  margin-block-end: 0em;
+}
+
+.Empdashboard__card3 {
+  background: #fff;
+  border-radius: 20px;
+  position: relative;
+  flex: 0.3333;
+  margin: 5px 5px 5px 10px;
+  transition: all 0.2s;
+  box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.Empdashboard__cardBody {
+  text-align: center;
+  height: 250px;
+  padding: 10px;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+@media (max-width: 1250px) {
+  .Empdashboard {
+    width: fit-content;
+  }
+
+  .Empdashboard__col1 {
+    flex: 1;
+    height: 500px;
+  }
+
+  .Empdashboard__col2 {
+    flex: 1;
+    height: 300px;
+  }
+
+  .Empdashboard__card1 {
+    flex: 100%;
+    max-width: 800px;
+  }
+
+  .Empdashboard__card2 {
+    /* flex: 100%; */
+    max-width: 800px;
+  }
+
+  .Empdashboard__card3 {
+    flex: 100%;
+    max-width: 800px;
+  }
+}
+
+@media (min-width: 1250px) and (max-width: 1500px) {
+  .Empdashboard__col1 {
+    flex: 0.835;
+  }
+}
+
+/* @media (max-width: 1170px) {
+
+} */

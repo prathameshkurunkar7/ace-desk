@@ -1,0 +1,126 @@
+.Leaves {
+  margin-top: 55px;
+  flex: 0.8;
+}
+
+.Leaves__card {
+  max-width: 100%;
+  margin: 30px;
+  padding: 30px;
+  border-radius: 20px;
+  background: #f8f8f8;
+  box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.Leaves__theader:hover,
+.Leaves__trow:hover {
+  transition: all 0.2s ease-in;
+  transform: scale(1);
+  box-shadow: 2px 2px 12px rgba(0, 0, 0, 0.2), -1px -1px 8px rgba(0, 0, 0, 0.2);
+}
+
+.Leaves__row {
+  margin: 30px 0px;
+  display: flex;
+  /* justify-content: space-between; */
+  align-items: baseline;
+}
+
+.Leaves__formaction {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: space-evenly;
+}
+
+.Leaves__formactionAdd {
+  background: #06c506;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.Leaves__formactionAdd:hover {
+  transition: all 0.2s ease-in;
+  transform: scale(1);
+  box-shadow: 2px 2px 12px rgba(0, 0, 0, 0.2), -1px -1px 8px rgba(0, 0, 0, 0.2);
+}
+
+.Leaves__formactionRem {
+  background: #da1a1a;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.Leaves__formactionRem:hover {
+  transition: all 0.2s ease-in;
+  transform: scale(1);
+  box-shadow: 2px 2px 12px rgba(0, 0, 0, 0.2), -1px -1px 8px rgba(0, 0, 0, 0.2);
+}
+
+.Leaves__input {
+  width: 100%;
+  margin: 15px 0px;
+  outline: none;
+  font-size: 17px;
+  padding: 7px 9px;
+  border-radius: 7px;
+  border: 1px solid #d5dbd9;
+  background: #f8f8f8;
+  box-shadow: 1px 1px 10px rgba(2, 0, 22, 0.2);
+}
+
+.Leaves__selectRow {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  position: relative;
+  width: 100%;
+  height: 45px;
+  margin-top: 10px;
+}
+
+.Leaves__select {
+  -webkit-appearance: none;
+  appearance: none;
+  border: 1px solid #d5dbd9;
+  width: 30%;
+  height: 100%;
+  border-radius: 7px;
+  padding: 8px 20px;
+  background: #f8f8f8;
+  box-shadow: 1px 1px 10px rgba(2, 0, 22, 0.2);
+  outline: none;
+  position: relative;
+  cursor: pointer;
+  z-index: 0;
+  /* text-transform: uppercase; */
+}
+
+.Leaves__selectRow:before {
+  content: "";
+  position: absolute;
+  top: 20px;
+  left: 96%;
+  border: 8px solid;
+  border-color: #5078ef transparent transparent transparent;
+  pointer-events: none;
+  z-index: 1;
+}
+
+@media (max-width: 598px) {
+  .Leaves__selectRow:before {
+    left: 87%;
+  }
+  .Leaves__select {
+    padding: 8px 25px;
+  }
+}
+
+@media (max-width: 400px) {
+  .Leaves__selectRow:before {
+    left: 70%;
+  }
+}
