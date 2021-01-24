@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const fs = require('fs');
+const appConfig = require('../config/appConfig');
 const HttpError = require("../utils/http-error");
 const {validationResult} = require('express-validator');
 const Employee = mongoose.model('Employee');
@@ -31,7 +32,7 @@ const updateProfile = async(req,res,next) =>{
         profileImage = req.file.path;
     }
 
-    if(emp.profileImage && profileImage){
+    if(emp.profileImage!==undefined && profileImage){
         fs.unlink(emp.profileImage,(err)=>{
             if(err){
                 console.log(err);
@@ -54,6 +55,10 @@ const updateProfile = async(req,res,next) =>{
         return next(error);
     }
 
+    if(employee.profileImage){
+        employee.profileImage = `${appConfig.APP_URL}/${employee.profileImage}`;
+    }
+
     res.status(200).json(employee);
 }
 
@@ -70,6 +75,10 @@ const getMyProfile = async(req,res,next) =>{
     } catch (err) {
         const error = new HttpError('Something went wrong!',500);
         return next(error);
+    }
+
+    if(employee.profileImage){
+        employee.profileImage = `${appConfig.APP_URL}/${employee.profileImage}`;
     }
 
     res.status(200).json(employee);

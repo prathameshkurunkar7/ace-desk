@@ -13,8 +13,9 @@ const markAttendance = async(req,res,next) =>{
         return next(err);
     }
 
-    const {status,workingDate} = req.body
-    
+    const {status} = req.body
+    const workingDate = new Date().toISOString().substring(0,10);
+
     let attendee;
     try {
         const employee = await Employee.findOne({userAuth:req.user.userId});
@@ -29,14 +30,11 @@ const markAttendance = async(req,res,next) =>{
     }
 
     const markedWorkingDays = attendee.workingDays.map(day=>{
-        const date = new Date(day.workingDate);
-        const nextDay = new Date();
-        nextDay.setDate(date.getDate() + 1)
-        if(new Date(workingDate)>=date && new Date(workingDate)<nextDay){
+        if(workingDate === new Date(day.workingDate).toISOString().substring(0,10)){
             day.status = status
         }
         return day;
-    });
+    })
 
     let newAttendee;
     try {
@@ -67,9 +65,11 @@ const getAttendees = async(req,res,next) =>{
         const fieldsExclude = ['page','limit','fields'];
         fieldsExclude.forEach(elem => delete queryObj[elem]);
         
-        const todayDate = new Date(queryObj.workingDate);
-        const nextDate = new Date();
+        let todayDate = new Date(queryObj.workingDate);
+        let nextDate = new Date();
         nextDate.setDate(todayDate.getDate() + 1)
+        todayDate = todayDate.toISOString().substring(0,10);
+        nextDate = nextDate.toISOString().substring(0,10);
         
         let query;
         if(queryObj.status){
@@ -111,28 +111,31 @@ const getAttendees = async(req,res,next) =>{
 
             let filteredAtt;
             if(!queryObj.status){
-                filteredAtt = attendee.workingDays.filter((day)=>day.workingDate >=todayDate && day.workingDate<nextDate);
+                filteredAtt = attendee.workingDays.filter((day)=>new Date(day.workingDate).toISOString().substring(0,10)===todayDate);
             }else{
-                filteredAtt = attendee.workingDays.filter((day)=>(day.workingDate >=todayDate && day.workingDate<nextDate)&&day.status===queryObj.status);
+                filteredAtt = attendee.workingDays.filter((day)=>new Date(day.workingDate).toISOString().substring(0,10)===todayDate && day.status===queryObj.status);
             }
-            console.log(filteredAtt)
 
-            return {
-                "empId":attendee.empId._id,
-                "firstName":attendee.empId.firstName,
-                "lastName":attendee.empId.lastName,
-                "status": filteredAtt.length!==0?filteredAtt[0].status:0,
-                "workingDate": filteredAtt.length!==0?filteredAtt[0].workingDate:0,
-                "id": filteredAtt.length!==0?filteredAtt[0]._id:0
+            if(filteredAtt.length===0){
+                return
+            }else{
+                return {
+                    "empId":attendee.empId._id,
+                    "firstName":attendee.empId.firstName,
+                    "lastName":attendee.empId.lastName,
+                    "status": filteredAtt[0].status,
+                    "workingDate": filteredAtt[0].workingDate,
+                    "id": filteredAtt[0]._id
+                }
             }
         })
+        newAttendees = newAttendees.filter((attendees)=>attendees!==undefined);
     } catch (err) {
-        console.log(err);
         const error = new HttpError('Failed to get attendance details',500);
         return next(error);
     }
 
-    res.status(200).json({newAttendees,totalCount:numAttendees?numAttendees:0});
+    res.status(200).json({newAttendees,totalCount:numAttendees?numAttendees:newAttendees.length});
 
 }
 

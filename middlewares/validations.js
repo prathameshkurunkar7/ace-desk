@@ -2,8 +2,8 @@ const {check,body,query} = require('express-validator');
 const {IndianStates, Designations, QualificationTitles, BloodGroups} = require('../utils/helperData');
 
 exports.validateEmployeeCreation = [
-    check('firstName').notEmpty().isAlpha().withMessage('Name should be Alphabetic'),
-    check('lastName').notEmpty().isAlpha().withMessage('Name should be Alphabetic'),
+    check('firstName').notEmpty().trim().withMessage('Name must not be empty').isAlpha().withMessage('Name should be Alphabetic'),
+    check('lastName').notEmpty().trim().withMessage('Name must not be empty').isAlpha().withMessage('Name should be Alphabetic'),
     check('email').normalizeEmail().isEmail(),
     check('dateOfBirth').custom(val=>{
         if (isNaN(Date.parse(val))) return false;
@@ -40,8 +40,8 @@ exports.validateEmployeeUpdation = [
         ,'designation'];
         return Object.keys(body).every(key => keys.includes(key));
     }).withMessage('Some extra parameters are sent'),
-    check('firstName').optional({checkFalsy:true}).notEmpty().isAlpha().withMessage('Should Be Alphabetic'),
-    check('lastName').optional({checkFalsy:true}).notEmpty().isAlpha().withMessage('Should be Alphabetic'),
+    check('firstName').optional({checkFalsy:true}).notEmpty().trim().withMessage('Name must not be empty').isAlpha().withMessage('Name should be Alphabetic'),
+    check('lastName').optional({checkFalsy:true}).notEmpty().trim().withMessage('Name must not be empty').isAlpha().withMessage('Name should be Alphabetic'),
     check('dateOfBirth').optional({checkFalsy:true}).custom(val=>{
         if (isNaN(Date.parse(val))) return false;
         else return true;
@@ -71,7 +71,7 @@ exports.validateEmployeeUpdation = [
 
 
 exports.validationCreateTeamAndProject = [
-    check('teamName').isAlpha().isLength({min:4}),
+    check('teamName').notEmpty().trim(),
     check('projectName').isLength({min:4,max:30}).withMessage('Project Name should have atleast 4 characters'),
     check('description').notEmpty().trim(),
     check('status').isIn(['Ongoing','Finished']).withMessage('Status has to be either Ongoing or finished'),
@@ -113,7 +113,7 @@ exports.validationUpdateTeamDetails = [
         const keys = ['teamName','teamLeader'];
         return Object.keys(body).every(key => keys.includes(key));
     }).withMessage('Some extra parameters are sent'),
-    check('teamName').isAlpha().isLength({min:4}),
+    check('teamName').notEmpty().trim(),
 ]
 
 exports.validationGetAttendance = [
@@ -126,10 +126,6 @@ exports.validationGetAttendance = [
 
 exports.validationMarkAttendance = [
     check('status').optional({checkFalsy:true}).isIn(['Present','Absent']),
-    check('workingDate').custom(val=>{
-        if (isNaN(Date.parse(val))) return false;
-        else return true;
-    }).withMessage('Entered date is invalid')
 ]
 
 exports.validationSetSchedule = [
@@ -138,7 +134,7 @@ exports.validationSetSchedule = [
         if (isNaN(Date.parse(val))) return false;
         else return true;
     }).withMessage('Entered date is invalid'),
-    check('daysSchedule.*.dayDescription').isAlpha('en-US').notEmpty().trim().withMessage('Description is invalid')
+    check('daysSchedule.*.dayDescription').notEmpty().trim().withMessage('Description is invalid')
 ]
 
 exports.validationEditDaySchedule = [
@@ -147,7 +143,7 @@ exports.validationEditDaySchedule = [
         return Object.keys(body).every(key => keys.includes(key));
     }).withMessage('Some extra parameters are sent'),
     check('dayType').isIn(['Event','Holiday','Business']).withMessage('Different values given from what expected'),
-    check('dayDescription').isAlpha('en-US').notEmpty().trim().withMessage('Description is invalid')
+    check('dayDescription').notEmpty().trim().withMessage('Description is invalid')
 ]
 
 exports.validationApplyLeaves = [
@@ -231,12 +227,12 @@ exports.validateApplyLoanBonus = [
     check('description').notEmpty().trim().withMessage('Please enter valid description.'),
 ]
 
-exports.updateProfile = [
+exports.validateUpdateProfile = [
     body().custom(body => {
         const keys = ['github','linkedIn','twitter'];
         return Object.keys(body).every(key => keys.includes(key));
     }).withMessage('Some extra parameters are sent'),
-    check('socialHandles.github').isURL({ host_whitelist: [/^.*github\.com$/,] }).withMessage('Should be a Github URL'),
-    check('socialHandles.linkedIn').isURL({ host_whitelist: [/^.*linkedin\.com$/,] }).withMessage('Should be a LinkedIn URL'),
-    check('socialHandles.twitter').isURL({ host_whitelist: [/^.*twitter\.com$/,] }).withMessage('Should be a Twitter URL'),
+    check('github').isURL({ host_whitelist: [/^.*github\.com$/,] }).withMessage('Should be a Github URL'),
+    check('linkedIn').isURL({ host_whitelist: [/^.*linkedin\.com$/,] }).withMessage('Should be a LinkedIn URL'),
+    check('twitter').isURL({ host_whitelist: [/^.*twitter\.com$/,] }).withMessage('Should be a Twitter URL'),
 ]

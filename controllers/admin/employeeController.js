@@ -75,7 +75,6 @@ const createEmployee = async(req,res,next) =>{
         designation,
         userAuth:createdEmployeeAuth.id,
         department,
-        // socialHandles,
         work,
         education
     });
@@ -99,7 +98,6 @@ const createEmployee = async(req,res,next) =>{
         newEmployee.payroll = pay.id;
         newEmployee = await newEmployee.save();
     } catch (err) {
-        console.log(err);
         const error = new HttpError('New Employee was not created',500);
         return next(error);
     }
@@ -114,7 +112,6 @@ const createEmployee = async(req,res,next) =>{
         await new Email(createdEmployeeAuth,newEmployee.firstName).sendEmployeeLoginCred(createdEmployeeAuth['password'],url);
         hashedpassword = await bcrypt.hash(createdEmployeeAuth['password'], 10);
     } catch (err) {
-        console.log(err);
         return next(new HttpError('Email Not sent',500));
     }
     
@@ -317,7 +314,7 @@ const empSerialIdGenerator = (dateOfCreation) =>{
     const randomCode = crypto.randomBytes(Math.ceil(length / 2)).toString('hex').slice(0, length).toUpperCase();
     
     //CN refers to Company Name,replace it later
-    const empSerialId = `CN${date.getFullYear()}${date.getMonth()+1}${date.getDate()}${randomCode}`;
+    const empSerialId = `AD${date.getFullYear()}${date.getMonth()+1}${date.getDate()}${randomCode}`;
 
     return empSerialId;
 }

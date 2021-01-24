@@ -94,14 +94,16 @@ const createPaySlip = async(req,res,next) =>{
     const employeeCity = employee.addresses['Residential.city'];
     
     const basicSalary = payroll.salaryPerAnnum/2;
+    // HRA 40% for non-metro residents and 50% for Metro residents
     const HRA = MetroCities.includes(employeeCity)?basicSalary*(50/100):basicSalary*(40/100);
+    
     const otherAllowances = basicSalary-HRA;
     const grossSalary = basicSalary+HRA+otherAllowances+empbonus;
     
-    // const grossSalaryPerMonth =grossSalary/12;
     const avgTdsRate=tdsCalc(payroll.salaryPerAnnum)
     const totalTds = (avgTdsRate/100)*grossSalary;
     
+    // calculations based on fiscal year 2020-2021 rates
     const DA = (345-126.33)/126.33*100;
     const EPF = ((12/100)*(basicSalary+DA))<15000 ?(12/100)*(basicSalary+DA):15000;
     const ESI = ((0.75/100)*grossSalary)<21000?(0.75/100)*grossSalary:21000;
@@ -133,7 +135,6 @@ const createPaySlip = async(req,res,next) =>{
             deductions,
         },{new:true}).populate('empId','firstName lastName')
     } catch (err) {
-        console.log(err);
         const error = new HttpError('Could Not Create Payment',500);
         return next(error);
     }
@@ -226,7 +227,6 @@ const generatePdf = async(req,res,next) =>{
     try {
         await new Payslip().pdf(payroll.toJSON());
     } catch (err) {
-        console.log(err);
         return next(new HttpError('Pdf not generated',500));
     }
     
@@ -370,6 +370,59 @@ const applyLoanBonus = async(req,res,next) =>{
 
 }
 
+const getLoanAndBonus = async(req,res,next) =>{
+    
+    let payrolls,numPayrolls;
+    try {
+
+        //filtering
+        const queryObj = {...req.query};
+        const fieldsExclude = ['page','sort','limit','fields'];
+        fieldsExclude.forEach(elem => delete queryObj[elem]);
+
+        let query = Payroll.find(queryObj);
+
+        //sorting
+        if(req.query.sort){
+            const sortBy = req.query.sort.split(',').join(' ');
+            query = query.sort(sortBy);
+        }else{
+            query = query.sort('-id');
+        }
+
+        // field limiting
+        if(req.query.fields){
+            const fields = req.query.fields.split(',').join(' ');
+            query = query.select(fields);
+        }else{
+            query = query.select('-__v'); 
+        }
+        
+        // pagination
+        const limit = req.query.limit*1 || 10;
+        const page = req.query.page*1 || 1;
+        const offset = (page-1)*limit;
+        
+        query = query.skip(offset).limit(limit);
+        
+        if(req.query.page){
+            numPayrolls = await Payroll.countDocuments();
+            if(offset >= numPayrolls){
+                return next(new HttpError('This Page does not exist',404));
+            }
+        }
+        //Execute query
+        payrolls = await query.populate('empId','firstName lastName');
+    } catch (err) {
+        const error = new HttpError('Failed to get schedule details',500);
+        return next(error);
+    }
+    
+    res.status(200).json({payrolls,totalCount:numPayrolls?numPayrolls:payrolls.length});
+
+}
+
+
 //get employee loans and bonus --employee side route
 const empLoanAndBonus = async(req,res,next) =>{
     const userId = req.user.userId;
@@ -385,6 +438,7 @@ const empLoanAndBonus = async(req,res,next) =>{
     res.status(200).json(payroll);
 }
 
+// TDS calculation based on fiscal year 2020-2021
 function tdsCalc(salaryPA) {
     let taxableAmount = salaryPA;
     let buffer = 250000;
@@ -406,12 +460,13 @@ function tdsCalc(salaryPA) {
         }
     }
     tds = arr.reduce((prev,curr)=>prev+curr);
-    const educationCess = 0.04;
+    const educationCess = 0.04; //education cess according to fiscal year 2020-2021
     const netTaxable = educationCess*tds+tds;
     const avgRateOfTds = (netTaxable/salaryPA)*100;
     return avgRateOfTds;
 }
 
+// income tax slab rates according to Fiscal Year 2020-2021
 function tdsRateCalc(slab){
     let rate;
     switch (slab) {
@@ -443,3 +498,4 @@ exports.sendPaySlip = sendPaySlip;
 exports.sanctionLoanBonus = sanctionLoanBonus;
 exports.applyLoanBonus = applyLoanBonus;
 exports.empLoanAndBonus = empLoanAndBonus;
+exports.getLoanAndBonus = getLoanAndBonus;

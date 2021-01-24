@@ -133,7 +133,8 @@ const employeeSchema = new Schema({
         qualificationTitle:{type: String}
     },
     about:{
-        type:String
+        type:String,
+        default:'Write something about yourself'
     }
 });
 

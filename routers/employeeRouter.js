@@ -6,17 +6,19 @@ const profileController = require('../controllers/profileController');
 const attendanceController = require('../controllers/attendanceController');
 const leaveController = require('../controllers/leaveController');
 const dashboardController = require('../controllers/dashboardController');
-const { validationMarkAttendance, validationApplyLeaves, validateApplyLoanBonus } = require('../middlewares/validations');
-const {fileUpload,resizeImage,imageUpload} = require('../middlewares/uploader');
+const { validationMarkAttendance, validationApplyLeaves, validateApplyLoanBonus,validateUpdateProfile } = require('../middlewares/validations');
+const {resizeImage,imageUpload} = require('../middlewares/uploader');
 const payrollController = require('../controllers/payrollController');
 
 //dashboard
 router.get('/dashboard/get-data',authenticate,dashboardController.getEmployeeDashboardData);
 
+router.get('/dashboard/graph-data',dashboardController.getHRDashboardGraph);
+
 //my profile
 router.get('/profile/',authenticate,profileController.getMyProfile);
 
-router.patch('/profile/update',imageUpload,resizeImage,authenticate,profileController.updateProfile);
+router.patch('/profile/update',imageUpload,resizeImage,validateUpdateProfile,authenticate,profileController.updateProfile);
 
 //mark attendance route
 router.post('/attendance/mark',validationMarkAttendance,authenticate,attendanceController.markAttendance);
@@ -24,7 +26,7 @@ router.post('/attendance/mark',validationMarkAttendance,authenticate,attendanceC
 // leaves
 router.post('/leaves/apply',validationApplyLeaves,authenticate,leaveController.applyLeave);
 
-router.delete('/leaves/delete/:appliedLeaveId',leaveController.deleteLeave);
+router.delete('/leaves/delete/:appliedLeaveId',authenticate,leaveController.deleteLeave);
 
 // loan and bonus
 router.get('/payroll/my-loan-bonus',authenticate,payrollController.empLoanAndBonus);

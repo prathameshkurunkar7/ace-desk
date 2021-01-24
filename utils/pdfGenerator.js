@@ -1,14 +1,14 @@
 const fs = require("fs");
 const path = require("path"); 
 const puppeteer = require('puppeteer');  
-const handlebars = require('handlebars')  
+const handlebars = require('handlebars');
+
+const {Months} = require('../utils/helperData');
 
 class Payslip {
     async html(payroll) {
         try {
-            const monthNames = ["January", "February", "March", "April", "May", "June",
-                "July", "August", "September", "October", "November", "December"
-            ];
+            const monthNames = Months; 
             const d = new Date();
             
             payroll.Date = `${monthNames[d.getMonth()]} ${d.getFullYear()}`
@@ -41,7 +41,7 @@ class Payslip {
     
             await browser.close();   
         } catch (err) {
-            console.log(err);
+            throw new Error('Something went wrong!');
         }
     }
 }

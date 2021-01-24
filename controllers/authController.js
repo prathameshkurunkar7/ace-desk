@@ -164,7 +164,6 @@ const updatePassword = async(req,res,next) =>{
     try {
         isValidPassword = await bcrypt.compare(currentPassword, user.password);
     } catch (err) {
-        console.log(err);
         const error = new HttpError('Could not log you in,please verify your credentials and try again.', 500);
         return next(error);
     }

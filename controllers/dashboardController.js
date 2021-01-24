@@ -16,19 +16,92 @@ const getHRDashboardData = async(req,res,next) =>{
     const nextMonthDate = new Date();
     nextMonthDate.setMonth(todayDate.getMonth() + 1, 1);
 
-    let departments;
     try {
         data.departmentCount = await Department.countDocuments();
-        departments = await Department.find({});
         data.employeeCount= await Employee.countDocuments();
         data.projectCount= await Project.countDocuments();
-        data.bdayEmployees = await Employee.find({'dateOfBirth':{
-            $gte: todayDate,
-            $lte: nextMonthDate
-        }}).select('firstName lastName dateOfBirth').populate('department','deptName');
+        data.bdayEmployees = await Employee.aggregate([
+            { $project: {
+                "firstName": 1,
+                "lastName": 1,
+                "dateOfBirth": 1,
+                "profileImage":1,
+                "month": "$month"
+            }},
+            {
+                $match: {
+                $expr: {
+                  $eq: [{ $month: '$dateOfBirth' }, { $month: new Date() }],
+                },
+            }}
+        ]);
     } catch (err) {
         const error = new HttpError('Something went wrong!',500);
         return next(error);
+    }
+
+    let leaves;
+    try {
+        leaves = await Leave.aggregate([
+            {
+                '$unwind':"$appliedLeaves"
+            },
+            {
+                '$project':{
+                    'empId':1,
+                    'appliedLeaves':1
+                }
+            },
+            {
+                '$match': {"appliedLeaves.status": 'Pending'}
+            }
+        ])
+    } catch (err) {
+        const error = new HttpError('Something went wrong!',500);
+        return next(error);
+    }
+
+    leaves = await Promise.all(leaves.map(async(leave)=>{
+        let emp;
+        try {
+            emp = await Employee.findById(leave.empId).select('firstName lastName');
+        } catch (err) {
+            const error = new HttpError('Something went wrong!',500);
+            return next(error);
+        }
+
+        return {
+            ...leave,
+            employeeFirstName: emp.firstName,
+            employeeLastName: emp.lastName
+        }
+    }));
+
+    let loanAndBonus;
+    try {
+        loanAndBonus = await Payroll.find({
+            '$or': [{"loan.status": 'Pending'},{"bonus.status":'Pending'}],
+        }).populate('empId','firstName lastName');
+    } catch (err) {
+        console.log(err);
+        const error = new HttpError('Could not get Pending Loans and Bonus',500);
+        return next(error);
+    }
+
+    data.leaves = leaves;
+    data.loanAndBonus = loanAndBonus;
+    res.status(200).json(data);
+
+}
+
+const getHRDashboardGraph = async(req,res,next) =>{
+
+    let departments;
+    try {
+        departments = await Department.find({});
+    } catch (err) {
+        const error = new HttpError('Could not fetch Graph Data',500);
+        return next(error);    
     }
 
     let employeeCounts=[];
@@ -37,28 +110,27 @@ const getHRDashboardData = async(req,res,next) =>{
         employeeCounts.push(department.employees.length);
         departmentNames.push(department.deptName);
     })
-    data.graph={}
-    data.graph['employeeCounts'] = employeeCounts;
-    data.graph['departmentNames'] = departmentNames;
-
-    res.status(200).json(data);
+    
+    res.status(200).json({employeeCounts,departmentNames})
 
 }
 
 const getEmployeeDashboardData = async(req,res,next) =>{
     const userId = req.user.userId;
 
-    const todayDate = new Date();
-    const nextMonthDate = new Date();
+    let todayDate = new Date();
+    let nextMonthDate = new Date();
     nextMonthDate.setMonth(todayDate.getMonth() + 1, 1);
+    todayDate = todayDate.toISOString().substring(0,10);
+    nextMonthDate = nextMonthDate.toISOString().substring(0,10);
 
     let team=null;
     let department,upcomingDays,employeeBdays,leaves,loanAndBonus;
     try {
         const emp = await Employee.findOne({userAuth:userId}).select('department assignedProject team payroll');
-        await Department.findById(emp.department).select('employees deptName');
+        department = await Department.findById(emp.department).select('employees deptName');
         if(emp.assignedProject){
-            team = Team.findById(emp.team).populate([{path:'project',select:'projectName status'},
+            team = await Team.findById(emp.team).populate([{path:'project',select:'projectName status'},
                 {path:'teamLeader',select:'firstName lastName profileImage'},
                 {path:'teamMembers',select:'firstName lastName profileImage'}
             ])
@@ -66,11 +138,21 @@ const getEmployeeDashboardData = async(req,res,next) =>{
         upcomingDays = await Day.find({'date':{
             $gte: todayDate,
             $lte: nextMonthDate
-        },'title': {$in: ['Event', 'Holiday']}}).select('dayType date dayDescription');
-        employeeBdays = await Employee.find({'dateOfBirth':{
-            $gte: todayDate,
-            $lte: nextMonthDate
-        }}).select('firstName lastName dateOfBirth').populate('department','deptName');
+        },'dayType': {$in: ['Event', 'Holiday']}}).select('dayType date dayDescription');
+        employeeBdays = await Employee.aggregate([
+            { $project: {
+                "firstName": 1,
+                "lastName": 1,
+                "dateOfBirth": 1,
+                "month": "$month"
+            }},
+            {
+                $match: {
+                $expr: {
+                  $eq: [{ $month: '$dateOfBirth' }, { $month: new Date() }],
+                },
+            }}
+        ]);
         leaves = await Leave.findOne({empId:emp.id}).select('availableLeaves takenLeaves');
         loanAndBonus = await Payroll.findById(emp.payroll).select('loan bonus');
     } catch (err) {
@@ -78,9 +160,20 @@ const getEmployeeDashboardData = async(req,res,next) =>{
         return next(error);
     }
 
+    if(loanAndBonus.loan['amount']===0 && !loanAndBonus.loan['status']){
+        delete loanAndBonus.loan['amount']
+        loanAndBonus.loan['status'] = 'No Loans'
+    }
+
+    if(loanAndBonus.bonus['amount']===0 && !loanAndBonus.bonus['status']){
+        delete loanAndBonus.bonus['amount']
+        loanAndBonus.bonus['status'] = 'No Bonuses'
+    }
+
     const data = {
         team:team ? team:'Project Unassigned',
-        department,
+        departmentName:department.deptName,
+        departmentEmployeeCount:department.employees.length,
         upcomingDays,
         employeeBdays,
         leaves,
@@ -92,3 +185,4 @@ const getEmployeeDashboardData = async(req,res,next) =>{
 
 exports.getHRDashboardData = getHRDashboardData;
 exports.getEmployeeDashboardData = getEmployeeDashboardData;
+exports.getHRDashboardGraph = getHRDashboardGraph;

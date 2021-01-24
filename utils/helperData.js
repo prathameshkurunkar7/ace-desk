@@ -54,8 +54,12 @@ exports.MetroCities = [
     'Jamshedpur'
 ]
 
-exports.Designations =['Manager','General Manager','Executive','President','Project Manager','Developer','Designer','Marketing Head','HR Admin','Captain','Other']
+exports.Designations =['Manager','General Manager','Executive','President','Project Manager','Sr.Developer','Designer','Marketing Head','HR Admin','Assistant','Jr.Developer','Other']
 
 exports.QualificationTitles = ['B.E','M.E','M.Tech','B.Tech','M.B.A','MS']
 
 exports.BloodGroups = ['A+','A-','O+','O-','B+','B-','AB+','AB-']
+
+exports.Months = ["January", "February", "March", "April", "May", "June",
+"July", "August", "September", "October", "November", "December"
+];

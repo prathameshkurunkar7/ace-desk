@@ -6,13 +6,18 @@ module.exports = class Email{
     constructor(user,firstName){
         this.to = user.email,
         this.firstName = firstName,
-        this.from = `Company Name <${appConfig.EMAIL_FROM}>`
+        this.from = `AceDesk <${appConfig.EMAIL_FROM}>`
     }
 
     modifiedTransport(){
         if(process.env.NODE_ENV === 'production'){
-            //sendGrid configuration
-            return 1;
+            return nodemailer.createTransport({
+                service:'SendGrid',
+                auth:{
+                    user: process.env.SEND_GRID_USERNAME,
+                    pass: process.env.SEND_GRID_PASSWORD
+                }
+            })
         }
 
         return nodemailer.createTransport({

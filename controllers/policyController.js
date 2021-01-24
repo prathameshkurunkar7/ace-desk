@@ -3,8 +3,6 @@ const fs = require('fs');
 const {validationResult} = require('express-validator');
 const HttpError = require('../utils/http-error');
 const appConfig = require('../config/appConfig');
-const Employee = mongoose.model('Employee');
-const Department = mongoose.model('Department');
 const Policy = mongoose.model('Policy');
 
 // create policy
@@ -148,7 +146,6 @@ const updatePolicy = async(req,res,next) =>{
             ,422)
         return next(err);
     }
-    console.log(req.body);
     
     let existingPolicy;
     try {
