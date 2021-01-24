@@ -47,10 +47,10 @@ if (process.env.NODE_ENV === 'production') {
     });
 }
 
-app.all('*',(req,res,next)=>{
-    const error = new HttpError(`Can't find ${req.originalUrl} on this server.`,404,true);
-    return next(error);
-});
+// app.all('*',(req,res,next)=>{
+//     const error = new HttpError(`Can't find ${req.originalUrl} on this server.`,404,true);
+//     return next(error);
+// });
 
 
 app.use((error, req, res, next) => {
