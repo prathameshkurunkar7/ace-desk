@@ -119,7 +119,7 @@ const employeeSchema = new Schema({
     },
     leaves:[{ type: mongoose.Types.ObjectId,ref: 'Leaves' }],
     socialHandles: {
-        github: { type: String },
+        github: { type: String ,default:'Enter GitHub Profile Link'},
         linkedIn: { type: String },
         twitter: { type: String }
     },

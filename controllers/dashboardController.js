@@ -77,24 +77,23 @@ const getHRDashboardData = async(req,res,next) =>{
         }
     }));
 
-    let loanAndBonus;
+    let loan=[],bonus=[];
     try {
-        loanAndBonus = await Payroll.find({
-            '$or': [{"loan.status": 'Pending'},{"bonus.status":'Pending'}],
-        }).populate('empId','firstName lastName');
+        loan = await Payroll.find({"loan.status": 'Pending'}).select('loan').populate('empId','firstName lastName');
+        bonus = await Payroll.find({"bonus.status": 'Pending'}).select('bonus').populate('empId','firstName lastName');
     } catch (err) {
-        console.log(err);
         const error = new HttpError('Could not get Pending Loans and Bonus',500);
         return next(error);
     }
-
+        
     data.leaves = leaves;
-    data.loanAndBonus = loanAndBonus;
+    data.loan = loan;
+    data.bonus = bonus;
     res.status(200).json(data);
 
 }
 
-const getHRDashboardGraph = async(req,res,next) =>{
+const getDashboardGraph = async(req,res,next) =>{
 
     let departments;
     try {
@@ -185,4 +184,4 @@ const getEmployeeDashboardData = async(req,res,next) =>{
 
 exports.getHRDashboardData = getHRDashboardData;
 exports.getEmployeeDashboardData = getEmployeeDashboardData;
-exports.getHRDashboardGraph = getHRDashboardGraph;
+exports.getDashboardGraph = getDashboardGraph;

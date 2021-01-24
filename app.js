@@ -3,6 +3,7 @@ const fs = require('fs');
 const helmet = require('helmet');
 const cors = require('cors');
 const rateLimit = require("express-rate-limit");
+const compression = require('compression');
 
 const HttpError = require('./utils/http-error');
 const adminRouter = require('./routers/adminRouter');
@@ -29,6 +30,9 @@ app.use(express.urlencoded({extended:true}));
 
 app.use('/uploads/files',express.static('uploads/files'));
 app.use('/uploads/images',express.static('uploads/images'));
+
+
+app.use(compression())
 
 // all routes here
 app.use('/register',apiLimiter,authRouter);

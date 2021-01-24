@@ -1,50 +1,36 @@
-# HRMS-Backend
+# AceDesk-A HRMS Web Application
 
-# Backend Essentials
-## Error Handling
-## Server and API separation
-## Security Measures
-## Apply Rate Limiting
-## Uncaught and Unhandled Exception Handlers
+This documentation speaks about the
 
-## Perfrom User authentication
-## While Signing up, register user with Employee role. When changed to HR role manually provide HR permissions.
-## While Logging in, show different windows based on Employee or HR.
+Where full URLs are provided in responses they will be rendered as if service
+is running on 'http://testserver/'.
 
-## HR operations
+## Open Endpoints
 
-### -> Adding Employee and Details
-### -> Functionality to change,delete and edit Employee. 
-### -> Sanction Leaves
-### -> Manage Payroll
-### -> Verify Attendance
-### -> Holiday and Event Creator
-### -> Keep Track of Employee B'days. Gift Them Something.
-### -> Policy Formation
-### -> Select Employee of the Month
-### -> Making Departments, assigning Employees,forming teams.
-### -> Check Various Recruits and their Applications
+Open endpoints require no Authentication.
 
-## Employee operations
-### -> 
+* [Login](login.md) : `POST /api/login/`
 
+## Endpoints that require Authentication
 
-# Routing:
-## Auth routes
-### POST    /register/signup    -> SignUp User
-### POST    /register/login     -> Login User
-### PATCH   /register/update-password-> Updates Password
+Closed endpoints require a valid Token to be included in the header of the
+request. A Token can be acquired from the Login view above.
 
-## Employee side routes
-### /employee ->Base Route
+### Current User related
 
+Each endpoint manipulates or displays information related to the User whose
+Token is provided with the request:
 
-## HR Admin side routes
-### /admin ->Base Route
-### POST    /admin/employee/create ->                   Adding Employee Details
-### GET     /admin/employee/send-credentials/:id ->     Send Login Credential details on Email to particular Employee
+* [Show info](user/get.md) : `GET /api/user/`
+* [Update info](user/put.md) : `PUT /api/user/`
 
+### Account related
 
-# Notes
+Endpoints for viewing and manipulating the Accounts that the Authenticated User
+has permissions to access.
 
-## Choose Country wise states option in input fields.
+* [Show Accessible Accounts](accounts/get.md) : `GET /api/accounts/`
+* [Create Account](accounts/post.md) : `POST /api/accounts/`
+* [Show An Account](accounts/pk/get.md) : `GET /api/accounts/:pk/`
+* [Update An Account](accounts/pk/put.md) : `PUT /api/accounts/:pk/`
+* [Delete An Account](accounts/pk/delete.md) : `DELETE /api/accounts/:pk/`
