@@ -1,5 +1,6 @@
 const express = require('express');
 const fs = require('fs');
+const path = require('path');
 const helmet = require('helmet');
 const cors = require('cors');
 const rateLimit = require("express-rate-limit");
@@ -28,9 +29,8 @@ const apiLimiter = rateLimit({
 app.use(express.json({ limit: '500kb' }));
 app.use(express.urlencoded({extended:true}));
 
-app.use('/uploads/files',express.static('uploads/files'));
-app.use('/uploads/images',express.static('uploads/images'));
-
+app.use('/uploads/files',express.static(path.join('uploads','files')));
+app.use('/uploads/images',express.static(path.join('uploads','images')));
 
 app.use(compression())
 
@@ -39,6 +39,13 @@ app.use('/register',apiLimiter,authRouter);
 app.use('/admin',adminRouter);
 app.use('/employee',employeeRouter);
 
+if (process.env.NODE_ENV === 'production') {
+    app.use(express.static('client/build'));
+
+    app.get('*', (req, res) => {
+        res.sendFile(path.join(__dirname, 'client', 'build', 'index.html'))
+    });
+}
 
 app.all('*',(req,res,next)=>{
     const error = new HttpError(`Can't find ${req.originalUrl} on this server.`,404,true);
