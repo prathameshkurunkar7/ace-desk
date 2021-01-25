@@ -101,7 +101,7 @@ function ProjectContent() {
   };
   const deleteProject = (id) => {
     return fetch(
-      `/admin/team/dissolve-team-project`,
+      `/admin/team/dissolve-team-project/${id}`,
       {
         method: "DELETE",
         headers: {
@@ -110,7 +110,6 @@ function ProjectContent() {
 
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify(id),
       }
     )
       .then((response) => {

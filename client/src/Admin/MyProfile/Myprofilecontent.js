@@ -8,11 +8,25 @@ import HomeIcon from "@material-ui/icons/Home";
 import LinkedInIcon from "@material-ui/icons/LinkedIn";
 import GitHubIcon from "@material-ui/icons/GitHub";
 import TwitterIcon from "@material-ui/icons/Twitter";
+import { Avatar } from "@material-ui/core";
+import { makeStyles } from "@material-ui/core/styles";
 import { NavLink } from "react-router-dom";
 import { isAuthenticate } from "../../auth/token";
 function Myprofilecontent() {
   const { token } = isAuthenticate();
-
+  const useStyles = makeStyles((theme) => ({
+    root: {
+      display: "flex",
+      "& > *": {
+        margin: theme.spacing(1),
+      },
+    },
+    large: {
+      width: theme.spacing(25),
+      height: theme.spacing(25),
+    },
+  }));
+  const classes = useStyles();
   const [details, setDetails] = useState({
     email: "",
     firstName: "",
@@ -103,8 +117,8 @@ function Myprofilecontent() {
             <div className="profile__desc">
               <div className="img__cover">
                 <a href="">
-                  <img
-                    className="profile__img"
+                  <Avatar
+                    className={classes.large}
                     alt="profile image"
                     src={details.profileImage}
                   />

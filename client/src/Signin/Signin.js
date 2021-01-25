@@ -53,7 +53,7 @@ function Signin() {
               redirectToadmin: true,
             });
           });
-        }, 3200);
+        }, 2500);
       } else {
         showSuccess(
           "Succesfully signed in,you will be redirected to Dashboard"
@@ -65,14 +65,14 @@ function Signin() {
               redirectTouser: true,
             });
           });
-        }, 3200);
+        }, 2500);
       }
     });
   };
   const showSuccess = (success) => {
     toast.info(success, {
-      position: "top-center",
-      autoClose: 3000,
+      position: "top-left",
+      autoClose: 2300,
       hideProgressBar: false,
       closeOnClick: true,
       pauseOnHover: true,
@@ -134,7 +134,7 @@ function Signin() {
                   />
                 </div>
                 <button onClick={clickSubmit} className="signin__btn ">
-                  Login
+                  Sign In
                 </button>
               </form>
             </div>

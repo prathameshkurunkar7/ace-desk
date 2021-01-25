@@ -232,7 +232,7 @@
   }
 }
 
-@media (min-width: 1280px) and (max-width: 1380px) {
+/* @media (min-width: 1280px) and (max-width: 1380px) {
   .dashboard__col1 {
     flex: 1;
     flex-direction: row;
@@ -241,4 +241,4 @@
   .dashboard__card1 {
     flex: 1;
   }
-}
+} */

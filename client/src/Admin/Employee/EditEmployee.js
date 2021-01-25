@@ -192,7 +192,7 @@ function EditEmployee() {
         setTimeout(function () {
           let path = `/AdminEmployee`;
           history.push(path);
-        }, 3200);
+        }, 2500);
       }
     });
   };
@@ -209,8 +209,8 @@ function EditEmployee() {
   };
   const showSuccess = (success) => {
     toast.info(success, {
-      position: "top-center",
-      autoClose: 3000,
+      position: "top-left",
+      autoClose: 2500,
       hideProgressBar: false,
       closeOnClick: true,
       pauseOnHover: true,

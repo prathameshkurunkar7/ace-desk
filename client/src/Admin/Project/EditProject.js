@@ -334,7 +334,7 @@ export default function EditProject() {
   const showError = (error) => {
     toast.dark(error, {
       position: "top-right",
-      autoClose: 5000,
+      autoClose: 2500,
       hideProgressBar: false,
       closeOnClick: true,
       pauseOnHover: true,
@@ -344,7 +344,7 @@ export default function EditProject() {
   };
   const showSuccess = (success) => {
     toast.info(success, {
-      position: "top-center",
+      position: "top-left",
       autoClose: 3000,
       hideProgressBar: false,
       closeOnClick: true,

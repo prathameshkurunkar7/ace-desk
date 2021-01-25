@@ -28,6 +28,7 @@ function Navbar() {
               onClick={handleMenu}
             />
           </button>
+          <h2><span className="Navbar__logo">A</span>ce<span className="Navbar__logo">D</span>esk</h2>
         </div>
         <div className="Navbar__rightArea">
           <NavLink onClick={() => signout()} to="/" className="Navbar__link">

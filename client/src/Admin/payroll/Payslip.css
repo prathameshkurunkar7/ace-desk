@@ -94,6 +94,7 @@
 
 .payslip__netSalary {
   display: inline;
+  margin-bottom: 5px;
 }
 
 .payslip__button {
@@ -104,8 +105,16 @@
   border-radius: 5px;
   box-shadow: 18px 18px 37px #d0d0d0, -18px -18px 37px #ffffff;
   outline: none;
+  border: none;
   font-size: 20px;
   cursor: pointer;
+  background-size: 200% auto;
+  background-image: linear-gradient( to right, #71d9fc 0%, rgb(68, 148, 253) 51%, #65d5fa 100%);
+}
+
+.payslip__button:hover {
+  background-position: right center;
+  text-decoration: none;
 }
 
 .payslip__buttonDiv {

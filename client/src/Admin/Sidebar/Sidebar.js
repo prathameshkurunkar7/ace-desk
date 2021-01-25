@@ -8,7 +8,8 @@ import FaceOutlinedIcon from "@material-ui/icons/FaceOutlined";
 import TodayOutlinedIcon from "@material-ui/icons/TodayOutlined";
 import FingerprintOutlinedIcon from "@material-ui/icons/FingerprintOutlined";
 import PolicyOutlinedIcon from "@material-ui/icons/PolicyOutlined";
-import AccountTreeOutlinedIcon from "@material-ui/icons/AccountTreeOutlined";
+import { Avatar } from "@material-ui/core";
+import { makeStyles } from "@material-ui/core/styles";
 import CreditCardRoundedIcon from "@material-ui/icons/CreditCardRounded";
 import AccountBalanceWalletRoundedIcon from "@material-ui/icons/AccountBalanceWalletRounded";
 import BusinessCenterRoundedIcon from "@material-ui/icons/BusinessCenterRounded";
@@ -18,15 +19,28 @@ import { isAuthenticate } from "../../auth/token";
 function Sidebar() {
   const { profileImage, firstName } = isAuthenticate();
   const isopen = useSelector(selectisopenbutton);
+  const useStyles = makeStyles((theme) => ({
+    root: {
+      display: "flex",
+      "& > *": {
+        margin: theme.spacing(1),
+      },
+    },
+    large: {
+      width: theme.spacing(12),
+      height: theme.spacing(12),
+    },
+  }));
+  const classes = useStyles();
   return (
     <div className={`${isopen ? "Sidebar" : "NoSidebar"}`}>
       <ul>
         <li>
           <div className="Sidebar__proPic">
             <NavLink to="/profile">
-              <img
+              <Avatar
                 src={profileImage}
-                className="Sidebar__img"
+                className={classes.large}
                 alt="adminImage"
               />
             </NavLink>

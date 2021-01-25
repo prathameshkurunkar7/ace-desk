@@ -43,6 +43,9 @@ ul li .Sidebar__link:hover {
 }
 
 .Sidebar__proPic {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   text-align: center;
   padding-top: 30px;
 }

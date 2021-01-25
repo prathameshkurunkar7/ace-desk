@@ -1,13 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "./Payslip.css";
 import "date-fns";
-import Grid from "@material-ui/core/Grid";
-import DateFnsUtils from "@date-io/date-fns";
-import {
-  MuiPickersUtilsProvider,
-  KeyboardDatePicker,
-} from "@material-ui/pickers";
-import { TableBody } from "@material-ui/core";
+import { useHistory } from "react-router-dom";
 import { savedPayrollId } from "../../features/generatepayroll";
 import { useSelector } from "react-redux";
 import { toast, ToastContainer } from "react-toastify";
@@ -15,7 +9,12 @@ import { isAuthenticate } from "../../auth/token";
 
 export default function Payslip() {
   const { token } = isAuthenticate();
-
+  const history = useHistory();
+  const monthNames = ["January", "February", "March", "April", "May", "June",
+  "July", "August", "September", "October", "November", "December"
+  ]
+  const d = new Date(); 
+  let thisMonthdate = `${monthNames[d.getMonth()]} ${d.getFullYear()}`
   const [values, setValues] = useState({
     phone: 0,
     conveyance: 0,
@@ -120,6 +119,7 @@ export default function Payslip() {
         headers: {
           Accept: "application/json",
           "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify(body),
       }
@@ -141,7 +141,14 @@ export default function Payslip() {
   const generatepdf = (e) => {
     e.preventDefault();
     return fetch(
-      `/admin/payroll/payslip/generate-pdf/${payslipInfo.payroll_id}`
+      `/admin/payroll/payslip/generate-pdf/${payslipInfo.payroll_id}`,
+      {
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        }
+      }
     )
       .then((response) => {
         return response.json();
@@ -150,7 +157,7 @@ export default function Payslip() {
         if (data.message) {
           showError(data.message);
         } else {
-          showSuccess("pdf generated successfully");
+          showSuccess("Pdf Generated Successfully");
         }
       })
       .catch((error) => {
@@ -160,7 +167,14 @@ export default function Payslip() {
   const sendEmail = (e) => {
     e.preventDefault();
     return fetch(
-      `/admin/payroll/payslip/send-mail/${payslipInfo.payroll_id}`
+      `/admin/payroll/payslip/send-mail/${payslipInfo.payroll_id}`,
+      {
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        }
+      }
     )
       .then((response) => {
         return response.json();
@@ -169,7 +183,11 @@ export default function Payslip() {
         if (data.message) {
           showError(data.message);
         } else {
-          showSuccess("mail sent successfully");
+          showSuccess("Mail Sent Successfully");
+          setTimeout(function () {
+            let path = `/AdminPayroll`;
+            history.push(path);
+          }, 2500);
         }
       })
       .catch((error) => {
@@ -189,8 +207,8 @@ export default function Payslip() {
   };
   const showSuccess = (success) => {
     toast.info(success, {
-      position: "top-center",
-      autoClose: 3000,
+      position: "top-left",
+      autoClose: 2500,
       hideProgressBar: false,
       closeOnClick: true,
       pauseOnHover: true,
@@ -201,19 +219,16 @@ export default function Payslip() {
   return (
     <div className="payslip__card">
       <div className="payslip__header">
-        <p>XYZ pvt. ltd. 221-B Baker Street, Marylebone, London. </p>
-        <h1>Payslip for the month of </h1>
+        <h1>Payslip for {thisMonthdate.split(' ')[0]}</h1>
         <hr className="proform__hr" />
       </div>
 
       <div className="payslip__body">
         <form>
-          <div className="top__row">
-            <div>
-              <div className="payslip__details">
-                <h4>Salary month:</h4>
-              </div>
+            <div style={{ float: "right" }}>
+              <h4>Salary month:{thisMonthdate}</h4>
             </div>
+            <div className="top__row">
             <div className="payslip__data">
               <h4>
                 {payslipInfo.firstName} {payslipInfo.lastName}
@@ -242,21 +257,21 @@ export default function Payslip() {
             <tr className="payslip__tableRow">
               <td className="payslip__tableTd">
                 House Rent &nbsp; :&nbsp;&nbsp;&nbsp; &#8377;
-                {payslipInfo.allowanceshouseRent}
+                {Number(payslipInfo.allowanceshouseRent).toFixed(2)}
               </td>
               <td className="payslip__tableTd">
-                EPF &nbsp; :&nbsp;&nbsp; &#8377; {payslipInfo.deductionsepf}
+                EPF &nbsp; :&nbsp;&nbsp; &#8377; {Number(payslipInfo.deductionsepf).toFixed(2)}
               </td>
             </tr>
 
             <tr className="payslip__tableRow">
               <td className="payslip__tableTd">
                 Dearness &nbsp; :&nbsp;&nbsp;&nbsp; &#8377;
-                {payslipInfo.allowancesdearness}
+                {Number(payslipInfo.allowancesdearness).toFixed(2)}
               </td>
               <td className="payslip__tableTd">
                 Professional &nbsp; :&nbsp;&nbsp; &#8377;
-                {payslipInfo.deductionsprofessional}
+                {Number(payslipInfo.deductionsprofessional).toFixed(2)}
               </td>
             </tr>
 
@@ -272,7 +287,7 @@ export default function Payslip() {
                 />
               </td>
               <td className="payslip__tableTd">
-                ESI &nbsp; :&nbsp;&nbsp; &#8377; {payslipInfo.deductionsesi}
+                ESI &nbsp; :&nbsp;&nbsp; &#8377; {Number(payslipInfo.deductionsesi).toFixed(2)}
               </td>
             </tr>
 
@@ -288,7 +303,8 @@ export default function Payslip() {
                 />
               </td>
               <td className="payslip__tableTd">
-                Bonus &nbsp; :&nbsp;&nbsp; &#8377; {payslipInfo.bonus}
+                Loan &nbsp; :&nbsp;&nbsp;&nbsp; &#8377;
+                {payslipInfo.loan}
               </td>
             </tr>
 
@@ -321,8 +337,7 @@ export default function Payslip() {
             </tr>
             <tr className="payslip__tableRow">
               <td className="payslip__tableTd">
-                Loan &nbsp; :&nbsp;&nbsp;&nbsp; &#8377;
-                {payslipInfo.loan}
+                Bonus &nbsp; :&nbsp;&nbsp; &#8377; {payslipInfo.bonus}
               </td>
             </tr>
           </table>
@@ -330,29 +345,29 @@ export default function Payslip() {
           <br />
           <br />
           <div className="payslip__netSalary">
-            <h2>
+            <h3 style={{fontWeight:"500"}}>
               Allowance Limit :
-              {payslipInfo.allowanceLimit -
+              &#8377;{Number(payslipInfo.allowanceLimit -
                 values.phone -
                 values.conveyance -
                 values.performance -
-                values.medical}
-            </h2>
+                values.medical).toFixed(2)}
+            </h3>
           </div>
           <div className="payslip__netSalary">
-            <h2>Net Salary : {payslipInfo.netSalary} </h2>
+            <h2>Net Salary : &#8377;{payslipInfo.netSalary} </h2>
           </div>
           <br />
           <br />
           <div className="payslip__buttonDiv">
             <button onClick={addallowances} className="payslip__button">
-              Save changes
+              Save Changes
             </button>
             <button onClick={generatepdf} className="payslip__button">
-              Generate pdf
+              Generate PDF
             </button>
             <button onClick={sendEmail} className="payslip__button">
-              Send email
+              Send Email
             </button>
           </div>
         </form>

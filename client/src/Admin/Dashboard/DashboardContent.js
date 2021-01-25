@@ -11,7 +11,6 @@ import TableCell from "@material-ui/core/TableCell";
 import TableContainer from "@material-ui/core/TableContainer";
 import TableRow from "@material-ui/core/TableRow";
 import "./DashContent.css";
-import { da } from "date-fns/locale";
 import { isAuthenticate } from "../../auth/token";
 
 function DashboardContent() {
@@ -28,7 +27,6 @@ function DashboardContent() {
   const [chartData, setChartData] = useState({});
   const [leaves, setLeaves] = useState([]);
   const [loans, setLoans] = useState([]);
-
   const [bonus, setBonus] = useState([]);
 
   useEffect(() => {
@@ -74,7 +72,7 @@ function DashboardContent() {
       labels: json.departmentNames,
       datasets: [
         {
-          label: "Income",
+          label: "Employees",
           data: json.employeeCounts,
           backgroundColor: ["rgba(75, 192, 192, 0.6)"],
           borderWidth: 4,
@@ -87,14 +85,14 @@ function DashboardContent() {
     <div className="dashboard">
       <div className="dashboard__row1">
         <div className="dashboard__card1">
-          <h1 className="dashboard__cardHead">Revenue Report</h1>
+          <h1 className="dashboard__cardHead">Department vs Employee</h1>
           <div style={{ width: "100%", height: "60vh" }}>
             <Line
               data={chartData}
               options={{
                 responsive: true,
                 maintainAspectRatio: false,
-                title: { text: "Income Scale", display: true },
+                title: { text: "Employee count per Department", display: true },
 
                 scales: {
                   yAxes: [
@@ -203,7 +201,7 @@ function DashboardContent() {
                       ))
                     )}
                     {bonus.length === 0 ? (
-                      <div style={{ display: "flex", alignItems: "center" }}>
+                      <div style={{ display: "flex",justifyContent: "center" }}>
                         <div>No pending bonuses</div>
                       </div>
                     ) : (
@@ -285,10 +283,6 @@ function DashboardContent() {
                         </TableRow>
                       ))
                     )}
-                    <TableRow>
-                      <TableCell align="center">lavish gupta</TableCell>
-                      <TableCell align="center">09-09-2020</TableCell>
-                    </TableRow>
                   </TableBody>
                 </Table>
               </TableContainer>

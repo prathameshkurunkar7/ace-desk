@@ -178,7 +178,7 @@ function AddEmployee() {
         setTimeout(function () {
           let path = `/AdminEmployee`;
           history.push(path);
-        }, 3200);
+        }, 2500);
       }
     });
   };
@@ -195,8 +195,8 @@ function AddEmployee() {
   };
   const showSuccess = (success) => {
     toast.info(success, {
-      position: "top-center",
-      autoClose: 3000,
+      position: "top-left",
+      autoClose: 2500,
       hideProgressBar: false,
       closeOnClick: true,
       pauseOnHover: true,

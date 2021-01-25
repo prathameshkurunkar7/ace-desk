@@ -95,14 +95,14 @@ export default function Editpolicy() {
         setTimeout(function () {
           let path = `/AdminPolicies`;
           history.push(path);
-        }, 3200);
+        }, 2500);
       }
     });
   };
   const showSuccess = (result) => {
     toast.info(result, {
-      position: "top-center",
-      autoClose: 3000,
+      position: "top-left",
+      autoClose: 2500,
       hideProgressBar: false,
       closeOnClick: true,
       pauseOnHover: true,
