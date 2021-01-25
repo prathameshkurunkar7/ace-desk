@@ -44,7 +44,7 @@ function Signin() {
         showError(data.message);
       } else if (data.role === "HR") {
         showSuccess(
-          "succesfully signed in,you will we redirected to Dashboard"
+          "Succesfully signed in,you will be redirected to Dashboard"
         );
         setTimeout(function () {
           authenticate(data, () => {
@@ -56,7 +56,7 @@ function Signin() {
         }, 3200);
       } else {
         showSuccess(
-          "succesfully signed in,you will we redirected to Dashboard"
+          "Succesfully signed in,you will be redirected to Dashboard"
         );
         setTimeout(function () {
           authenticate(data, () => {

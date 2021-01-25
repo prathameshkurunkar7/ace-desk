@@ -229,10 +229,11 @@ exports.validateApplyLoanBonus = [
 
 exports.validateUpdateProfile = [
     body().custom(body => {
-        const keys = ['github','linkedIn','twitter'];
+        const keys = ['github','linkedIn','twitter','about'];
         return Object.keys(body).every(key => keys.includes(key));
     }).withMessage('Some extra parameters are sent'),
     check('github').isURL({ host_whitelist: [/^.*github\.com$/,] }).withMessage('Should be a Github URL'),
     check('linkedIn').isURL({ host_whitelist: [/^.*linkedin\.com$/,] }).withMessage('Should be a LinkedIn URL'),
     check('twitter').isURL({ host_whitelist: [/^.*twitter\.com$/,] }).withMessage('Should be a Twitter URL'),
+    check('about').notEmpty().trim().withMessage('Please enter valid About')
 ]
