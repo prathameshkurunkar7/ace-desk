@@ -13,9 +13,10 @@ const employeeRouter = require('./routers/employeeRouter');
 
 const app = express();
 
-app.use(helmet());
-app.use(cors());
-app.use(compression())
+// app.use(helmet());
+// app.use(cors());
+// app.use(compression())
+
 // Enable if you're behind a reverse proxy (Heroku, Bluemix, AWS ELB, Nginx, etc)
 // see https://expressjs.com/en/guide/behind-proxies.html
 // app.set('trust proxy', 1);
