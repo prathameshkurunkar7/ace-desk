@@ -27,7 +27,7 @@ app.use(cors());
 
 // limit body data at 300kb only
 app.use(express.json({ limit: '500kb' }));
-app.use(express.urlencoded({extended:true}));
+app.use(express.urlencoded({extended:false}));
 
 app.use('/uploads/files',express.static(path.join('uploads','files')));
 app.use('/uploads/images',express.static(path.join('uploads','images')));
