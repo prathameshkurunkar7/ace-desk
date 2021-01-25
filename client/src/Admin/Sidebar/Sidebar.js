@@ -41,7 +41,6 @@ function Sidebar() {
               <Avatar
                 src={profileImage}
                 className={classes.large}
-                alt="adminImage"
               />
             </NavLink>
           </div>

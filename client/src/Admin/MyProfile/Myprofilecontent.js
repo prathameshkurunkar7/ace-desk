@@ -119,7 +119,6 @@ function Myprofilecontent() {
                 <a href="">
                   <Avatar
                     className={classes.large}
-                    alt="profile image"
                     src={details.profileImage}
                   />
                 </a>

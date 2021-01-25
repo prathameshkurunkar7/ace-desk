@@ -34,9 +34,6 @@ app.use(express.urlencoded({extended:false}));
 app.use('/uploads/files',express.static(path.join('uploads','files')));
 app.use('/uploads/images',express.static(path.join('uploads','images')));
 
-// if (process.env.NODE_ENV === 'production') {
-//     app.use(express.static('client/build'))
-// }
 
 // all routes here
 app.use('/register',authRouter);
@@ -49,12 +46,6 @@ if (process.env.NODE_ENV === 'production') {
         res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'));
     });
 }
-
-// app.all('*',(req,res,next)=>{
-//     const error = new HttpError(`Can't find ${req.originalUrl} on this server.`,404,true);
-//     return next(error);
-// });
-
 
 app.use((error, req, res, next) => {
     if(req.file){
