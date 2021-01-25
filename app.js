@@ -19,11 +19,11 @@ app.use(cors());
 // see https://expressjs.com/en/guide/behind-proxies.html
 // app.set('trust proxy', 1);
  
-const apiLimiter = rateLimit({
-    windowMs: 60 * 60 * 1000, // 1hr
-    max: 100,
-    message: 'Too many requests from this IP,please try again later.'
-});
+// const apiLimiter = rateLimit({
+//     windowMs: 60 * 60 * 1000, // 1hr
+//     max: 100,
+//     message: 'Too many requests from this IP,please try again later.'
+// });
 
 // limit body data at 300kb only
 app.use(express.json({ limit: '500kb' }));
@@ -35,13 +35,12 @@ app.use('/uploads/images',express.static(path.join('uploads','images')));
 app.use(compression())
 
 // all routes here
-app.use('/register',apiLimiter,authRouter);
+app.use('/register',authRouter);
 app.use('/admin',adminRouter);
 app.use('/employee',employeeRouter);
 
 if (process.env.NODE_ENV === 'production') {
     app.use(express.static('client/build'));
-
     app.get('*', (req, res) => {
         res.sendFile(path.join(__dirname, 'client', 'build', 'index.html'))
     });

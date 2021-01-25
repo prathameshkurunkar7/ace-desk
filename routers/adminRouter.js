@@ -39,7 +39,7 @@ router.get('/employee/',authenticate,restricted,employeeController.getEmployees)
 
 router.get('/employee/:employeeId',authenticate,restricted,employeeController.getEmployeeById);
 
-router.post('/employee/create',validateEmployeeCreation,authenticate,restricted,employeeController.createEmployee);
+router.post('/employee/create',validateEmployeeCreation,employeeController.createEmployee);
 
 router.patch('/employee/update/:employeeId',validateEmployeeUpdation,authenticate,restricted,employeeController.updateEmployee);
 
@@ -48,7 +48,7 @@ router.delete('/employee/delete/:employeeId',authenticate,restricted,employeeCon
 // departmental routes
 router.get('/department/',authenticate,departmentController.getDepartments);
 
-router.post('/department/create',[check('deptName').isLength({min:2}).isAlpha('en-US')],authenticate,restricted,departmentController.createDepartment);
+router.post('/department/create',[check('deptName').isLength({min:2}).isAlpha('en-US')],departmentController.createDepartment);
 
 router.delete('/department/dissolve-department/:deptId',authenticate,restricted,departmentController.dissolveDepartment);
 
