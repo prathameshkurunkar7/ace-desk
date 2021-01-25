@@ -15,6 +15,7 @@ const app = express();
 
 app.use(helmet());
 app.use(cors());
+app.use(compression())
 // Enable if you're behind a reverse proxy (Heroku, Bluemix, AWS ELB, Nginx, etc)
 // see https://expressjs.com/en/guide/behind-proxies.html
 // app.set('trust proxy', 1);
@@ -32,19 +33,21 @@ app.use(express.urlencoded({extended:false}));
 app.use('/uploads/files',express.static(path.join('uploads','files')));
 app.use('/uploads/images',express.static(path.join('uploads','images')));
 
-app.use(compression())
+if (process.env.NODE_ENV === 'production') {
+    app.use(express.static('client/build'))
+}
 
 // all routes here
 app.use('/register',authRouter);
 app.use('/admin',adminRouter);
 app.use('/employee',employeeRouter);
 
-if (process.env.NODE_ENV === 'production') {
-    app.use(express.static(path.join(__dirname, "client", "build")))
-    app.get('*', (req, res) => {
-        res.sendFile(path.join(__dirname, 'client', 'build', 'index.html'))
-    });
-}
+// if (process.env.NODE_ENV === 'production') {
+//     app.use(express.static('client/build'))
+//     app.get('*', (req, res) => {
+//         res.sendFile(path.join(__dirname, 'client', 'build', 'index.html'))
+//     });
+// }
 
 // app.all('*',(req,res,next)=>{
 //     const error = new HttpError(`Can't find ${req.originalUrl} on this server.`,404,true);
