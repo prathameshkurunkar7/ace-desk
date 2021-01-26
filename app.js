@@ -5,6 +5,7 @@ const helmet = require('helmet');
 const cors = require('cors');
 const rateLimit = require("express-rate-limit");
 const compression = require('compression');
+const favicon = require('serve-favicon');
 
 const adminRouter = require('./routers/adminRouter');
 const authRouter = require('./routers/authRouter');
@@ -17,6 +18,7 @@ app.use(helmet({
 }));
 app.use(cors());
 app.use(compression())
+app.use(favicon(path.join(__dirname, 'client', 'public','images','favicon.ico')));
 
 app.set('trust proxy', 1);
  

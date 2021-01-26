@@ -104,7 +104,7 @@ const createEmployee = async(req,res,next) =>{
 
 
     // add the client side url here for displaying login window.
-    const url = `${req.protocol}://${req.hostname}:${appConfig.PORT}/register/login`
+    const url = `${appConfig.APP_URL}`
     
     //send employee email of their credentials
     let hashedpassword;
