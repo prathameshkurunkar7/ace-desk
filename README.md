@@ -1,36 +1,73 @@
 # AceDesk-A HRMS Web Application
 
-This documentation speaks about the
+This documentation speaks about the AceDesk Web Application.
+Demo Link: 'https://ace-desk.herokuapp.com/'
 
 Where full URLs are provided in responses they will be rendered as if service
-is running on 'http://testserver/'.
+is running on 'http://localhost:3030'.
+
+## :wrench: How to setup
+
+```bash
+git clone https://github.com/prathameshkurunkar7/ace-desk.git
+cd ace-desk
+npm install && npm install client
+npm client
+npm start
+```
+
+## :warning: Requirements
+
+- [npm](https://yarnpkg.com)
+- [node.js](https://zeit.co/download)
+- [MongoDB](https://www.mongodb.com/)
+
+## :hamburger: Tech Stack
+
+- MongoDB
+- Express.js
+- React.js
+- Node.js
+- Redux
+- Mongoose
 
 ## Open Endpoints
 
-Open endpoints require no Authentication.
-
-* [Login](login.md) : `POST /api/login/`
+Open Functionalities require no Authentication.
+* [Home]
+* [Login]
 
 ## Endpoints that require Authentication
 
-Closed endpoints require a valid Token to be included in the header of the
-request. A Token can be acquired from the Login view above.
+Closed endpoints require a valid JWT Token to be included in the header of the
+request.(After Sucessful Login process)
+## Common Functionalities
+* [Profile Info]
 
-### Current User related
+### Admin User Dashboard
 
 Each endpoint manipulates or displays information related to the User whose
-Token is provided with the request:
+Token is provided with the request,with respect to his role the authorization is then decided and the user is redirected their particular
+Dashboard:
+* [Admin Dashboard]
+* [Employee Management]
+* [Department Management]
+* [Teams and Project Management]
+* [Attendances Management]
+* [Scheduling & Planning]
+* [Leaves Handling]
+* [Policies Handling]
+* [Payroll Management]
+* [Loans and Bonus Management]
 
-* [Show info](user/get.md) : `GET /api/user/`
-* [Update info](user/put.md) : `PUT /api/user/`
-
-### Account related
+### Employee Dashboard
 
 Endpoints for viewing and manipulating the Accounts that the Authenticated User
 has permissions to access.
 
-* [Show Accessible Accounts](accounts/get.md) : `GET /api/accounts/`
-* [Create Account](accounts/post.md) : `POST /api/accounts/`
-* [Show An Account](accounts/pk/get.md) : `GET /api/accounts/:pk/`
-* [Update An Account](accounts/pk/put.md) : `PUT /api/accounts/:pk/`
-* [Delete An Account](accounts/pk/delete.md) : `DELETE /api/accounts/:pk/`
+* [Employee Dashboard]
+* [Mark Attendance]
+* [Apply Leaves]
+* [Delete Applied Leaves]
+* [Apply Loans and Bonus]
+* [Delete Loans and Bonus]

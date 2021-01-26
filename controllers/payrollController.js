@@ -157,7 +157,7 @@ const createPaySlip = async(req,res,next) =>{
         "basicSalary": empPayroll.basicSalary/12,
         "grossSalary": empPayroll.grossSalary/12,
         "netSalary": empPayroll.netSalary/12,
-        "allowanceLimit":allowanceLimit,
+        "allowanceLimit":allowanceLimit/12,
         "totalDeductions":totalDeductions+totalTds,
         "loan":emploan/12,
         "bonus":empbonus
