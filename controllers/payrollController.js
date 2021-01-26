@@ -96,15 +96,15 @@ const createPaySlip = async(req,res,next) =>{
     const basicSalary = payroll.salaryPerAnnum/2;
     // HRA 40% for non-metro residents and 50% for Metro residents
     const HRA = MetroCities.includes(employeeCity)?basicSalary*(50/100):basicSalary*(40/100);
+    const DA = (345-126.33)/126.33*100;
     
-    const otherAllowances = basicSalary-HRA;
-    const grossSalary = basicSalary+HRA+otherAllowances+empbonus;
+    const otherAllowances = basicSalary-(HRA+DA);
+    const grossSalary = basicSalary+HRA+DA+otherAllowances+empbonus;
     
     const avgTdsRate=tdsCalc(payroll.salaryPerAnnum)
     const totalTds = (avgTdsRate/100)*grossSalary;
     
     // calculations based on fiscal year 2020-2021 rates
-    const DA = (345-126.33)/126.33*100;
     const EPF = ((12/100)*(basicSalary+DA))<15000 ?(12/100)*(basicSalary+DA):15000;
     const ESI = ((0.75/100)*grossSalary)<21000?(0.75/100)*grossSalary:21000;
     const professionalTax = payroll.deductions['professional'];
@@ -139,7 +139,7 @@ const createPaySlip = async(req,res,next) =>{
         return next(error);
     }
 
-    const allowanceLimit = (empPayroll.basicSalary-(empPayroll.allowances['houseRent']+empPayroll.allowances['dearness']))/12;
+    const allowanceLimit = empPayroll.allowances['otherAllowanceTotal']/12;
     const newPayroll = {
         "allowances": {
             "dearness": empPayroll.allowances['dearness'],
@@ -157,7 +157,7 @@ const createPaySlip = async(req,res,next) =>{
         "basicSalary": empPayroll.basicSalary/12,
         "grossSalary": empPayroll.grossSalary/12,
         "netSalary": empPayroll.netSalary/12,
-        "allowanceLimit":allowanceLimit/12,
+        "allowanceLimit":allowanceLimit,
         "totalDeductions":totalDeductions+totalTds,
         "loan":emploan/12,
         "bonus":empbonus
@@ -187,11 +187,11 @@ const addAllowances = async(req,res,next) =>{
         return next(error);
     }
 
-    if((phone+conveyance+medical)>payroll.allowances['otherAllowanceTotal']/12){
+    if((phone+conveyance+medical)>(payroll.allowances['otherAllowanceTotal']/12)){
         return next(new HttpError('Exceeds allowance limit',400));
     }
     if(performance>2000){
-        return next(new HttpError('Exceeds performance allowance limit',400));
+        return next(new HttpError('Exceeds performance allowance limit of 2000',400));
     }
 
     payroll.netSalary = payroll.netSalary+performance;
