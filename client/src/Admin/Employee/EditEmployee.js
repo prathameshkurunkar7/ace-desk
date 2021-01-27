@@ -102,7 +102,6 @@ function EditEmployee() {
     })
       .then((response) => response.json())
       .then((employee) => {
-        console.log(employee);
         setvalues({
           ...values,
           firstName: employee.firstName,

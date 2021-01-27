@@ -40,7 +40,6 @@ function Holidayscontent() {
     return dates;
   }
   let dates = getDates();
-  console.log(dates);
   const updatedDates = dates.map((date) => {
     return {
       date: date.toISOString().substring(0, 10),
@@ -50,7 +49,6 @@ function Holidayscontent() {
   });
 
   const Addholidays = (daysSchedule) => {
-    console.log(daysSchedule);
     const body = {
       daysSchedule: daysSchedule,
     };
@@ -77,8 +75,7 @@ function Holidayscontent() {
       if (data?.message) {
         showError(data.message);
       } else {
-        console.log("response", data);
-        showSuccess("schedule succesfully planned");
+        showSuccess("Schedule succesfully Planned");
       }
     });
   };

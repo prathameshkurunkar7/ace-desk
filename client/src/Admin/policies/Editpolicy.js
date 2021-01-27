@@ -59,7 +59,6 @@ export default function Editpolicy() {
     setValues({ ...values, [event.target.name]: event.target.value });
   };
   const handleChangepdf = (event) => {
-    console.log(event.target.files[0]);
     setValues({ ...values, Policyfile: event.target.files[0] });
   };
   const updatePolicy = () => {

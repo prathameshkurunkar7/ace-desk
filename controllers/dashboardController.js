@@ -169,8 +169,16 @@ const getEmployeeDashboardData = async(req,res,next) =>{
         loanAndBonus.bonus['status'] = 'No Bonuses'
     }
 
+    let newTeam = {
+        project:{
+            projectName: 'Unassigned'
+        },
+        teamLeader:{
+            firstName: 'Not Applicable'
+        }
+    }
     const data = {
-        team:team ? team:'Project Unassigned',
+        team: team ? team:newTeam,
         departmentName:department.deptName,
         departmentEmployeeCount:department.employees.length,
         upcomingDays,

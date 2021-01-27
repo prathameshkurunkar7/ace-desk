@@ -227,7 +227,6 @@ const generatePdf = async(req,res,next) =>{
     try {
         await new Payslip().pdf(payroll.toJSON());
     } catch (err) {
-        console.log(err);
         return next(new HttpError('Pdf not generated',500));
     }
     

@@ -49,7 +49,6 @@ export default function EditProfileContent() {
   const clickSubmit = (event) => {
     event.preventDefault();
     Updateprofile().then((data) => {
-      console.log(data.profileImage);
       if (data?.message) {
         showError(data.message);
       } else {

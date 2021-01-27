@@ -113,7 +113,6 @@ export default function EditProject() {
     )
       .then((response) => response.json())
       .then(({ projects }) => {
-        console.log(projects);
         setProId(projects[0].project._id);
         setvalues({
           teamName: projects[0].teamName,

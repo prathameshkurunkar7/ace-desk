@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from "react";
 import { withStyles, makeStyles } from "@material-ui/core/styles";
 import Table from "@material-ui/core/Table";
@@ -16,7 +17,6 @@ import {
 } from "@material-ui/pickers";
 import "./Attendancecontent.css";
 import { TablePagination } from "@material-ui/core";
-import { NewReleasesSharp } from "@material-ui/icons";
 import { isAuthenticate } from "../../auth/token";
 
 export default function Attendancecontent() {

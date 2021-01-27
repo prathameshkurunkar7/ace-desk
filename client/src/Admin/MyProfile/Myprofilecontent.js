@@ -68,7 +68,6 @@ function Myprofilecontent() {
         return response.json();
       })
       .then((data) => {
-        console.log(data);
         setDetails({
           ...details,
           firstName: data.firstName,

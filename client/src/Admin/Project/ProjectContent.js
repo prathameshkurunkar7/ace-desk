@@ -46,7 +46,6 @@ function ProjectContent() {
     )
       .then((response) => response.json())
       .then(({ projects, totalCount, message }) => {
-        console.log(projects);
         if (message) {
           setMessage(message);
           setTotal(0);
@@ -120,7 +119,7 @@ function ProjectContent() {
           showError(response.message);
         } else {
           var alreadyPresent = projects.filter(
-            (member) => member.teamId !== id
+            (member) => member._id !== id
           );
           setProjects(alreadyPresent);
           showSuccess("member deleted successfully");

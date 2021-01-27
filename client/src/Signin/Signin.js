@@ -37,24 +37,23 @@ function Signin() {
   const clickSubmit = (event) => {
     event.preventDefault();
     Signinuser({ email, password }).then((data) => {
-      console.log(data);
       if (data?.message) {
         setvalues({ ...values });
         showError(data.message);
       } else if (data.role === "HR") {
+        authenticate(data);
         showSuccess(
           "Succesfully signed in,you will be redirected to Dashboard"
           );
-        authenticate(data);
         setTimeout(function () {
           let path = `/AdminDashboard`;
           history.push(path);
         }, 2500);
       } else {
+        authenticate(data);
         showSuccess(
           "Succesfully signed in,you will be redirected to Dashboard"
         );
-        authenticate(data);
         setTimeout(function () {
           let path = `/EmpDashboard`;
           history.push(path);

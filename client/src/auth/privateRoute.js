@@ -18,7 +18,7 @@ export const PrivateEmployeeRoute = ({ component: Component, ...rest }) => (
   <Route
     {...rest}
     render={(props) =>
-      isAuthenticate() && role === "Employee" ? (
+      isAuthenticate() && isAuthenticate().role === "Employee" ? (
         <Component {...props} />
       ) : (
         <Redirect to={{ pathname: "/", state: { from: props.location } }} />
@@ -31,7 +31,7 @@ export const PrivateAdminRoute = ({ component: Component, ...rest }) => (
   <Route
     {...rest}
     render={(props) =>
-      isAuthenticate() && role === "HR" ? (
+      isAuthenticate() && isAuthenticate().role === "HR" ? (
         <Component {...props} />
       ) : (
         <Redirect to={{ pathname: "/", state: { from: props.location } }} />

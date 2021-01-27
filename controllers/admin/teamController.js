@@ -144,7 +144,7 @@ const dissolveTeamAndProject = async(req,res,next) =>{
         return next(error);
     }
 
-    res.status(200).json({"message":"Team has been deleted successfully"});
+    res.status(200).json({"status":"Team has been deleted successfully"});
 
 }
 

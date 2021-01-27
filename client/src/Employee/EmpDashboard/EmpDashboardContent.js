@@ -72,7 +72,6 @@ function EmpDashboardContent() {
     )
       .then((response) => response.json())
       .then((data) => {
-        console.log(data);
         setInfo({
           ...info,
           projectName: data.team.project.projectName,

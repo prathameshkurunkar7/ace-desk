@@ -17,7 +17,6 @@ import { useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import "./Policiescontent.css";
-// import AddRoundedIcon from "@material-ui/icons/AddRounded";
 import { savePolId } from "../../features/editpol";
 import { isAuthenticate } from "../../auth/token";
 

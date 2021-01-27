@@ -11,10 +11,8 @@ import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
-import DeleteRoundedIcon from "@material-ui/icons/DeleteRounded";
 import { TablePagination } from "@material-ui/core";
 import { isAuthenticate } from "../../auth/token";
-// import AddRoundedIcon from "@material-ui/icons/AddRounded";
 
 function Departmentcontent() {
   const [deptName, setDeptName] = useState("");
@@ -110,7 +108,7 @@ function Departmentcontent() {
         showError(data.message);
       } else {
         setDeptName("");
-        showSuccess("department added succesfully");
+        showSuccess("Department added Succesfully");
       }
     });
   };

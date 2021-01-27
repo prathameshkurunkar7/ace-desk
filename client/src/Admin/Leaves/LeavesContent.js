@@ -92,7 +92,6 @@ export default function LeaveContent() {
     )
       .then((response) => response.json())
       .then(({ leaves }) => {
-        console.log(leaves);
         setAppliedLeaves(leaves);
       })
       .catch((error) => {

@@ -33,7 +33,7 @@ const payrollSchema = new Schema({
         epf: { type: Number },
         esi: {type: Number},
         professional: { type: Number,default: 200},
-        totalDedcutions:{type:Number}       
+        totalDeductions:{type:Number}       
     },
     loan:{
         amount:{type: Number,max:50000,default:0},

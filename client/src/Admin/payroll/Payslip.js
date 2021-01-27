@@ -72,7 +72,6 @@ export default function Payslip() {
     )
       .then((response) => response.json())
       .then(({ payroll }) => {
-        console.log(payroll);
         setPayslipInfo({
           ...payslipInfo,
           allowanceLimit: payroll.allowanceLimit,

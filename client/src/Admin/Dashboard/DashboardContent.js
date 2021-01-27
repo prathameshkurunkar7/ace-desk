@@ -43,7 +43,6 @@ function DashboardContent() {
         }
       );
       const json = await response.json();
-      //console.log(json);
       setBirthdays(json.bdayEmployees);
       setDashData({
         ...dashData,
