@@ -94,7 +94,11 @@ function EmpPoliciesContent() {
     const dn = deptName ? `&department=${deptName}` : "";
 
     await fetch(
-      `/admin/policy/?${paging}${pn}${dn}`
+      `/admin/policy/?${paging}${pn}${dn}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
     )
       .then((response) => response.json())
       .then(({ policies, totalCount, message }) => {

@@ -11,9 +11,9 @@ is running on 'http://localhost:3030'.
 ```bash
 git clone https://github.com/prathameshkurunkar7/ace-desk.git
 cd ace-desk
-npm install && npm install client
-npm client
-npm start
+npm install && npm run install-client
+npm run client (in separate terminal)
+npm run dev
 ```
 
 ## :warning: Requirements

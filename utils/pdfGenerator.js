@@ -46,6 +46,7 @@ class Payslip {
     
             await browser.close();   
         } catch (err) {
+            console.log(err);
             throw new Error('Something went wrong!');
         }
     }

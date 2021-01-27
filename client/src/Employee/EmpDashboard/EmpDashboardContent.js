@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
 import { Line } from "react-chartjs-2";
@@ -14,12 +15,6 @@ import "./EmpDashboardContent.css";
 import { isAuthenticate } from "../../auth/token";
 
 const useStyles = makeStyles({});
-
-function createData(name, bdate, dept) {
-  return { name, bdate, dept };
-}
-
-const rows = [createData("Nisha Shinde", "29 Jan 2021", "IT")];
 
 function EmpDashboardContent() {
   const classes = useStyles();
@@ -55,7 +50,7 @@ function EmpDashboardContent() {
       labels: json.departmentNames,
       datasets: [
         {
-          label: "Income",
+          label: "Employee Count",
           data: json.employeeCounts,
           backgroundColor: ["rgba(75, 192, 192, 0.6)"],
           borderWidth: 4,
@@ -103,14 +98,14 @@ function EmpDashboardContent() {
     <div className="Empdashboard">
       <div className="Empdashboard__row1">
         <div className="Empdashboard__card1">
-          <h1 className="Empdashboard__cardHead">Revenue Report</h1>
+          <h1 className="Empdashboard__cardHead">Department vs Employee</h1>
           <div style={{ width: "100%", height: "60vh" }}>
             <Line
               data={chartData}
               options={{
                 responsive: true,
                 maintainAspectRatio: false,
-                title: { text: "Income Scale", display: true },
+                title: { text: "Employee count per Department", display: true },
 
                 scales: {
                   yAxes: [

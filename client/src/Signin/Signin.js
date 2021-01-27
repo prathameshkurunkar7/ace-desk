@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import "./Signin.css";
-import { Redirect } from "react-router-dom";
+import {useHistory} from 'react-router-dom';
 import { ReactComponent as Logo } from "../img/undraw_Data_re_80ws.svg";
 import PersonIcon from "@material-ui/icons/Person";
 import LockIcon from "@material-ui/icons/Lock";
@@ -9,13 +9,12 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 function Signin() {
+  const history = useHistory();
   const [values, setvalues] = useState({
     email: "",
     password: "",
-    redirectTouser: false,
-    redirectToadmin: false,
   });
-  const { email, password, redirectTouser, redirectToadmin } = values;
+  const { email, password} = values;
   const handleChange = (name) => (event) => {
     setvalues({ ...values, error: false, [name]: event.target.value });
   };
@@ -45,26 +44,20 @@ function Signin() {
       } else if (data.role === "HR") {
         showSuccess(
           "Succesfully signed in,you will be redirected to Dashboard"
-        );
+          );
+        authenticate(data);
         setTimeout(function () {
-          authenticate(data, () => {
-            setvalues({
-              ...values,
-              redirectToadmin: true,
-            });
-          });
+          let path = `/AdminDashboard`;
+          history.push(path);
         }, 2500);
       } else {
         showSuccess(
           "Succesfully signed in,you will be redirected to Dashboard"
         );
+        authenticate(data);
         setTimeout(function () {
-          authenticate(data, () => {
-            setvalues({
-              ...values,
-              redirectTouser: true,
-            });
-          });
+          let path = `/EmpDashboard`;
+          history.push(path);
         }, 2500);
       }
     });
@@ -90,16 +83,6 @@ function Signin() {
       draggable: true,
       progress: undefined,
     });
-  };
-  const UserRedirect = () => {
-    if (redirectTouser) {
-      return <Redirect to="/EmpDashboard" />;
-    }
-  };
-  const AdminRedirect = () => {
-    if (redirectToadmin) {
-      return <Redirect to="/AdminDashboard" />;
-    }
   };
 
   const SignInForm = () => {
@@ -157,8 +140,6 @@ function Signin() {
   return (
     <div>
       {SignInForm()}
-      {UserRedirect()}
-      {AdminRedirect()}
       <ToastContainer />
     </div>
   );

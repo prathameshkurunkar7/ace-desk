@@ -187,7 +187,7 @@ const addAllowances = async(req,res,next) =>{
         return next(error);
     }
 
-    if((phone+conveyance+medical)>(payroll.allowances['otherAllowanceTotal']/12)){
+    if((Number(phone)+Number(conveyance)+Number(medical))>(payroll.allowances['otherAllowanceTotal']/12)){
         return next(new HttpError('Exceeds allowance limit',400));
     }
     if(performance>2000){
@@ -227,6 +227,7 @@ const generatePdf = async(req,res,next) =>{
     try {
         await new Payslip().pdf(payroll.toJSON());
     } catch (err) {
+        console.log(err);
         return next(new HttpError('Pdf not generated',500));
     }
     

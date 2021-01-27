@@ -2,6 +2,8 @@ import React from "react";
 import "./EmpSidebar.css";
 import { NavLink } from "react-router-dom";
 import { useSelector } from "react-redux";
+import { Avatar } from "@material-ui/core";
+import { makeStyles } from "@material-ui/core/styles";
 import AppsOutlinedIcon from "@material-ui/icons/AppsOutlined";
 import FingerprintOutlinedIcon from "@material-ui/icons/FingerprintOutlined";
 import PolicyOutlinedIcon from "@material-ui/icons/PolicyOutlined";
@@ -12,6 +14,20 @@ import { isAuthenticate } from "../../auth/token";
 
 function EmpSidebar() {
   const { profileImage, firstName } = isAuthenticate();
+  const useStyles = makeStyles((theme) => ({
+    root: {
+      display: "flex",
+      "& > *": {
+        margin: theme.spacing(1),
+      },
+    },
+    large: {
+      width: theme.spacing(12),
+      height: theme.spacing(12),
+      marginLeft: theme.spacing(12),
+    },
+  }));
+  const classes = useStyles();
   const isopen = useSelector(selectisopenbutton);
 
   return (
@@ -19,11 +35,10 @@ function EmpSidebar() {
       <ul>
         <li>
           <div className="EmpSidebar__proPic">
-            <NavLink to="/profile">
-              <img
+          <NavLink to="/profile">
+              <Avatar
                 src={profileImage}
-                className="EmpSidebar__img"
-                alt="EmpImage"
+                className={classes.large}
               />
             </NavLink>
           </div>
