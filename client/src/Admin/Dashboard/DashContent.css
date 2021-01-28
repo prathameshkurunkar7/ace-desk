@@ -39,7 +39,7 @@
   transform: scale(1.05);
 } */
 
-/* .dashboard__info:hover, .dashboard__val:hover {
+/* .dashboard_info:hover, .dashboard_val:hover {
   transform: scale(1.11);
 } */
 
@@ -207,8 +207,8 @@
   }
 
   .dashboard__col1 {
-    flex: 1;
     height: 500px;
+    flex: 1;
   }
 
   .dashboard__col2 {
@@ -232,13 +232,11 @@
   }
 }
 
-/* @media (min-width: 1280px) and (max-width: 1380px) {
+@media (min-width: 1280px) and (max-width: 1400px) {
   .dashboard__col1 {
-    flex: 1;
-    flex-direction: row;
-    flex-wrap: wrap;
+    flex: auto;
   }
   .dashboard__card1 {
     flex: 1;
   }
-} */
+}

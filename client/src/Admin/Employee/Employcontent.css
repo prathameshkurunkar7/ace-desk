@@ -1,5 +1,5 @@
 .Employee {
-  margin-top: 55px;
+  margin-top: 45px;
   flex: 0.8;
   overflow-x: hidden;
 }
@@ -75,7 +75,7 @@
   justify-content: space-between;
 }
 .Employee__formactionAdd {
-  background: #09af33;
+  background: #4997f0;
   border: none;
   outline: none;
   cursor: pointer;

@@ -225,8 +225,7 @@ function DashboardContent() {
           </div>
         </div>
 
-        <div className="dashboard__col2">
-          <div className="dashboard__card2">
+          <div className="dashboard__card3">
             <h1 className="dashboard__cardHead">Leaves</h1>
             <div className="dashboard__bdayTable">
               <TableContainer>
@@ -257,7 +256,6 @@ function DashboardContent() {
               </TableContainer>
             </div>
           </div>
-        </div>
         <div className="dashboard__col2">
           <div className="dashboard__card2">
             <h1 className="dashboard__cardHead">Birthdays</h1>

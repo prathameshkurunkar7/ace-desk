@@ -1,5 +1,5 @@
 .project {
-  margin-top: 55px;
+  margin-top: 45px;
   flex: 0.8;
   overflow-x: hidden;
 }
@@ -56,7 +56,7 @@
   display: flex;
   flex-direction: row;
   justify-content: space-around;
-  flex-flow: wrap;
+  flex-wrap: wrap;
 }
 
 .project__crd {
@@ -221,12 +221,6 @@
   text-decoration: none;
 }
 
-/* @media screen and (max-width: 1000px) {
-  .project__card {
-    width: 40%;
-  }
-} */
-
 @media screen and (max-width: 620px) {
   .project__card {
     width: 80%;
@@ -234,21 +228,27 @@
   .project__dropDown {
     transform: translate3d(100px, 65px, 0px);
   }
-  .project__crd {
-    margin: 0;
-    padding: 0;
-  }
   .project {
     overflow-x: visible;
   }
 }
 
-@media screen and (max-width: 1195) {
+@media (max-width: 1195px) {
   .project__row {
     flex-direction: column;
-    align-items: flex-start;
+    align-items: center;
+  }
+  .project__btn {
+    margin: auto;
+  }
+  .project__selectRow {
+    justify-content: center;
+  }
+  .project__searchip {
+    width: 100%;
   }
   .project__addP {
-    margin: auto;
+    margin-top: 10px;
+    width: 250px;
   }
 }

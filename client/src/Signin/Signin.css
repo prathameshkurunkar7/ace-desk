@@ -259,7 +259,7 @@
 @media (max-width: 570px) {
   .signin__homeTitle {
     text-align: center;
-    margin-right: 20px;
+    padding: 0;
   }
   .signin__form {
     padding: 0 1.5rem;
@@ -270,6 +270,7 @@
   }
   .signin__panel .signin__panelContent {
     padding: 0.5rem 1rem;
+    margin-top: 1.2rem;
   }
   .signin__container {
     padding: 1.5rem;

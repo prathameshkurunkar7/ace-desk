@@ -14,7 +14,8 @@ import Paper from "@material-ui/core/Paper";
 import CloseRoundedIcon from "@material-ui/icons/CloseRounded";
 import SearchRoundedIcon from "@material-ui/icons/SearchRounded";
 import { makeStyles, TablePagination } from "@material-ui/core";
-import AddRoundedIcon from "@material-ui/icons/AddRounded";
+import EditRoundedIcon from "@material-ui/icons/EditRounded";
+import DeleteRoundedIcon from '@material-ui/icons/DeleteRounded';
 import { saveEmpId } from "../../features/editemp";
 import { toast, ToastContainer } from "react-toastify";
 import { isAuthenticate } from "../../auth/token";
@@ -250,7 +251,7 @@ function Employcontent() {
                               onClick={() => editEmployee(employee._id)}
                               className="Employee__formactionAdd"
                             >
-                              <AddRoundedIcon />
+                              <EditRoundedIcon />
                             </button>
                           </div>
                           <div>
@@ -258,7 +259,7 @@ function Employcontent() {
                               onClick={() => deleteEmployee(employee._id)}
                               className="Employee__formactionRem"
                             >
-                              <CloseRoundedIcon />
+                              <DeleteRoundedIcon />
                             </button>
                           </div>
                         </div>

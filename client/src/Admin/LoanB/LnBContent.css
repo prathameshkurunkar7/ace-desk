@@ -6,9 +6,9 @@
   max-width: 100%;
   margin: 30px;
   padding: 30px;
-  border-radius: 50px;
+  border-radius: 20px;
   background: #f8f8f8;
-  box-shadow: 35px 35px 35px #c7c6c6, -35px -35px 35px #e0dfdf;
+  box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.3);
 }
 
 .adminlb__theader:hover,
