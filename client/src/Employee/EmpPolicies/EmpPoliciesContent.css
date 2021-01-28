@@ -196,6 +196,11 @@
 }
 
 @media (max-width: 598px) {
+  .policies{
+    overflow-x: visible;
+    margin-left: auto;
+    margin-right: auto;
+  }
   .policies__selectRow:before {
     left: 29%;
   }

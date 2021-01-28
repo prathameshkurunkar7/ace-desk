@@ -231,12 +231,3 @@
     max-width: 800px;
   }
 }
-
-@media (min-width: 1280px) and (max-width: 1400px) {
-  .dashboard__col1 {
-    flex: auto;
-  }
-  .dashboard__card1 {
-    flex: 1;
-  }
-}

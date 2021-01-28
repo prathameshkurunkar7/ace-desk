@@ -6,8 +6,12 @@
   position: fixed;
   z-index: 1;
   box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.15);
+  display: flex;
+  justify-content: space-between;
 }
-
+.Navbar__logo{
+  color: rgb(68, 148, 253);
+}
 .Navbar__button {
   background-color: #fff;
   cursor: pointer;
@@ -17,7 +21,6 @@
 .Navbar__link {
   text-decoration: none;
   float: right;
-  margin-top: -27px;
   margin-right: 10px;
 }
 
@@ -36,7 +39,15 @@
   .Navbar__button {
     display: none;
   }
-  .Navbar__link {
-    margin-top: 0px;
+}
+
+@media (max-width: 600px) {
+  .Navbar__rightArea {
+    margin-top: auto;
+  }
+  .Navbar__leftArea {
+    width: 58%;
+    display: flex;
+    justify-content: space-between;
   }
 }

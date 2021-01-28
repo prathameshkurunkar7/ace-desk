@@ -170,6 +170,8 @@
 @media (max-width: 1250px) {
   .Empdashboard {
     width: fit-content;
+    margin-right: auto;
+    margin-left: auto;
   }
 
   .Empdashboard__col1 {
@@ -203,7 +205,3 @@
     flex: 0.835;
   }
 }
-
-/* @media (max-width: 1170px) {
-
-} */

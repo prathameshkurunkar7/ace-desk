@@ -188,6 +188,9 @@
 }
 
 @media (max-width: 598px) {
+  .Employee{
+    overflow-x: visible;
+  }
   .Employee__selectRow:before {
     left: 29%;
   }
