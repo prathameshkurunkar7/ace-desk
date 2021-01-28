@@ -135,7 +135,7 @@ const getAttendees = async(req,res,next) =>{
         return next(error);
     }
 
-    res.status(200).json({newAttendees,totalCount:numAttendees?numAttendees:newAttendees.length});
+    res.status(200).json({newAttendees,totalCount:newAttendees?newAttendees.length:numAttendees});
 
 }
 

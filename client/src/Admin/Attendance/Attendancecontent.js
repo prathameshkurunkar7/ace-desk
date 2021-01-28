@@ -63,7 +63,7 @@ export default function Attendancecontent() {
     await fetch(
       `/admin/attendance/?workingDate=${new Date(
         selectedDate
-      ).toISOString()}${st}${paging},`,
+      ).toISOString()}${st}${paging}`,
       {
         headers: {
           Authorization: `Bearer ${token}`,

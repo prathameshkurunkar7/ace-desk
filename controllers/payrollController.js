@@ -194,7 +194,7 @@ const addAllowances = async(req,res,next) =>{
         return next(new HttpError('Exceeds performance allowance limit of 2000',400));
     }
 
-    payroll.netSalary = payroll.netSalary+performance;
+    payroll.netSalary = Number(payroll.netSalary)+Number(performance);
     payroll.allowances['phone'] = phone;
     payroll.allowances['conveyance'] = conveyance;
     payroll.allowances['medical'] = medical;
@@ -223,7 +223,19 @@ const generatePdf = async(req,res,next) =>{
         const error = new HttpError('Something went wrong!',500);
         return next(error);
     }
-    
+
+    payroll.allowances['houseRent'] = payroll.allowances['houseRent']/12;
+    payroll.deductions['professional']= payroll.deductions['professional']/12;
+    payroll.deductions['tds']=payroll.deductions['tds']/12;
+    payroll.deductions['epf']=payroll.deductions['epf']/12;
+    payroll.deductions['esi']=payroll.deductions['esi']/12;
+    payroll.salaryPerAnnum=payroll.salaryPerAnnum/12;
+    payroll.basicSalary=payroll.basicSalary/12;
+    payroll.grossSalary=payroll.grossSalary/12;
+    payroll.netSalary=payroll.netSalary/12;
+    payroll.deductions['totalDeductions']=payroll.deductions['totalDeductions']/12;
+    payroll.loan['amount']=payroll.loan['amount']/12;
+
     try {
         await new Payslip().pdf(payroll.toJSON());
     } catch (err) {
