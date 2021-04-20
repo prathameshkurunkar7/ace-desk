@@ -54,7 +54,7 @@ exports.MetroCities = [
     'Jamshedpur'
 ]
 
-exports.Designations =['Manager','General Manager','Executive','President','Project Manager','Sr.Developer','Designer','Marketing Head','HR Admin','Assistant','Jr.Developer','Other']
+exports.Designations =['Manager','General Manager','Executive','President','Project Manager','Sr. Developer','Designer','Marketing Head','HR','Assistant','Jr. Developer','Other']
 
 exports.QualificationTitles = ['B.E','M.E','M.Tech','B.Tech','M.B.A','MS']
 

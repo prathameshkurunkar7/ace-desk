@@ -510,7 +510,7 @@ function AddEmployee() {
                   <option value="Sr. Developer">Sr. Developer</option>
                   <option value="Designer">Designer</option>
                   <option value="Marketing Head">Marketing Head</option>
-                  <option value="HR Admin">HR Admin</option>
+                  <option value="HR">HR</option>
                   <option value="Assistant">Assistant</option>
                   <option value="Other">Other</option>
                 </select>
