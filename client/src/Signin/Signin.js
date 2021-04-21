@@ -1,23 +1,29 @@
 import React, { useState } from "react";
-import "./Signin.css";
-import {useHistory} from 'react-router-dom';
 import { ReactComponent as Logo } from "../img/undraw_Data_re_80ws.svg";
-import PersonIcon from "@material-ui/icons/Person";
-import LockIcon from "@material-ui/icons/Lock";
 import { authenticate } from "../auth/token";
 import { toast, ToastContainer } from "react-toastify";
+import { useHistory } from "react-router-dom";
+import { Button } from "@material-ui/core";
+import PersonIcon from "@material-ui/icons/Person";
+import LockIcon from "@material-ui/icons/Lock";
 import "react-toastify/dist/ReactToastify.css";
+import Modal from "react-modal";
+import "./Signin.css";
 
 function Signin() {
   const history = useHistory();
+  const [modalIsOpen, setIsOpen] = useState(true);
   const [values, setvalues] = useState({
     email: "",
     password: "",
+    redirectTouser: false,
+    redirectToadmin: false,
   });
-  const { email, password} = values;
+  const { email, password } = values;
   const handleChange = (name) => (event) => {
-    setvalues({ ...values, error: false, [name]: event.target.value });
+    setvalues({ ...values, [name]: event.target.value });
   };
+
   const Signinuser = (user) => {
     return fetch(`/register/login`, {
       method: "POST",
@@ -38,16 +44,14 @@ function Signin() {
     event.preventDefault();
     Signinuser({ email, password }).then((data) => {
       if (data?.message) {
-        setvalues({ ...values });
         showError(data.message);
-      } else if (data.role === "HR") {
+      } else if (data.role === "Employee") {
         authenticate(data);
         showSuccess(
           "Succesfully signed in,you will be redirected to Dashboard"
-          );
+        );
         setTimeout(function () {
-          let path = `/AdminDashboard`;
-          history.push(path);
+          history.push("/EmpDashboard");
         }, 2500);
       } else {
         authenticate(data);
@@ -55,8 +59,7 @@ function Signin() {
           "Succesfully signed in,you will be redirected to Dashboard"
         );
         setTimeout(function () {
-          let path = `/EmpDashboard`;
-          history.push(path);
+          history.push("/AdminDashboard");
         }, 2500);
       }
     });
@@ -82,6 +85,21 @@ function Signin() {
       draggable: true,
       progress: undefined,
     });
+  };
+
+  function closeModal() {
+    setIsOpen(false);
+  }
+
+  const customStyles = {
+    content: {
+      top: "10%",
+      left: "75%",
+      right: "auto",
+      bottom: "auto",
+      marginRight: "-50%",
+      transform: "translate(-50%, -50%)",
+    },
   };
 
   const SignInForm = () => {
@@ -139,7 +157,18 @@ function Signin() {
   return (
     <div>
       {SignInForm()}
+
       <ToastContainer />
+      <Modal
+        isOpen={modalIsOpen}
+        onRequestClose={closeModal}
+        style={customStyles}
+        contentLabel="Example Modal"
+      >
+        <p>Email: &nbsp; admin77@gmail.com</p>
+        <p>Password: &nbsp; 0B248CB2</p>
+        <Button onClick={closeModal}>close</Button>
+      </Modal>
     </div>
   );
 }
