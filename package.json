@@ -9,7 +9,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "cd client && npm run build",
-    "render-install": "npm install && npm run install-client",
+    "render-install": "npm install && npm run install-client && npm build",
     "install-client": "cd client && npm install",
     "start": "node server.js",
     "client": "cd client && npm start",
