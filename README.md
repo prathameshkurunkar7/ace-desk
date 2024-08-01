@@ -1,7 +1,20 @@
 # AceDesk-A HRMS Web Application
 This is an old project, no longer maintained or worked on. This was developed as a college project for a Hackathon, the code is now available for reference purpose only. 
 
-Where full URLs are provided in responses they will be rendered as if service
+Fellow Contributors:
+<div>
+<a href="https://github.com/lavishgupta029">Lavish Gupta</a>
+</div>
+<div>
+<a href="https://github.com/nikki1908">Niharika Bisht</a>
+</div>
+<div>
+  Rujula Shinde
+</div>
+
+<br>
+
+Wherever full URLs are provided in responses they will be rendered as if service
 is running on 'http://localhost:3030'.
 
 ## :wrench: How to setup
